@@ -7,6 +7,13 @@
  * - Synthesized authentic FM radio static noise on empty frequencies
  */
 
+(function () {
+  'use strict';
+  // Safe browser environment check - prevents server-side / SSR execution errors
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
+
 const STATIONS = [
   // --- DELHI NCR BROADCASTERS ---
   {
@@ -1059,3 +1066,6 @@ function setupAudioVisualizer() {
 
   draw();
 }
+
+})();
+
