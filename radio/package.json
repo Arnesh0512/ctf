@@ -4,7 +4,6 @@
   "description": "Delhi Capital Live FM Radio Player Web App",
   "private": true,
   "scripts": {
-    "build": "echo 'Static radio player build complete'",
     "start": "node local-server.js",
     "python": "python server.py"
   },

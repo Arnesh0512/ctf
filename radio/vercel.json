@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/hls-proxy", "destination": "/api/hls-proxy" },
     { "source": "/stream-proxy", "destination": "/api/hls-proxy" }
