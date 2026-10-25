@@ -1,0 +1,13 @@
+{
+  "name": "delhi-fm-radio",
+  "version": "1.0.0",
+  "description": "Delhi Capital Live FM Radio Player Web App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "python": "python server.py"
+  },
+  "keywords": ["radio", "fm", "delhi", "redfm", "mirchi", "air", "audio-player"],
+  "author": "",
+  "license": "MIT"
+}

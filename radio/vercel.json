@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/hls-proxy", "destination": "/api/hls-proxy" },
+    { "source": "/stream-proxy", "destination": "/api/hls-proxy" }
+  ]
+}

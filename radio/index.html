@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delhi FM Live - Global & Local Radio Tuner (92.7 Big FM, 93.5 Red FM, Mirchi, International)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="hls.min.js"></script>
+</head>
+<body>
+  <div class="background-glow">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="radio-tower-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
+            <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/>
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/>
+            <path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">DILLI FM LIVE</h1>
+          <p class="brand-subtitle">Delhi Capital & Global Radio Tuner &bull; 13 Broadcasters</p>
+        </div>
+      </div>
+
+      <div class="header-status">
+        <div class="live-pill" id="livePill">
+          <span class="live-dot"></span>
+          <span class="live-text" id="liveText">STANDBY</span>
+        </div>
+        <div class="delhi-time" id="delhiClock">
+          <span class="clock-label">IST (DELHI)</span>
+          <span class="clock-val" id="clockVal">--:--:--</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main FM Tuner / Player Console -->
+    <main class="player-console">
+      <!-- Tuner Display (Retro-Modern LCD) -->
+      <section class="lcd-screen">
+        <div class="lcd-header">
+          <div class="signal-meter">
+            <span class="signal-label">SIGNAL</span>
+            <div class="signal-bars" id="signalBars">
+              <span class="bar bar-1 active"></span>
+              <span class="bar bar-2 active"></span>
+              <span class="bar bar-3 active"></span>
+              <span class="bar bar-4 active"></span>
+              <span class="bar bar-5 active"></span>
+            </div>
+          </div>
+          <div class="lcd-tag">
+            <span class="tag-stereo" id="stereoTag">STEREO</span>
+            <span class="tag-city">BROADCAST TUNER &bull; FM BAND</span>
+          </div>
+        </div>
+
+        <div class="lcd-center">
+          <div class="freq-display">
+            <span class="freq-number" id="freqNumber">93.5</span>
+            <span class="freq-unit">MHz FM</span>
+          </div>
+
+          <div class="station-meta">
+            <h2 class="station-name" id="stationName">Superhits 93.5 Red FM</h2>
+            <p class="station-tagline" id="stationTagline">Bajaate Raho! &bull; Delhi's Superhit Bollywood Station</p>
+            <div class="stream-status" id="streamStatus">Click Play or select any station to listen live</div>
+          </div>
+        </div>
+
+        <!-- Live Visualizer Waveform / Equalizer -->
+        <div class="visualizer-wrapper">
+          <canvas id="visualizerCanvas" width="700" height="70"></canvas>
+        </div>
+
+        <div class="lcd-footer">
+          <div class="broadcast-time">
+            <span class="footer-label">SESSION:</span>
+            <span class="time-counter" id="sessionTimer">00:00:00</span>
+          </div>
+          <div class="stream-tech-info">
+            <span class="tech-badge" id="formatBadge">MP3 Live</span>
+            <span class="tech-badge" id="qualityBadge">HQ 128 kbps</span>
+            <span class="tech-badge" id="latencyBadge">Live Output</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analog-style FM Frequency Dial Bar -->
+      <section class="fm-dial-section">
+        <div class="dial-header-bar">
+          <div class="dial-title">
+            <span class="tuner-led"></span>
+            <span>ANALOG FM TUNER &bull; 88.0 – 108.0 MHz</span>
+          </div>
+          <div class="dial-instructions">
+            <span class="drag-hint-pill">🖱️ Drag red tracker or click anywhere &bull; Live static noise on empty frequencies</span>
+          </div>
+        </div>
+
+        <div class="dial-track" id="dialTrack">
+          <div class="dial-glass-glare"></div>
+          <div class="dial-ticks-layer" id="dialTicksLayer"></div>
+          <div class="dial-stations-layer" id="dialStationsLayer"></div>
+
+          <!-- Draggable Red Indicator Needle -->
+          <div class="dial-needle" id="dialNeedle" style="left: 27.5%;">
+            <div class="needle-tooltip" id="needleTooltip">93.5 MHz</div>
+            <div class="needle-handle" id="needleHandle" title="Drag to Tune Frequency"></div>
+            <div class="needle-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Player Controls -->
+      <section class="controls-panel">
+        <div class="panel-left">
+          <button class="control-btn nav-btn" id="prevBtn" title="Previous Station (Left Arrow)">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/>
+            </svg>
+          </button>
+
+          <button class="control-btn play-btn" id="playBtn" title="Play / Pause (Spacebar)">
+            <div class="play-icon-wrap" id="playIconWrap">
+              <svg id="playIconSvg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <svg id="pauseIconSvg" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+              <svg id="spinnerSvg" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display: none;">
+                <circle cx="12" cy="12" r="9" stroke-dasharray="40 20"/>
+              </svg>
+            </div>
+          </button>
+
+          <button class="control-btn nav-btn" id="nextBtn" title="Next Station (Right Arrow)">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="panel-center">
+          <div class="station-chip" id="currentStationChip">
+            <span class="chip-dot"></span>
+            <span class="chip-text" id="chipStationText">Superhits 93.5 Red FM</span>
+          </div>
+          <button class="alt-stream-btn" id="retryStreamBtn" title="Switch to Alternate Stream Server">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/>
+            </svg>
+            <span id="altStreamText">Switch Stream Source</span>
+          </button>
+        </div>
+
+        <div class="panel-right">
+          <div class="volume-container">
+            <button class="vol-btn" id="muteBtn" title="Mute / Unmute (M)">
+              <svg id="volIconHigh" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              </svg>
+              <svg id="volIconMuted" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+              </svg>
+            </button>
+            <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="85" title="Volume Slider">
+            <span class="vol-percentage" id="volPercent">85%</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Broadcasters Grid Section -->
+    <section class="stations-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Broadcaster Directory (13 Channels)</h2>
+          <p class="section-desc">Delhi NCR networks & verified international live channels</p>
+        </div>
+        <!-- Category Filter Tabs -->
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all">📻 All Stations (13)</button>
+          <button class="filter-tab" data-filter="delhi">🇮🇳 Delhi NCR (7)</button>
+          <button class="filter-tab" data-filter="intl">🌍 International (6)</button>
+        </div>
+      </div>
+
+      <!-- Station Cards Grid -->
+      <div class="station-grid" id="stationGrid">
+
+        <!-- 0: 92.7 Big FM Delhi -->
+        <article class="station-card" data-index="0" data-category="delhi" data-freq="92.7">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill gold-pill">92.7 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">READY</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon gold-icon">
+              <span>92.7</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">92.7 Big FM Delhi</h3>
+              <p class="card-subtitle">"Dhun Badal Ke Toh Dekho"</p>
+              <p class="card-genre">Retro Bollywood &bull; 90s & 2000s Superhits</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Delhi Big FM Stereo</span>
+            <button class="card-action-btn gold-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 1: Superhits 93.5 Red FM -->
+        <article class="station-card active" data-index="1" data-category="delhi" data-freq="93.5">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(239, 35, 60, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill red-pill">93.5 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">TUNED</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon red-icon">
+              <span>93.5</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">Superhits 93.5 Red FM</h3>
+              <p class="card-subtitle">"Bajaate Raho!"</p>
+              <p class="card-genre">Delhi Bollywood Superhits &bull; Morning No. 1</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">HQ 128kbps Stream</span>
+            <button class="card-action-btn red-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 2: Radio Mirchi 98.3 -->
+        <article class="station-card" data-index="2" data-category="delhi" data-freq="98.3">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(249, 115, 22, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill orange-pill">98.3 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">READY</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon orange-icon">
+              <span>98.3</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">Radio Mirchi 98.3 FM</h3>
+              <p class="card-subtitle">"Mirchi Sunnewaale Always Khush!"</p>
+              <p class="card-genre">Mirchi Top 20 &bull; Bollywood Non-stop</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Icecast Stereo 128kbps</span>
+            <button class="card-action-btn orange-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 3: AIR FM Gold 100.1 Delhi -->
+        <article class="station-card" data-index="3" data-category="delhi" data-freq="100.1">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(234, 179, 8, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill gold-pill">100.1 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">READY</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon gold-icon">
+              <span>100.1</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">AIR FM Gold Delhi</h3>
+              <p class="card-subtitle">"Akashvani Delhi National"</p>
+              <p class="card-genre">Hindi Golden Classics &bull; Delhi News &bull; Culture</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Live CloudFront HLS</span>
+            <button class="card-action-btn gold-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 4: AIR FM Rainbow 102.6 Delhi -->
+        <article class="station-card" data-index="4" data-category="delhi" data-freq="102.6">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill cyan-pill">102.6 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">READY</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon cyan-icon">
+              <span>102.6</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">AIR FM Rainbow Delhi</h3>
+              <p class="card-subtitle">"Dilli Ki Taazi Dhadkan"</p>
+              <p class="card-genre">Youth Hits, Indie Pop &bull; Live RJ Shows</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Live CloudFront HLS</span>
+            <button class="card-action-btn cyan-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 5: Vividh Bharati 102.8 FM Delhi -->
+        <article class="station-card" data-index="5" data-category="delhi" data-freq="102.8">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill emerald-pill">102.8 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">READY</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon emerald-icon">
+              <span>102.8</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">Vividh Bharati Delhi</h3>
+              <p class="card-subtitle">"Desh Ki Swar-Ganga"</p>
+              <p class="card-genre">Vintage Nostalgia, Jaimala &bull; All India Radio</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Official Akashvani Live</span>
+            <button class="card-action-btn emerald-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 6: Ishq 104.8 FM Delhi -->
+        <article class="station-card" data-index="6" data-category="delhi" data-freq="104.8">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill pink-pill">104.8 MHz &bull; 🇮🇳</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">READY</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon pink-icon">
+              <span>104.8</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">Ishq 104.8 FM Delhi</h3>
+              <p class="card-subtitle">"Do Dil Ek Dhadkan"</p>
+              <p class="card-genre">Non-stop Hindi Romantic Melodies &bull; Delhi NCR</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Pure Hindi Love Songs</span>
+            <button class="card-action-btn pink-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 7: YES 933 Chinese Radio (Chinese) -->
+        <article class="station-card" data-index="7" data-category="intl" data-freq="93.3">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill red-pill">93.3 MHz &bull; 🇨🇳 CHINESE</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">GLOBAL</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon red-icon">
+              <span>93.3</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">YES 933 Chinese Radio</h3>
+              <p class="card-subtitle">"顶尖流行音乐台"</p>
+              <p class="card-genre">Top Mandarin Hits &bull; China & Taiwan Pop Classics</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">StreamTheWorld AAC</span>
+            <button class="card-action-btn red-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 8: WNYC 93.9 FM New York (American) -->
+        <article class="station-card" data-index="8" data-category="intl" data-freq="93.9">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill cyan-pill">93.9 MHz &bull; 🇺🇸 AMERICAN</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">GLOBAL</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon cyan-icon">
+              <span>93.9</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">WNYC 93.9 FM New York</h3>
+              <p class="card-subtitle">"New York Public Radio"</p>
+              <p class="card-genre">Live NYC News, Culture, Conversations & Talk</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">New York City Direct</span>
+            <button class="card-action-btn cyan-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 9: Capital FM 95.8 London (Britain) -->
+        <article class="station-card" data-index="9" data-category="intl" data-freq="95.8">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(2, 132, 199, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill cyan-pill">95.8 MHz &bull; 🇬🇧 BRITAIN</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">GLOBAL</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon cyan-icon">
+              <span>95.8</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">Capital FM 95.8 London</h3>
+              <p class="card-subtitle">"The UK's No. 1 Hit Music Station"</p>
+              <p class="card-genre">British Top 40, Pop Hits &bull; London Live</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">London UK Icecast</span>
+            <button class="card-action-btn cyan-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 10: FM 100 Pakistan (Pakistani) -->
+        <article class="station-card" data-index="10" data-category="intl" data-freq="100.0">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(22, 163, 74, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill emerald-pill">100.0 MHz &bull; 🇵🇰 PAKISTANI</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">GLOBAL</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon emerald-icon">
+              <span>100</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">FM 100 Pakistan</h3>
+              <p class="card-subtitle">"Pakistan's First FM Network"</p>
+              <p class="card-genre">Urdu Hits, Lollywood Classics &bull; Islamabad / Lahore</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Live Pakistan Stream</span>
+            <button class="card-action-btn emerald-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 11: J-Pop Powerplay Tokyo (Japanese) -->
+        <article class="station-card" data-index="11" data-category="intl" data-freq="105.5">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(225, 29, 72, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill pink-pill">105.5 MHz &bull; 🇯🇵 JAPANESE</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">GLOBAL</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon pink-icon">
+              <span>105.5</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">J-Pop Powerplay Tokyo</h3>
+              <p class="card-subtitle">"All Japan Top Hits"</p>
+              <p class="card-genre">Tokyo J-Pop, Anime Openings &bull; Shibuya Hits</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">Tokyo Japan Stereo</span>
+            <button class="card-action-btn pink-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- 12: Red FM 106.7 International (World) -->
+        <article class="station-card" data-index="12" data-category="intl" data-freq="106.7">
+          <div class="card-glow" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);"></div>
+          <div class="card-top">
+            <span class="card-freq-pill purple-pill">106.7 MHz &bull; 🌏 WORLD</span>
+            <div class="card-status-badge">
+              <span class="pulse-dot"></span>
+              <span class="badge-text">GLOBAL</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="station-brand-icon purple-icon">
+              <span>106.7</span>
+            </div>
+            <div class="card-info">
+              <h3 class="card-name">Red FM 106.7 World</h3>
+              <p class="card-subtitle">"RTM International Red FM"</p>
+              <p class="card-genre">East Asian, Chinese & Asian Pop Hits &bull; Global Broadcaster</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <span class="bitrate-info">StreamTheWorld AAC</span>
+            <button class="card-action-btn purple-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play Live</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Features & Audio Diagnostics Footer -->
+    <footer class="app-footer">
+      <div class="footer-card">
+        <div class="footer-card-icon">⚡</div>
+        <div class="footer-card-body">
+          <h4>Zero Latency Direct Streaming</h4>
+          <p>Direct low-latency CDN connections to Delhi radio streams, supporting HTTP Live Streaming (HLS) and Icecast MP3/AAC.</p>
+        </div>
+      </div>
+      <div class="footer-card">
+        <div class="footer-card-icon">⌨️</div>
+        <div class="footer-card-body">
+          <h4>Keyboard Navigation</h4>
+          <p><kbd>Space</kbd> Play/Pause &bull; <kbd>&larr;</kbd><kbd>&rarr;</kbd> Prev/Next Station &bull; <kbd>&uarr;</kbd><kbd>&darr;</kbd> Volume &bull; <kbd>M</kbd> Mute &bull; <kbd>1</kbd>-<kbd>9</kbd> Direct Jump</p>
+        </div>
+      </div>
+      <div class="footer-card">
+        <div class="footer-card-icon">📡</div>
+        <div class="footer-card-body">
+          <h4>13 Broadcasters Included</h4>
+          <p>Delhi (Big FM 92.7, Red FM 93.5, Mirchi 98.3, AIR Gold, AIR Rainbow, Vividh Bharati, Ishq FM) + World (Chinese, Japanese, Pakistani, British, American, Red FM World).</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Audio Element Hidden Engine -->
+  <audio id="audioElement" preload="none" playsinline></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
