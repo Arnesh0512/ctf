@@ -2,6 +2,8 @@
   "version": 2,
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/tune", "destination": "/api/tune" },
+    { "source": "/api/tune", "destination": "/api/tune" },
     { "source": "/hls-proxy", "destination": "/api/hls-proxy" },
     { "source": "/stream-proxy", "destination": "/api/hls-proxy" }
   ]
