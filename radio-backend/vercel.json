@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/tune", "destination": "/api/tune" },
+    { "source": "/tune", "destination": "/api/tune" },
+    { "source": "/", "destination": "/api/index" }
+  ]
+}

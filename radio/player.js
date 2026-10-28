@@ -234,6 +234,10 @@ const STATIONS = [
 // App State
 let currentStationIndex = 1; // Default to 93.5 Red FM
 let currentStreamIndex = 0;
+let lastTunedStationIndex = 1;
+let clipRepeatTimeout = null;
+let currentBackendCarrierFreq = null;
+let activeBackendRepeatDelay = 1000;
 let isPlaying = false;
 let isLoading = false;
 let isTunedToStation = true;
@@ -399,52 +403,47 @@ function setupDialDragging() {
     needleTooltip.textContent = `${freq.toFixed(1)} MHz`;
     freqNumber.textContent = freq.toFixed(1);
 
-    // Check if within +/- 0.22 MHz of a station
+    // WHILE DRAGGING OR HOLDING:
+    // Audio is always muted, and static noise always plays in transition
+    if (audio) {
+      audio.volume = 0;
+    }
+    setStaticNoiseVolume(0.28);
+    isTunedToStation = false;
+    livePill.classList.remove("active");
+    liveText.textContent = "TUNING...";
+
+    // Check if within tolerance of a station to preview carrier
     let matchedStation = null;
     let matchedIdx = -1;
     for (let i = 0; i < STATIONS.length; i++) {
-      if (Math.abs(parseFloat(STATIONS[i].freq) - freq) <= 0.22) {
-        matchedStation = STATIONS[i];
+      const s = STATIONS[i];
+      const tol = s.tolerance || 0.22;
+      if (Math.abs(parseFloat(s.freq) - freq) <= tol) {
+        matchedStation = s;
         matchedIdx = i;
         break;
       }
     }
 
     if (matchedStation) {
-      // Station in range -> clean signal!
-      isTunedToStation = true;
-      setStaticNoiseVolume(0); // Silence static
       needleTooltip.style.background = matchedStation.color || "#ef233c";
       stationName.textContent = `${matchedStation.flag} ${matchedStation.name}`;
-      stationTagline.textContent = matchedStation.tagline;
-      streamStatus.textContent = "SIGNAL TUNED • CARRIER LOCKED";
+      stationTagline.textContent = "Release pointer to lock frequency & play audio";
+      streamStatus.textContent = "CARRIER DETECTED • RELEASE TO LISTEN";
       streamStatus.className = "stream-status playing";
       chipStationText.textContent = `${matchedStation.flag} ${matchedStation.name} (${matchedStation.freq} MHz)`;
-      livePill.classList.add("active");
-      liveText.textContent = "TUNED ON AIR";
       stereoTag.style.opacity = "1";
-      updateSignalBars(5);
+      updateSignalBars(4);
       updateStationPinsHighlight(matchedIdx);
       highlightStationCard(matchedIdx);
-
-      // Restore volume if playing
-      if (isPlaying) {
-        audio.volume = volSlider.value / 100;
-      }
     } else {
-      // Empty frequency space -> AUTHENTIC FM STATIC NOISE
-      isTunedToStation = false;
       needleTooltip.style.background = "rgba(239, 35, 60, 0.95)";
-      setStaticNoiseVolume(0.26); // Emit static noise
-      audio.volume = 0; // Mute station broadcast on empty band
-
       stationName.textContent = "📻 FM STATIC NOISE";
-      stationTagline.textContent = "No broadcast carrier signal on this frequency • Drag needle to tune";
-      streamStatus.textContent = "EMPTY FREQUENCY • NO CARRIER";
+      stationTagline.textContent = "Sliding pointer through FM spectrum... release to tune";
+      streamStatus.textContent = "SWEEPING SPECTRUM • FM STATIC NOISE";
       streamStatus.className = "stream-status buffering";
-      chipStationText.textContent = `${freq.toFixed(1)} MHz (Empty Space)`;
-      livePill.classList.remove("active");
-      liveText.textContent = "STATIC NOISE";
+      chipStationText.textContent = `${freq.toFixed(1)} MHz (Tuning...)`;
       stereoTag.style.opacity = "0.35";
       updateSignalBars(1);
       updateStationPinsHighlight(-1);
@@ -455,6 +454,16 @@ function setupDialDragging() {
     isDraggingNeedle = true;
     initWebAudio();
     initStaticNoise();
+    if (clipRepeatTimeout) {
+      clearTimeout(clipRepeatTimeout);
+      clipRepeatTimeout = null;
+    }
+    // Mute and pause any currently playing station audio, start static noise immediately
+    if (audio) {
+      audio.volume = 0;
+      audio.pause();
+    }
+    setStaticNoiseVolume(0.28);
     dialTrack.classList.add("dragging");
     dialNeedle.classList.add("dragging");
     handlePointer(e.clientX);
@@ -480,31 +489,144 @@ function setupDialDragging() {
     const pct = (offsetX / rect.width) * 100;
     const freq = percentToFreq(pct);
 
-    // Check if near any station to snap cleanly
     let nearestIdx = -1;
     let minDiff = 0.35;
     STATIONS.forEach((s, idx) => {
+      const tol = s.tolerance || minDiff;
       const diff = Math.abs(parseFloat(s.freq) - freq);
-      if (diff < minDiff) {
+      if (diff <= tol && diff < minDiff) {
         minDiff = diff;
         nearestIdx = idx;
       }
     });
 
+    // STEP 1: If it is a standard radio frequency then simply play that radio
     if (nearestIdx !== -1) {
-      // Snap to station
+      currentBackendCarrierFreq = null;
       setStaticNoiseVolume(0);
       loadAndPlayStation(nearestIdx, 0);
-    } else {
-      // User landed on empty space! Keep needle there and keep static noise humming
-      dialNeedle.style.transition = "left 0.2s ease-out";
-      isTunedToStation = false;
-      setStaticNoiseVolume(0.26);
-      if (audio) audio.pause();
+      return;
     }
+
+    // STEP 2: If not then send backend call to know whether to continue play noise or play audio sent by backend
+    checkBackendCarrier(freq);
   }
 
   dialTrack.addEventListener("pointerdown", onPointerDown);
+}
+
+// Interrogate backend carrier API for secret frequencies (88.0, 96.2, 108.0)
+function checkBackendCarrier(freq) {
+  if (clipRepeatTimeout) {
+    clearTimeout(clipRepeatTimeout);
+    clipRepeatTimeout = null;
+  }
+  dialNeedle.style.transition = "left 0.2s ease-out";
+  isTunedToStation = false;
+  setStaticNoiseVolume(0.26); // Keep noise humming in transition
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+  }
+  lastTunedStationIndex = -1;
+
+  const roundedFreq = parseFloat(freq.toFixed(1));
+  stationName.textContent = "📻 SCANNING SPECTRUM...";
+  stationTagline.textContent = `Interrogating receiver for carrier signal at ${roundedFreq.toFixed(1)} MHz...`;
+  streamStatus.textContent = "CHECKING SPECTRUM CARRIER...";
+  streamStatus.className = "stream-status buffering";
+  chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Querying...)`;
+  livePill.classList.remove("active");
+  liveText.textContent = "SCANNING";
+
+  const backendUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? "http://localhost:3001/api/tune"
+    : "/api/tune";
+
+  fetch(backendUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ freq: roundedFreq })
+  })
+  .then(res => res.json())
+  .then(data => {
+    // If the user resumed sliding while fetching, ignore stale response
+    if (isDraggingNeedle) return;
+
+    if (data && data.match === true && data.audio) {
+      // Step 2 (Match): Cut static noise, demodulate and play audio received from backend
+      currentBackendCarrierFreq = roundedFreq;
+      activeBackendRepeatDelay = data.repeatDelay || 1000;
+      isTunedToStation = true;
+      setStaticNoiseVolume(0); // Mute static noise completely
+
+      needleTooltip.style.background = "#06b6d4";
+      stationName.textContent = `📡 CARRIER LOCKED (${roundedFreq.toFixed(1)} MHz)`;
+      const delaySec = Math.round(activeBackendRepeatDelay / 1000);
+      stationTagline.textContent = `Encrypted Audio Stream Demodulated • ${delaySec}s Auto-Repeat Loop`;
+      streamStatus.textContent = `CARRIER ACTIVE • ${roundedFreq.toFixed(1)} MHz`;
+      streamStatus.className = "stream-status playing";
+      chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Signal Carrier)`;
+      livePill.classList.add("active");
+      liveText.textContent = "LIVE CARRIER";
+      stereoTag.style.opacity = "1";
+      updateSignalBars(4);
+      updateStationPinsHighlight(-1);
+      highlightStationCard(-1);
+
+      audio.src = data.audio;
+      audio.currentTime = 0;
+      audio.volume = volSlider.value / 100;
+      audio.play().then(() => {
+        isPlaying = true;
+        setLoadingState(false);
+        startSessionTimer();
+      }).catch(handlePlayError);
+    } else {
+      // Step 2 (No match): Continue playing noise
+      currentBackendCarrierFreq = null;
+      isTunedToStation = false;
+      setStaticNoiseVolume(0.26);
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      stationName.textContent = "📻 FM STATIC NOISE";
+      stationTagline.textContent = "No broadcast carrier signal on this frequency • Drag needle to tune";
+      streamStatus.textContent = "EMPTY FREQUENCY • NO CARRIER";
+      streamStatus.className = "stream-status buffering";
+      chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Empty Space)`;
+      livePill.classList.remove("active");
+      liveText.textContent = "STATIC NOISE";
+      stereoTag.style.opacity = "0.35";
+      updateSignalBars(1);
+      updateStationPinsHighlight(-1);
+      highlightStationCard(-1);
+    }
+  })
+  .catch(err => {
+    console.warn("Backend tune query failed:", err);
+    if (!isDraggingNeedle) {
+      currentBackendCarrierFreq = null;
+      isTunedToStation = false;
+      setStaticNoiseVolume(0.26);
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      stationName.textContent = "📻 FM STATIC NOISE";
+      stationTagline.textContent = "No broadcast carrier signal on this frequency • Drag needle to tune";
+      streamStatus.textContent = "EMPTY FREQUENCY • NO CARRIER";
+      streamStatus.className = "stream-status buffering";
+      chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Empty Space)`;
+      livePill.classList.remove("active");
+      liveText.textContent = "STATIC NOISE";
+      stereoTag.style.opacity = "0.35";
+      updateSignalBars(1);
+      updateStationPinsHighlight(-1);
+      highlightStationCard(-1);
+    }
+  });
 }
 
 // Authentic Web Audio Static Noise Synthesizer
@@ -617,13 +739,13 @@ function updateStationUI(index) {
   setStaticNoiseVolume(0); // Silence static when station is selected
   audio.volume = volSlider.value / 100;
 
-  freqNumber.textContent = s.freq;
   stationName.textContent = `${s.flag} ${s.name}`;
   stationTagline.textContent = s.tagline;
   formatBadge.textContent = s.format;
   qualityBadge.textContent = s.quality;
   chipStationText.textContent = `${s.flag} ${s.name} (${s.freq} MHz)`;
-  altStreamText.textContent = `Server 1 of ${s.streams.length}`;
+  const delaySec = Math.round((s.repeatDelay || 1000) / 1000);
+  altStreamText.textContent = s.isClip ? `Audio Clip • ${delaySec}s Repeat Loop` : `Server 1 of ${s.streams.length}`;
   stereoTag.style.opacity = "1";
 
   // Pixel-perfect needle positioning: exact mathematical percentage
@@ -631,8 +753,9 @@ function updateStationUI(index) {
   const pct = freqToPercent(f);
   dialNeedle.style.transition = "left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)";
   dialNeedle.style.left = `${pct}%`;
-
   needleTooltip.textContent = `${s.freq} MHz`;
+  freqNumber.textContent = s.freq;
+
   needleTooltip.style.background = s.color || "#ef233c";
 
   updateSignalBars(5);
@@ -679,13 +802,22 @@ function highlightStationCard(activeIdx) {
 
 // Load and play a station
 function loadAndPlayStation(stationIdx, streamIdx = 0) {
+  currentBackendCarrierFreq = null;
+  if (clipRepeatTimeout) {
+    clearTimeout(clipRepeatTimeout);
+    clipRepeatTimeout = null;
+  }
+
+  const stationChanged = (lastTunedStationIndex !== stationIdx);
+  lastTunedStationIndex = stationIdx;
   currentStationIndex = stationIdx;
   currentStreamIndex = streamIdx;
   const station = STATIONS[stationIdx];
   const streamUrl = station.streams[streamIdx];
 
   updateStationUI(stationIdx);
-  altStreamText.textContent = `Server ${streamIdx + 1} of ${station.streams.length}`;
+  const delaySec = Math.round((station.repeatDelay || 1000) / 1000);
+  altStreamText.textContent = station.isClip ? `Audio Clip • ${delaySec}s Repeat Loop` : `Server ${streamIdx + 1} of ${station.streams.length}`;
 
   setLoadingState(true, `Connecting to ${station.name}...`);
 
@@ -730,6 +862,10 @@ function loadAndPlayStation(stationIdx, streamIdx = 0) {
       }
     });
   } else {
+    // If returning to station or station changed or it's a clip, replay from start (0:00)
+    if (stationChanged || station.isClip) {
+      audio.currentTime = 0;
+    }
     audio.src = streamUrl;
     audio.load();
     audio.play().catch(handlePlayError);
@@ -785,11 +921,22 @@ function setStatusMessage(msg, type = "normal") {
 // Toggle Play/Pause
 function togglePlayPause() {
   if (isPlaying) {
+    if (clipRepeatTimeout) {
+      clearTimeout(clipRepeatTimeout);
+      clipRepeatTimeout = null;
+    }
     audio.pause();
+    isPlaying = false;
     if (hlsInstance) {
       hlsInstance.stopLoad();
     }
     setStaticNoiseVolume(0);
+    setStatusMessage("PAUSED • Click Play to resume live output", "normal");
+    setLoadingState(false);
+    livePill.classList.remove("active");
+    liveText.textContent = "PAUSED";
+    stopSessionTimer();
+    highlightStationCard(currentStationIndex);
   } else {
     if (!isTunedToStation) {
       // Resume static noise
@@ -800,6 +947,9 @@ function togglePlayPause() {
       liveText.textContent = "STATIC NOISE";
       startSessionTimer();
     } else {
+      if (audio.ended) {
+        audio.currentTime = 0;
+      }
       loadAndPlayStation(currentStationIndex, currentStreamIndex);
     }
   }
@@ -883,6 +1033,52 @@ function bindEvents() {
     highlightStationCard(currentStationIndex);
   });
 
+  audio.addEventListener("ended", () => {
+    // If an encrypted backend carrier audio stream ended, auto-repeat with specified delay
+    if (currentBackendCarrierFreq !== null) {
+      if (clipRepeatTimeout) clearTimeout(clipRepeatTimeout);
+      const delayMs = activeBackendRepeatDelay || 1000;
+      const delaySec = Math.round(delayMs / 1000);
+      setStatusMessage(`AUDIO COMPLETED • REPEATING IN ${delaySec} SEC...`, "buffering");
+      liveText.textContent = `WAITING ${delaySec}S`;
+      const lockedFreq = currentBackendCarrierFreq;
+      clipRepeatTimeout = setTimeout(() => {
+        // As long as still tuned to this carrier frequency, replay from 0:00
+        if (currentBackendCarrierFreq === lockedFreq && isTunedToStation && !isDraggingNeedle) {
+          audio.currentTime = 0;
+          audio.play().then(() => {
+            isPlaying = true;
+            setLoadingState(false);
+            liveText.textContent = "LIVE CARRIER";
+            livePill.classList.add("active");
+          }).catch(handlePlayError);
+        }
+      }, delayMs);
+      return;
+    }
+
+    const s = STATIONS[currentStationIndex];
+    if (s && s.isClip) {
+      if (clipRepeatTimeout) clearTimeout(clipRepeatTimeout);
+      const delayMs = s.repeatDelay || 1000;
+      const delaySec = Math.round(delayMs / 1000);
+      setStatusMessage(`AUDIO COMPLETED • REPEATING IN ${delaySec} SEC...`, "buffering");
+      liveText.textContent = `WAITING ${delaySec}S`;
+      clipRepeatTimeout = setTimeout(() => {
+        // As long as still tuned to this station, replay from 0:00
+        if (isTunedToStation && currentStationIndex === lastTunedStationIndex) {
+          audio.currentTime = 0;
+          audio.play().then(() => {
+            isPlaying = true;
+            setLoadingState(false);
+            liveText.textContent = "LIVE ON AIR";
+            livePill.classList.add("active");
+          }).catch(handlePlayError);
+        }
+      }, delayMs);
+    }
+  });
+
   audio.addEventListener("waiting", () => {
     if (isTunedToStation) {
       setLoadingState(true, "Buffering live stream...");
@@ -890,6 +1086,10 @@ function bindEvents() {
   });
 
   audio.addEventListener("pause", () => {
+    // If the audio track reached the end, ignore this native pause event so it repeats automatically
+    if (audio.ended && (currentBackendCarrierFreq !== null || STATIONS[currentStationIndex]?.isClip)) {
+      return;
+    }
     if (isTunedToStation) {
       isPlaying = false;
       setLoadingState(false);

@@ -38,13 +38,64 @@ class DelhiRadioHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_HEAD(self):
         parsed = urllib.parse.urlparse(self.path)
-        if parsed.path in ('/stream-proxy', '/hls-proxy'):
+        if parsed.path in ('/stream-proxy', '/hls-proxy', '/api/tune', '/tune'):
             self.do_GET()
         else:
             super().do_HEAD()
 
+    def do_POST(self):
+        parsed = urllib.parse.urlparse(self.path)
+        if parsed.path in ('/api/tune', '/tune'):
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length)
+            try:
+                req = urllib.request.Request(
+                    f"http://127.0.0.1:3001{parsed.path}",
+                    data=body,
+                    headers={
+                        'Content-Type': self.headers.get('Content-Type', 'application/json')
+                    },
+                    method='POST'
+                )
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    resp_data = resp.read()
+                    self.send_response(resp.status)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Content-Length', str(len(resp_data)))
+                    self.end_headers()
+                    self.wfile.write(resp_data)
+                    return
+            except Exception as e:
+                self.send_response(502)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(b'{"match":false,"error":"backend offline"}')
+                return
+        self.send_response(404)
+        self.end_headers()
+
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
+
+        # Proxy /api/tune directly to radio-backend on port 3001
+        if parsed.path in ('/api/tune', '/tune'):
+            try:
+                target_url = f"http://127.0.0.1:3001{self.path}"
+                req = urllib.request.Request(target_url)
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    resp_data = resp.read()
+                    self.send_response(resp.status)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Content-Length', str(len(resp_data)))
+                    self.end_headers()
+                    self.wfile.write(resp_data)
+                    return
+            except Exception:
+                self.send_response(502)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(b'{"match":false}')
+                return
         
         # Transparent HLS and Audio Stream Proxy
         if parsed.path in ('/stream-proxy', '/hls-proxy'):
