@@ -1,4 +1,4 @@
-const carriers = require('../carriers-data.js');
+const carriers = require('./_carriers.js');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
