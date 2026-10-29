@@ -6,8 +6,6 @@ import {
   AlertCircle, 
   Crown, 
   Sparkles, 
-  Copy, 
-  Check, 
   RefreshCw
 } from 'lucide-react';
 import { getAuthCookie, decodeCookieSafe, BACKEND_URL } from '../auth';
@@ -15,7 +13,6 @@ import { getAuthCookie, decodeCookieSafe, BACKEND_URL } from '../auth';
 export default function Vault({ user, onUserUpdate }) {
   const [vaultLoading, setVaultLoading] = useState(false);
   const [vaultResult, setVaultResult] = useState(null);
-  const [copied, setCopied] = useState(false);
   const [currentCookie, setCurrentCookie] = useState('');
 
   useEffect(() => {
@@ -71,12 +68,6 @@ export default function Vault({ user, onUserUpdate }) {
       setVaultLoading(false);
       setCurrentCookie(getAuthCookie());
     }
-  };
-
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -180,31 +171,11 @@ export default function Vault({ user, onUserUpdate }) {
                   <Sparkles className="w-4 h-4 text-amber-600" />
                   <span>Sovereign CTF Flag</span>
                 </p>
-                <div className="flex items-center justify-between bg-white border-2 border-amber-400 rounded-xl p-4 shadow-inner">
-                  <code className="text-lg sm:text-2xl font-mono font-bold text-amber-900 tracking-wider break-all select-all">
+                <div className="bg-white border-2 border-amber-400 rounded-xl p-4 shadow-inner text-center">
+                  <code className="text-lg sm:text-2xl font-mono font-bold text-amber-900 tracking-wider break-all select-all block">
                     {vaultResult.flag}
                   </code>
-                  <button
-                    onClick={() => handleCopy(vaultResult.flag)}
-                    className="ml-3 shrink-0 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-sm"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-4 h-4 text-emerald-300" />
-                        <span>COPIED</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4" />
-                        <span>COPY</span>
-                      </>
-                    )}
-                  </button>
                 </div>
-              </div>
-
-              <div className="pt-1 text-xs text-stone-600">
-                <strong className="text-stone-900">Vault Collection:</strong> {vaultResult.vault?.collection}
               </div>
             </div>
           )}
