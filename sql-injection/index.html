@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERDEFENSE // High-Altitude Command Auth Gateway</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-grid"></div>
+  <div class="cyber-scanlines"></div>
+
+  <main class="auth-container">
+    <header class="portal-header">
+      <div class="badge-row">
+        <span class="badge badge-sec">SECURITY LEVEL // RESTRICTED</span>
+        <span class="badge badge-status"><span class="pulse-dot"></span> GATEWAY ONLINE</span>
+      </div>
+      <h1 class="portal-title">CHUSHUL DEFENSE NET</h1>
+      <p class="portal-subtitle">High-Altitude Signal Directorate • Central Database Gateway</p>
+    </header>
+
+    <div class="card-terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <span class="terminal-title">AUTH_GATEWAY_V3.8 // CLIENT_FILTER: ACTIVE</span>
+      </div>
+
+      <div class="terminal-body">
+        <!-- Client-Side Input Warning Banner -->
+        <div id="clientWarning" class="alert-box alert-warning hidden">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-content">
+            <strong>CLIENT INPUT FILTER VIOLATION</strong>
+            <p id="warningText">Only alphabetic characters (A-Z, a-z) are permitted in username & password fields.</p>
+          </div>
+        </div>
+
+        <!-- Success / Flag Banner -->
+        <div id="successBanner" class="alert-box alert-success hidden">
+          <span class="alert-icon">🚩</span>
+          <div class="alert-content">
+            <strong>DATABASE BREACH CONFIRMED // FLAG CAPTURED</strong>
+            <div class="flag-container">
+              <code id="flagText" class="flag-code">MAYA{...}</code>
+              <button id="copyFlagBtn" class="btn-copy" title="Copy Flag">COPY</button>
+            </div>
+            <div id="retrievedDataSection" class="retrieved-data-preview"></div>
+          </div>
+        </div>
+
+        <!-- Server Error Banner -->
+        <div id="serverErrorBanner" class="alert-box alert-error hidden">
+          <span class="alert-icon">🛑</span>
+          <div class="alert-content">
+            <strong id="errorTitle">ACCESS DENIED</strong>
+            <p id="errorDescription">Invalid credentials.</p>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form" autocomplete="off" novalidate>
+          <div class="form-group">
+            <label for="usernameInput" class="input-label">
+              <span>OPERATOR USERNAME</span>
+              <span class="constraint-tag">ALPHABETS ONLY [a-zA-Z]</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input 
+                type="text" 
+                id="usernameInput" 
+                name="username" 
+                placeholder="e.g. operator" 
+                required 
+                spellcheck="false"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="passwordInput" class="input-label">
+              <span>ACCESS PASSPHRASE</span>
+              <span class="constraint-tag">ALPHABETS ONLY [a-zA-Z]</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input 
+                type="password" 
+                id="passwordInput" 
+                name="password" 
+                placeholder="Enter passphrase" 
+                required 
+              />
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">
+            <span class="btn-glow"></span>
+            <span class="btn-text">AUTHENTICATE WITH MAINFRAME</span>
+          </button>
+        </form>
+
+        <!-- Developer Clue / CTF Hint -->
+        <div class="dev-note">
+          <div class="dev-note-header">
+            <span>ℹ️ SYSTEM DIRECTIVE &bull; REF #SEC-701</span>
+          </div>
+          <p class="dev-note-text">
+            Front-facing terminals apply strict client-side alphabetic sanitization. Microservice authentications bypass the UI and interface directly with the backend API controller.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collapsible Direct API Inspector for Players -->
+    <details class="api-reference-box">
+      <summary class="api-summary">🔍 INSPECT API ENDPOINT SPECIFICATION</summary>
+      <div class="api-details">
+        <p class="api-desc">Direct microservice authentication endpoint accessible without client form filtering:</p>
+        <pre class="code-block"><code>POST /api/login
+Content-Type: application/json
+
+{
+  "username": "...",
+  "password": "..."
+}</code></pre>
+        <p class="api-example-label">Quick Test via Console / Curl:</p>
+        <pre class="code-block"><code id="curlExample">curl -X POST https://sql-injection-sigma.vercel.app/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin'\'' --","password":"xyz"}'</code></pre>
+      </div>
+    </details>
+
+    <footer class="portal-footer">
+      <span>CHUSHUL HIGH-ALTITUDE CTF CHALLENGE // AUTHORIZED PERSONNEL ONLY</span>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
