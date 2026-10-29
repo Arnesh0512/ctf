@@ -1,5 +1,5 @@
 -- ====================================================================
--- CHUSHUL DEFENSE NET // CTF SQL INJECTION SCHEMA
+-- CHUSHUL DEFENSE NET 
 -- ====================================================================
 
 -- 1. Create Challenge Table

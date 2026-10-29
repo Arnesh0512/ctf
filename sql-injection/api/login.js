@@ -117,7 +117,7 @@ module.exports = async (req, res) => {
     const result = await client.query(rawSql);
 
     if (result.rows && result.rows.length > 0) {
-      const flag = process.env.FLAG || 'MAYA{abc}';
+      const flag = process.env.FLAG || 'MAYA{INSECURE_DAULAT}';
       return res.status(200).json({
         success: true,
         message: 'Authentication successful! Access granted.',
@@ -150,7 +150,7 @@ function handleLocalSimulation(username, password, req, res) {
   const matches = pattern.test(username) || pattern.test(password);
 
   if (matches || (username === 'admin' && password === 'S3cr3tAdm!nP@ss_2026_x99')) {
-    const flag = process.env.FLAG || 'MAYA{abc}';
+    const flag = process.env.FLAG || 'MAYA{INSECURE_DAULAT}';
     return res.status(200).json({
       success: true,
       message: 'Authentication successful! Access granted.',
