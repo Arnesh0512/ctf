@@ -784,7 +784,9 @@ function updateStationPinsHighlight(activeIdx) {
 }
 
 function highlightStationCard(activeIdx) {
-  document.querySelectorAll(".station-card").forEach(card => {
+  const cards = document.querySelectorAll(".station-card");
+  if (!cards.length) return;
+  cards.forEach(card => {
     const cardIdx = parseInt(card.dataset.index, 10);
     const badgeText = card.querySelector(".badge-text");
     if (cardIdx === activeIdx) {
