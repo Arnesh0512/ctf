@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from fastapi.openapi.docs import get_swagger_ui_html
 from dotenv import load_dotenv
 import os
 
@@ -9,9 +11,99 @@ app = FastAPI(
     title="Museum Archive API",
     description="Interactive documentation for Museum Archive flags 1 to 12.",
     version="1.0.0",
-    docs_url="/docs",
+    docs_url=None,  # Custom handler below provides minimal calling GUI
     redoc_url="/redoc"
 )
+
+CUSTOM_CSS = """
+<style>
+/* 1. Hide Parameters section & Cancel/Clear buttons */
+.opblock-section:not(.responses-wrapper),
+.opblock-section-header,
+.parameters-container,
+.btn.cancel,
+.btn.clear {
+    display: none !important;
+}
+
+/* 2. Hide Curl Command & Request URL */
+.curl-command,
+.request-url,
+div:has(> .curl-command),
+div:has(> .request-url),
+.responses-inner h5:has(+ .curl-command),
+.responses-inner h5:has(+ .request-url) {
+    display: none !important;
+}
+
+/* 3. Hide Response Headers */
+.response-headers,
+pre.response-headers,
+h5:has(+ .response-headers),
+h5:has(+ pre.response-headers),
+.response-col_description > h5:nth-of-type(2) {
+    display: none !important;
+}
+
+/* 4. Hide Status Code Column & Headers row in live response table */
+.live-responses-table thead,
+.response-col_status,
+.responses-header {
+    display: none !important;
+}
+
+/* 5. Hide the entire bottom Documentation Responses table */
+.responses-inner > .responses-table,
+.responses-inner > div:not(.live-responses-table) {
+    display: none !important;
+}
+
+/* 6. Clean full-width Execute Button */
+.execute-wrapper {
+    padding: 12px 20px !important;
+}
+.btn.execute {
+    width: 100% !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 10px 0 !important;
+    border-radius: 6px !important;
+    letter-spacing: 0.05em !important;
+}
+
+/* 7. Clean Response Body display */
+.live-responses-table {
+    width: 100% !important;
+    padding: 0 20px 16px 20px !important;
+}
+.response-col_description {
+    width: 100% !important;
+    padding: 0 !important;
+}
+.response-col_description > h5:first-of-type {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    color: #49cc90 !important;
+    margin-bottom: 6px !important;
+}
+.highlight-code pre {
+    border-radius: 6px !important;
+    font-size: 13px !important;
+}
+</style>
+"""
+
+@app.get("/docs", include_in_schema=False)
+def custom_docs():
+    """Custom documentation view showing only Execute button and returned response."""
+    response = get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=app.title,
+        swagger_ui_parameters={"tryItOutEnabled": True}
+    )
+    content = response.body.decode().replace("</head>", f"{CUSTOM_CSS}</head>")
+    return HTMLResponse(content=content)
 
 def get_flag(n: int) -> str:
     """Retrieve flag from environment variable FLAG_N or FLAGN."""
