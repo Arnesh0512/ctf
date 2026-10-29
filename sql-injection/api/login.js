@@ -108,21 +108,19 @@ module.exports = async (req, res) => {
     client = await dbPool.connect();
     await ensureSchema(client);
 
-    // Map MySQL comment '#' to standard SQL comment '-- ' so payloads like ' OR '1'='1' # work in Postgres
+    // Map MySQL comment '#' to standard SQL comment '-- '
     const sqlUser = username.replace(/#/g, '-- ');
     const sqlPass = password.replace(/#/g, '-- ');
 
-    // Intentionally vulnerable SQL query string concatenation
     const rawSql = `SELECT id, username, role FROM users WHERE username = '${sqlUser}' AND password = '${sqlPass}'`;
 
     const result = await client.query(rawSql);
 
-    // If query returns rows (either valid login or SQL Injection bypass like ' OR '1'='1 / admin' --)
     if (result.rows && result.rows.length > 0) {
       const flag = process.env.FLAG || 'MAYA{abc}';
       return res.status(200).json({
         success: true,
-        message: 'Authentication successful! SQL Injection bypass verified.',
+        message: 'Authentication successful! Access granted.',
         flag: flag,
         user: result.rows[0],
         totalRecordsRetrieved: result.rows.length,
@@ -130,14 +128,13 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Normal invalid credentials (no SQLi and no matching user)
+    // Invalid credentials
     return res.status(401).json({
       success: false,
       message: 'Invalid username or password. Access Denied.'
     });
 
   } catch (err) {
-    // Return standard Access Denied without leaking database error or hint
     return res.status(401).json({
       success: false,
       message: 'Invalid username or password. Access Denied.'
@@ -149,15 +146,14 @@ module.exports = async (req, res) => {
 
 // Fallback simulator for offline local testing
 function handleLocalSimulation(username, password, req, res) {
-  // If input contains standard SQL injection vectors
-  const sqliPattern = /('|--|#|\/\*|;|OR\s+['"\d\w]+|UNION\s+SELECT|AND\s+['"\d\w]+)/i;
-  const isSqli = sqliPattern.test(username) || sqliPattern.test(password);
+  const pattern = /('|--|#|\/\*|;|OR\s+['"\d\w]+|UNION\s+SELECT|AND\s+['"\d\w]+)/i;
+  const matches = pattern.test(username) || pattern.test(password);
 
-  if (isSqli || (username === 'admin' && password === 'S3cr3tAdm!nP@ss_2026_x99')) {
+  if (matches || (username === 'admin' && password === 'S3cr3tAdm!nP@ss_2026_x99')) {
     const flag = process.env.FLAG || 'MAYA{abc}';
     return res.status(200).json({
       success: true,
-      message: 'Authentication successful! SQL Injection bypass verified (Local Fallback).',
+      message: 'Authentication successful! Access granted.',
       flag: flag,
       user: { id: 1, username: 'admin', role: 'administrator' },
       totalRecordsRetrieved: 3,

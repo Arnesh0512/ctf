@@ -1,22 +1,6 @@
-/**
- * ==============================================================================
- * CHUSHUL DEFENSE NET // AUTHENTICATION CONTROLLER v3.8
- * 
- * NOTICE TO OPERATORS & AUDITORS:
- * Client-Side Input Policy #702 enforces strict alphabetic character restrictions
- * on form elements.
- * 
- * Direct Service Interface:
- * Method: POST
- * Route:  /api/login
- * Headers: Content-Type: application/json
- * Body:   { "username": "<STRING>", "password": "<STRING>" }
- * ==============================================================================
- */
-
 const API_LOGIN_ENDPOINT = '/api/login';
 
-// Elements
+// DOM Elements
 const loginForm = document.getElementById('loginForm');
 const usernameInput = document.getElementById('usernameInput');
 const passwordInput = document.getElementById('passwordInput');
@@ -34,11 +18,11 @@ const serverErrorBanner = document.getElementById('serverErrorBanner');
 const errorTitle = document.getElementById('errorTitle');
 const errorDescription = document.getElementById('errorDescription');
 
-// Strict Alphabetic Regex: only A-Z and a-z allowed
+// Input validation
 const ALPHABET_REGEX = /^[a-zA-Z]+$/;
 
 function validateAlphabetic(value) {
-  if (!value) return true; // empty checked on submit
+  if (!value) return true;
   return ALPHABET_REGEX.test(value);
 }
 
@@ -52,7 +36,7 @@ function updateValidationUI() {
   if (!userValid) {
     usernameInput.classList.add('input-invalid');
     hasError = true;
-    reason = 'Username contains non-alphabetic characters (symbols, numbers, quotes or spaces are blocked by client filter).';
+    reason = 'Only alphabetic characters (A-Z, a-z) are permitted in username.';
   } else {
     usernameInput.classList.remove('input-invalid');
   }
@@ -60,7 +44,7 @@ function updateValidationUI() {
   if (!passValid) {
     passwordInput.classList.add('input-invalid');
     hasError = true;
-    reason = 'Passphrase contains non-alphabetic characters (symbols, numbers, quotes or spaces are blocked by client filter).';
+    reason = 'Only alphabetic characters (A-Z, a-z) are permitted in passphrase.';
   } else {
     passwordInput.classList.remove('input-invalid');
   }
@@ -75,22 +59,18 @@ function updateValidationUI() {
   }
 }
 
-// Live input listener to enforce alphabetic rule in UI
 usernameInput.addEventListener('input', updateValidationUI);
 passwordInput.addEventListener('input', updateValidationUI);
 
-// Form submission handler
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Reset alert states
   serverErrorBanner.classList.add('hidden');
   successBanner.classList.add('hidden');
 
   const username = usernameInput.value.trim();
   const password = passwordInput.value.trim();
 
-  // Client-Side Input Enforcement
   if (!ALPHABET_REGEX.test(username) || !ALPHABET_REGEX.test(password)) {
     updateValidationUI();
     return;
@@ -111,15 +91,13 @@ loginForm.addEventListener('submit', async (e) => {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      // Flag captured!
       handleSuccess(data);
     } else {
       handleError(data);
     }
   } catch (err) {
     handleError({
-      message: 'Network error or backend unavailable. Inspect console for details.',
-      error: err.message
+      message: 'Network error or service unavailable.'
     });
   } finally {
     submitBtn.disabled = false;
@@ -135,14 +113,13 @@ function handleSuccess(data) {
     flagText.textContent = data.flag;
   }
 
-  // Display retrieved records if available
   if (data.records && data.records.length > 0) {
     const formatted = data.records
       .map(r => `• ID: ${r.id} | User: ${r.username} | Role: ${r.role || 'user'}`)
       .join('\n');
-    retrievedDataSection.textContent = `Retrieved Table Records:\n${formatted}`;
+    retrievedDataSection.textContent = `Retrieved Records:\n${formatted}`;
   } else {
-    retrievedDataSection.textContent = `Retrieved User: ${data.user?.username || 'admin'}`;
+    retrievedDataSection.textContent = `User: ${data.user?.username || 'admin'}`;
   }
 }
 
@@ -154,7 +131,6 @@ function handleError(data) {
   errorDescription.textContent = data.message || 'Invalid username or password.';
 }
 
-// Copy Flag Button
 copyFlagBtn.addEventListener('click', () => {
   const flag = flagText.textContent;
   if (!flag) return;

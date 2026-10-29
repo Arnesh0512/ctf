@@ -30,24 +30,24 @@
           <span class="dot dot-yellow"></span>
           <span class="dot dot-green"></span>
         </div>
-        <span class="terminal-title">AUTH_GATEWAY_V3.8 // CLIENT_FILTER: ACTIVE</span>
+        <span class="terminal-title">AUTH_GATEWAY_V3.8</span>
       </div>
 
       <div class="terminal-body">
-        <!-- Client-Side Input Warning Banner -->
+        <!-- Input Warning Banner -->
         <div id="clientWarning" class="alert-box alert-warning hidden">
           <span class="alert-icon">⚠️</span>
           <div class="alert-content">
-            <strong>CLIENT INPUT FILTER VIOLATION</strong>
-            <p id="warningText">Only alphabetic characters (A-Z, a-z) are permitted in username & password fields.</p>
+            <strong>INVALID INPUT</strong>
+            <p id="warningText">Only alphabetic characters (A-Z, a-z) are permitted.</p>
           </div>
         </div>
 
-        <!-- Success / Flag Banner -->
+        <!-- Success Banner -->
         <div id="successBanner" class="alert-box alert-success hidden">
           <span class="alert-icon">🚩</span>
           <div class="alert-content">
-            <strong>DATABASE BREACH CONFIRMED // FLAG CAPTURED</strong>
+            <strong>AUTHENTICATION SUCCESSFUL // ACCESS GRANTED</strong>
             <div class="flag-container">
               <code id="flagText" class="flag-code">MAYA{...}</code>
               <button id="copyFlagBtn" class="btn-copy" title="Copy Flag">COPY</button>
@@ -70,7 +70,6 @@
           <div class="form-group">
             <label for="usernameInput" class="input-label">
               <span>OPERATOR USERNAME</span>
-              <span class="constraint-tag">ALPHABETS ONLY [a-zA-Z]</span>
             </label>
             <div class="input-wrapper">
               <span class="input-icon">👤</span>
@@ -88,7 +87,6 @@
           <div class="form-group">
             <label for="passwordInput" class="input-label">
               <span>ACCESS PASSPHRASE</span>
-              <span class="constraint-tag">ALPHABETS ONLY [a-zA-Z]</span>
             </label>
             <div class="input-wrapper">
               <span class="input-icon">🔑</span>
@@ -107,44 +105,11 @@
             <span class="btn-text">AUTHENTICATE WITH MAINFRAME</span>
           </button>
         </form>
-
-        <!-- Developer Clue / CTF Hint -->
-        <div class="dev-note">
-          <div class="dev-note-header">
-            <span>ℹ️ SYSTEM DIRECTIVE &bull; REF #SEC-701</span>
-          </div>
-          <p class="dev-note-text">
-            Front-facing terminals apply strict client-side alphabetic sanitization. Microservice authentications bypass the UI and interface directly with the backend API controller.
-          </p>
-        </div>
       </div>
     </div>
 
-    <!-- Collapsible Direct API Inspector for Players -->
-    <details class="api-reference-box">
-      <summary class="api-summary">🔍 INSPECT API ENDPOINT SPECIFICATION</summary>
-      <div class="api-details">
-        <p class="api-desc">Direct microservice authentication endpoint accessible without client form filtering:</p>
-        <pre class="code-block"><code>POST /api/login
-Content-Type: application/json
-
-{
-  "username": "...",
-  "password": "..."
-}</code></pre>
-        <p class="api-example-label">Quick Test via PowerShell:</p>
-        <pre class="code-block"><code>Invoke-RestMethod -Uri "https://sql-injection-sigma.vercel.app/api/login" -Method Post -ContentType "application/json" -Body '{"username":"admin'' --","password":"xyz"}'</code></pre>
-
-        <p class="api-example-label">Quick Test via Bash / Curl:</p>
-        <pre class="code-block"><code>curl -X POST https://sql-injection-sigma.vercel.app/api/login -H "Content-Type: application/json" -d '{"username":"admin'\'' --","password":"xyz"}'</code></pre>
-
-        <p class="api-example-label">Or direct GET in browser URL bar:</p>
-        <pre class="code-block"><code>https://sql-injection-sigma.vercel.app/api/login?username=admin'%20--&password=xyz</code></pre>
-      </div>
-    </details>
-
     <footer class="portal-footer">
-      <span>CHUSHUL HIGH-ALTITUDE CTF CHALLENGE // AUTHORIZED PERSONNEL ONLY</span>
+      <span>CHUSHUL HIGH-ALTITUDE COMMAND // AUTHORIZED PERSONNEL ONLY</span>
     </footer>
   </main>
 
