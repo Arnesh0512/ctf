@@ -147,12 +147,6 @@ export default function Vault({ user, onUserUpdate }) {
                   <p className="text-xs sm:text-sm font-sans text-red-800 font-semibold leading-relaxed">
                     {vaultResult.message}
                   </p>
-                  {vaultResult.identity && (
-                    <div className="pt-2 flex flex-wrap gap-3 text-xs font-mono text-red-700 border-t border-red-200/80">
-                      <span>Subject: <strong className="text-red-950">{vaultResult.identity.username}</strong></span>
-                      <span>Role: <strong className="text-red-950">{vaultResult.identity.role}</strong></span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
