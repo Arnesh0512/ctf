@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Crown, LogOut, Key, Menu, X, Landmark, BookOpen, Compass, Sparkles } from 'lucide-react';
-import { clearAuth, BACKEND_URL } from './auth';
+import { clearAuth } from './auth';
 
 export default function Navbar({ user, onLogout }) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleExit = async () => {
+  const handleExit = () => {
     clearAuth();
     if (onLogout) onLogout();
-    try {
-      await fetch(`${BACKEND_URL}/logout`, { method: 'POST', credentials: 'include' });
-    } catch (_) {}
     navigate('/login');
   };
 

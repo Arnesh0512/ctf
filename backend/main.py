@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="Jai Vilas Palace API",
-    description="Jai Vilas Palace Authentication & Royal Vault Gateway",
+    title="CTF Authentication & Authorization Gateway",
+    description="Generic CTF Backend for cookie-based privilege escalation challenges",
     version="1.0.0"
 )
 
@@ -210,21 +210,6 @@ async def process_vault(request: Request, cookie: Optional[str] = None):
 @router.get("/vault", summary="Get Vault")
 async def get_vault(request: Request, cookie: Optional[str] = None):
     return await process_vault(request, cookie)
-
-@router.post("/vault", summary="Post Vault")
-async def post_vault(request: Request, cookie: Optional[str] = None):
-    return await process_vault(request, cookie)
-
-@router.post("/logout", summary="Logout")
-def logout(response: Response):
-    response.delete_cookie(
-        key="auth",
-        path="/",
-        samesite="none",
-        secure=True,
-        httponly=False
-    )
-    return {"success": True, "message": "Session terminated."}
 
 app.include_router(router)
 
