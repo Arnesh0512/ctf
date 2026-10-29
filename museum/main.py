@@ -6,8 +6,8 @@ import os
 load_dotenv()
 
 app = FastAPI(
-    title="CTF Swagger API",
-    description="Interactive Swagger UI documentation for CTF Challenge flags 1 to 10.",
+    title="Museum Archive API",
+    description="Interactive documentation for Museum Archive flags 1 to 10.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"

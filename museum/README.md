@@ -1,10 +1,10 @@
-# CTF Swagger API
+# Museum Archive API
 
-FastAPI application serving CTF challenge flags via endpoints `/flag1` through `/flag10`.
+FastAPI application serving flags via endpoints `/flag1` through `/flag10`.
 
 ## Endpoints
 
-- `GET /docs` - Interactive Swagger UI documentation
+- `GET /docs` - Interactive API documentation
 - `GET /redoc` - ReDoc API documentation
 - `GET /flag1` - Returns Flag 1
 - `GET /flag2` - Returns Flag 2
@@ -30,5 +30,5 @@ FLAG_10=MAYA{...}
 
 ```bash
 pip install -r requirements.txt
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload --host 0.0.0.0 --port 10000
 ```
