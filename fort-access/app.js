@@ -1,4 +1,4 @@
-const API_LOGIN_ENDPOINT = 'https://fort-access.vercel.app/api/login';
+const API_BASE_URL = 'https://fort-access.vercel.app';
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
@@ -80,7 +80,7 @@ loginForm.addEventListener('submit', async (e) => {
   submitBtn.querySelector('.btn-text').textContent = 'VERIFYING CITADEL PASS...';
 
   try {
-    const res = await fetch(API_LOGIN_ENDPOINT, {
+    const res = await fetch(`${API_BASE_URL}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
