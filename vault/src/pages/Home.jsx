@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Key, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -24,26 +24,8 @@ export default function Home() {
             </h1>
 
             <p className="text-stone-200 text-sm sm:text-lg font-sans max-w-xl leading-snug drop-shadow">
-              India's premier 19th-century Italianate palace &mdash; 400 rooms of gilded halls, crystal chandeliers, and imperial treasures.
+              India's premier 19th-century Italianate palace &mdash; 400 rooms of gilded halls, crystal chandeliers, and royal Maratha heritage.
             </p>
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link
-                to="/vault"
-                className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-400 hover:to-amber-600 text-stone-950 font-cinzel font-bold text-xs sm:text-sm tracking-wider px-6 py-3.5 rounded-xl shadow-lg shadow-amber-600/40 flex items-center space-x-2 transition-all transform active:scale-95"
-              >
-                <Key className="w-4 h-4" />
-                <span>UNSEAL ROYAL VAULT</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-
-              <Link
-                to="/tourism"
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 text-white font-cinzel font-bold text-xs sm:text-sm tracking-wider px-6 py-3.5 rounded-xl transition-all"
-              >
-                <span>VISITOR PASSES</span>
-              </Link>
-            </div>
           </div>
         </div>
       </section>
@@ -122,29 +104,29 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Card 3: Imperial Vault */}
-          <Link to="/vault" className="group rounded-2xl overflow-hidden bg-gradient-to-b from-amber-50 to-white border-2 border-amber-300 hover:border-amber-500 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
+          {/* Card 3: 12-Year Hand-Woven Carpet */}
+          <Link to="/history" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
             <div className="relative h-64 overflow-hidden bg-stone-100">
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Art_collection_Scindia_Palace.jpg"
-                alt="Imperial Vault Treasure"
+                src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Carpet_2022.jpg"
+                alt="12-Year Hand-Woven Carpet"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute top-3 left-3 bg-amber-600 text-white px-2.5 py-1 rounded-md text-[10px] font-bold font-mono uppercase tracking-wider shadow">
-                Sealed Vault
+              <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-bold font-mono text-amber-800 uppercase tracking-wider">
+                Historic Textile
               </div>
             </div>
             <div className="p-5 space-y-1.5 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="font-cinzel font-bold text-stone-900 text-lg group-hover:text-amber-700 transition-colors">
-                  Palace Treasure (Vault)
+                  12-Year Persian Carpet
                 </h3>
                 <p className="text-xs text-stone-600 line-clamp-2">
-                  Classified subterranean chamber protecting the dynastic secrets and the CTF flag.
+                  Asia's largest hand-knotted woolen carpet woven over 12 continuous years inside Gwalior Prison.
                 </p>
               </div>
-              <span className="text-xs font-bold text-amber-700 flex items-center space-x-1 pt-3 border-t border-amber-200">
-                <span>Enter Sanctum</span>
+              <span className="text-xs font-bold text-amber-800 flex items-center space-x-1 pt-3 border-t border-stone-100">
+                <span>View Textile Wonder</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </span>
             </div>

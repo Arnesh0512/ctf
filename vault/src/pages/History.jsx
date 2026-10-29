@@ -1,16 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { 
   BookOpen, 
-  Crown, 
-  Sparkles, 
-  Train, 
-  Key, 
-  ArrowRight,
-  ShieldCheck,
-  Calendar,
-  Layers,
-  Award
+  Layers
 } from 'lucide-react';
 
 export default function History() {
@@ -178,26 +169,6 @@ export default function History() {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Quick Vault Callout */}
-      <section className="bg-gradient-to-r from-amber-50 via-white to-amber-50 border border-amber-300 rounded-3xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-        <div className="space-y-1 text-center sm:text-left">
-          <h3 className="text-xl font-cinzel font-bold text-stone-900">
-            Discover the Scindia Royal Collection
-          </h3>
-          <p className="text-xs text-stone-600 font-sans">
-            Ancestral jewels, coronation relics, and the imperial vault awaiting royal authorization.
-          </p>
-        </div>
-        <Link
-          to="/vault"
-          className="shrink-0 bg-amber-600 hover:bg-amber-700 text-white font-cinzel font-bold text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-md shadow-amber-600/20 flex items-center space-x-2 transition-transform active:scale-95"
-        >
-          <Key className="w-4 h-4" />
-          <span>ENTER PALACE TREASURE</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
       </section>
     </div>
   );

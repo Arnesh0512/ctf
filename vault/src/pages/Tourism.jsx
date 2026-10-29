@@ -1,19 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Compass, 
   Clock, 
   Ticket, 
-  MapPin, 
   Plane, 
   Train as TrainIcon, 
   Navigation, 
-  ShieldCheck, 
-  Camera, 
-  Sparkles,
-  ArrowRight,
-  Landmark,
-  CheckCircle2
+  Camera
 } from 'lucide-react';
 
 export default function Tourism() {
@@ -194,26 +187,6 @@ export default function Tourism() {
             </p>
           </div>
         </div>
-      </section>
-
-      {/* Bottom Vault Banner */}
-      <section className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white rounded-3xl p-8 sm:p-10 shadow-lg shadow-amber-600/20 flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="space-y-1 text-center sm:text-left">
-          <p className="text-xs uppercase tracking-widest text-amber-200 font-bold">Restricted Sanctum</p>
-          <h3 className="text-2xl font-cinzel font-black">
-            Access the Palace Treasure
-          </h3>
-          <p className="text-xs text-amber-100 font-sans max-w-lg">
-            Authorized royal visitors can test their clearance key at the sovereign vault gate.
-          </p>
-        </div>
-        <Link
-          to="/vault"
-          className="shrink-0 bg-white text-stone-950 hover:bg-stone-100 font-cinzel font-bold text-xs tracking-wider px-6 py-3.5 rounded-xl shadow-md flex items-center space-x-2 transition-transform active:scale-95"
-        >
-          <span>PROCEED TO VAULT</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
       </section>
     </div>
   );
