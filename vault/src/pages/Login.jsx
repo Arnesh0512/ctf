@@ -56,7 +56,7 @@ export default function Login({ onLoginSuccess }) {
 
       {/* Top brand header */}
       <header className="relative z-10 border-b border-amber-200/80 bg-white/80 backdrop-blur-md px-6 py-4 shadow-sm">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-center">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 p-0.5 shadow-md shadow-amber-600/20">
               <div className="w-full h-full bg-white rounded-[9px] flex items-center justify-center">
