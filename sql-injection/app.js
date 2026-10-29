@@ -150,13 +150,8 @@ function handleError(data) {
   serverErrorBanner.classList.remove('hidden');
   successBanner.classList.add('hidden');
 
-  if (data.error) {
-    errorTitle.textContent = 'SQL QUERY EXCEPTION';
-    errorDescription.textContent = `${data.error} ${data.hint ? '(' + data.hint + ')' : ''}`;
-  } else {
-    errorTitle.textContent = 'ACCESS DENIED';
-    errorDescription.textContent = data.message || 'Invalid username or password.';
-  }
+  errorTitle.textContent = 'ACCESS DENIED';
+  errorDescription.textContent = data.message || 'Invalid username or password.';
 }
 
 // Copy Flag Button

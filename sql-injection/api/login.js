@@ -108,8 +108,12 @@ module.exports = async (req, res) => {
     client = await dbPool.connect();
     await ensureSchema(client);
 
+    // Map MySQL comment '#' to standard SQL comment '-- ' so payloads like ' OR '1'='1' # work in Postgres
+    const sqlUser = username.replace(/#/g, '-- ');
+    const sqlPass = password.replace(/#/g, '-- ');
+
     // Intentionally vulnerable SQL query string concatenation
-    const rawSql = `SELECT id, username, role FROM users WHERE username = '${username}' AND password = '${password}'`;
+    const rawSql = `SELECT id, username, role FROM users WHERE username = '${sqlUser}' AND password = '${sqlPass}'`;
 
     const result = await client.query(rawSql);
 
@@ -133,11 +137,10 @@ module.exports = async (req, res) => {
     });
 
   } catch (err) {
-    // SQL Error reporting (classic error-based SQLi / syntax feedback for CTF players)
-    return res.status(400).json({
+    // Return standard Access Denied without leaking database error or hint
+    return res.status(401).json({
       success: false,
-      error: err.message,
-      hint: 'Syntax error in query execution.'
+      message: 'Invalid username or password. Access Denied.'
     });
   } finally {
     if (client) client.release();
