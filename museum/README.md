@@ -1,6 +1,6 @@
 # Museum Archive API
 
-FastAPI application serving flags via endpoints `/flag1` through `/flag10`.
+FastAPI application serving flags via endpoints `/flag1` through `/flag12`.
 
 ## Endpoints
 
@@ -16,6 +16,8 @@ FastAPI application serving flags via endpoints `/flag1` through `/flag10`.
 - `GET /flag8` - Returns Flag 8
 - `GET /flag9` - Returns Flag 9
 - `GET /flag10` - Returns Flag 10
+- `GET /flag11` - Returns Flag 11
+- `GET /flag12` - Returns Flag 12
 
 ## Environment Variables
 
@@ -23,7 +25,7 @@ Configure flags in `.env` or in Render service environment settings:
 ```env
 FLAG_1=MAYA{...}
 ...
-FLAG_10=MAYA{...}
+FLAG_12=MAYA{...}
 ```
 
 ## Running Locally

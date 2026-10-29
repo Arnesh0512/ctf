@@ -7,7 +7,7 @@ load_dotenv()
 
 app = FastAPI(
     title="Museum Archive API",
-    description="Interactive documentation for Museum Archive flags 1 to 10.",
+    description="Interactive documentation for Museum Archive flags 1 to 12.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -61,7 +61,15 @@ def flag9():
 def flag10():
     return {"flag": get_flag(10)}
 
+@app.get("/flag11", tags=["Flags"], summary="Retrieve Flag 11")
+def flag11():
+    return {"flag": get_flag(11)}
+
+@app.get("/flag12", tags=["Flags"], summary="Retrieve Flag 12")
+def flag12():
+    return {"flag": get_flag(12)}
+
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT", 10000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
