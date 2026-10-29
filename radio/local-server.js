@@ -35,11 +35,14 @@ const server = http.createServer((req, res) => {
     const respond = (frequency) => {
       const f = Number.parseFloat(frequency);
       const matched = Number.isFinite(f)
-        ? carriers.find(carrier => Math.abs(carrier.freq - f) <= carrier.tolerance)
+        ? carriers.find(carrier => {
+            const tol = typeof carrier.tolerance === 'number' ? carrier.tolerance : 0.05;
+            return Math.abs(carrier.freq - f) <= (tol + 0.001);
+          })
         : null;
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify(matched
-        ? { match: true, audio: matched.audio, repeatDelay: matched.repeatDelay }
+        ? { match: true, audio: matched.audio, repeatDelay: matched.repeatDelay, carrierFreq: matched.freq }
         : { match: false }));
     };
 

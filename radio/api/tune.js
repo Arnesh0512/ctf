@@ -38,12 +38,16 @@ module.exports = (req, res) => {
     return res.status(200).json({ match: false });
   }
 
-  const matched = carriers.find(c => Math.abs(c.freq - f) <= c.tolerance);
+  const matched = carriers.find(c => {
+    const tol = typeof c.tolerance === 'number' ? c.tolerance : 0.05;
+    return Math.abs(c.freq - f) <= (tol + 0.001);
+  });
   if (matched) {
     return res.status(200).json({
       match: true,
       audio: matched.audio,
-      repeatDelay: matched.repeatDelay
+      repeatDelay: matched.repeatDelay,
+      carrierFreq: matched.freq
     });
   }
 

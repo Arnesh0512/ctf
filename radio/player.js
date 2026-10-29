@@ -576,25 +576,26 @@ function checkBackendCarrier(freq) {
 
     if (data && data.match === true && data.audio) {
       // Step 2 (Match): Cut static noise, demodulate and play audio received from backend
-      currentBackendCarrierFreq = roundedFreq;
+      const carrierFreq = (typeof data.carrierFreq === 'number') ? data.carrierFreq : roundedFreq;
+      currentBackendCarrierFreq = carrierFreq;
       activeBackendRepeatDelay = data.repeatDelay || 1000;
       isTunedToStation = true;
       setStaticNoiseVolume(0); // Mute static noise completely
 
       // Snap needle to matched carrier frequency
-      const carrierPct = freqToPercent(roundedFreq);
+      const carrierPct = freqToPercent(carrierFreq);
       dialNeedle.style.transition = "left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)";
       dialNeedle.style.left = `${carrierPct}%`;
-      needleTooltip.textContent = `${roundedFreq.toFixed(1)} MHz`;
-      freqNumber.textContent = roundedFreq.toFixed(1);
+      needleTooltip.textContent = `${carrierFreq.toFixed(1)} MHz`;
+      freqNumber.textContent = carrierFreq.toFixed(1);
 
       needleTooltip.style.background = "#06b6d4";
-      stationName.textContent = `📡 CARRIER LOCKED (${roundedFreq.toFixed(1)} MHz)`;
+      stationName.textContent = `📡 CARRIER LOCKED (${carrierFreq.toFixed(1)} MHz)`;
       const delaySec = Math.round(activeBackendRepeatDelay / 1000);
       stationTagline.textContent = `Encrypted Audio Stream Demodulated • ${delaySec}s Auto-Repeat Loop`;
-      streamStatus.textContent = `CARRIER ACTIVE • ${roundedFreq.toFixed(1)} MHz`;
+      streamStatus.textContent = `CARRIER ACTIVE • ${carrierFreq.toFixed(1)} MHz`;
       streamStatus.className = "stream-status playing";
-      chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Signal Carrier)`;
+      chipStationText.textContent = `${carrierFreq.toFixed(1)} MHz (Signal Carrier)`;
       livePill.classList.add("active");
       liveText.textContent = "LIVE CARRIER";
       stereoTag.style.opacity = "1";
