@@ -2,7 +2,7 @@ import os
 import json
 import base64
 from typing import Optional
-from fastapi import FastAPI, Request, Response, status
+from fastapi import FastAPI, APIRouter, Request, Response, status
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="CTF Authentication & Authorization Gateway",
-    description="Generic CTF Backend for cookie-based privilege escalation challenges",
+    title="Jai Vilas Palace API",
+    description="Jai Vilas Palace Authentication & Royal Vault Gateway",
     version="1.0.0"
 )
 
@@ -27,6 +27,9 @@ app.add_middleware(
 
 ROYAL_ADMINS = ["king", "queen", "prince", "princess"]
 FLAG = os.getenv("FLAG", "MAYA{ROYAL_CREDENTIAL}")
+
+# Dedicated JaiVilla Router
+router = APIRouter(tags=["JaiVilla"])
 
 class LoginRequest(BaseModel):
     username: Optional[str] = None
@@ -67,11 +70,11 @@ def parse_auth_cookie(raw_cookie: Optional[str]):
     except Exception:
         return None
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def health_check():
     return {
         "status": "online",
-        "service": "CTF Authentication & Authorization Gateway",
+        "service": "Jai Vilas Palace Gateway",
         "version": "1.0.0"
     }
 
@@ -126,12 +129,8 @@ async def process_login(request: Request, response: Response, login_data: Option
         "user": session_data
     }
 
-@app.post("/login")
+@router.post("/login", summary="Login")
 async def login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
-    return await process_login(request, response, login_data)
-
-@app.post("/api/login")
-async def api_login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
     return await process_login(request, response, login_data)
 
 async def process_vault(request: Request, cookie: Optional[str] = None):
@@ -208,30 +207,15 @@ async def process_vault(request: Request, cookie: Optional[str] = None):
         }
     )
 
-@app.get("/vault")
+@router.get("/vault", summary="Get Vault")
 async def get_vault(request: Request, cookie: Optional[str] = None):
     return await process_vault(request, cookie)
 
-@app.post("/vault")
+@router.post("/vault", summary="Post Vault")
 async def post_vault(request: Request, cookie: Optional[str] = None):
     return await process_vault(request, cookie)
 
-@app.get("/api/vault")
-async def api_get_vault(request: Request, cookie: Optional[str] = None):
-    return await process_vault(request, cookie)
-
-@app.post("/api/vault")
-async def api_post_vault(request: Request, cookie: Optional[str] = None):
-    return await process_vault(request, cookie)
-
-@app.get("/me")
-def me(request: Request, cookie: Optional[str] = None):
-    raw_cookie = request.cookies.get("auth") or request.headers.get("x-auth-cookie") or cookie
-    parsed = parse_auth_cookie(raw_cookie)
-    return {"cookie": raw_cookie, "session": parsed}
-
-@app.post("/logout")
-@app.get("/logout")
+@router.post("/logout", summary="Logout")
 def logout(response: Response):
     response.delete_cookie(
         key="auth",
@@ -241,6 +225,8 @@ def logout(response: Response):
         httponly=False
     )
     return {"success": True, "message": "Session terminated."}
+
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn

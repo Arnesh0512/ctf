@@ -60,17 +60,8 @@ export default function Navbar({ user, onLogout }) {
             <span>Tourism Guide</span>
           </NavLink>
 
-          <NavLink
-            to="/vault"
-            className={({ isActive }) =>
-              `flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-                isActive
-                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                  : 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700 shadow-sm'
-              }`
-            }
-          >
-            <Key className="w-3.5 h-3.5" />
+          <NavLink to="/vault" className={navLinkClass}>
+            <Key className="w-4 h-4" />
             <span>Palace Treasure</span>
           </NavLink>
         </nav>
@@ -124,7 +115,7 @@ export default function Navbar({ user, onLogout }) {
               <Compass className="w-4 h-4" />
               <span>Tourism Guide</span>
             </NavLink>
-            <NavLink to="/vault" onClick={() => setMobileMenuOpen(false)} className="col-span-2 flex items-center justify-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white">
+            <NavLink to="/vault" onClick={() => setMobileMenuOpen(false)} className={navLinkClass}>
               <Key className="w-4 h-4" />
               <span>Palace Treasure</span>
             </NavLink>
