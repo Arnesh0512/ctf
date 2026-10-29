@@ -17,31 +17,31 @@ app = FastAPI(
 
 CUSTOM_CSS = """
 <style>
-/* 1. Hide Parameters section & Cancel/Clear buttons */
-.opblock-section:not(.responses-wrapper),
+/* 1. Hide Parameters & Action Buttons */
 .opblock-section-header,
 .parameters-container,
+.try-out,
+.btn-clear,
+.btn.btn-clear,
+button.btn-clear,
 .btn.cancel,
-.btn.clear {
+button.cancel {
     display: none !important;
 }
 
-/* 2. Hide Curl Command & Request URL */
+/* 2. Hide Curl & Request URL */
 .curl-command,
 .request-url,
-div:has(> .curl-command),
-div:has(> .request-url),
-.responses-inner h5:has(+ .curl-command),
-.responses-inner h5:has(+ .request-url) {
+.responses-inner > div > h4 {
     display: none !important;
 }
 
-/* 3. Hide Response Headers */
+/* 3. Hide Response Headers and its label */
 .response-headers,
 pre.response-headers,
-h5:has(+ .response-headers),
+.response-col_description > h5:nth-of-type(2),
 h5:has(+ pre.response-headers),
-.response-col_description > h5:nth-of-type(2) {
+h5:has(+ .response-headers) {
     display: none !important;
 }
 
@@ -52,18 +52,23 @@ h5:has(+ pre.response-headers),
     display: none !important;
 }
 
-/* 5. Hide the entire bottom Documentation Responses table */
-.responses-inner > .responses-table,
-.responses-inner > div:not(.live-responses-table) {
+/* 5. Hide bottom static Documentation Responses table and its heading */
+.responses-inner > table.responses-table:not(.live-responses-table),
+.responses-inner > h4 {
     display: none !important;
 }
 
-/* 6. Clean full-width Execute Button */
+/* 6. Single clean full-width Execute Button */
 .execute-wrapper {
     padding: 12px 20px !important;
 }
+.btn-group {
+    display: block !important;
+    width: 100% !important;
+}
 .btn.execute {
     width: 100% !important;
+    display: block !important;
     font-size: 14px !important;
     font-weight: 700 !important;
     padding: 10px 0 !important;
@@ -72,13 +77,15 @@ h5:has(+ pre.response-headers),
 }
 
 /* 7. Clean Response Body display */
-.live-responses-table {
+.live-responses-table,
+.live-responses-table tbody,
+.live-responses-table tr.response,
+.response-col_description {
+    display: block !important;
     width: 100% !important;
-    padding: 0 20px 16px 20px !important;
 }
 .response-col_description {
-    width: 100% !important;
-    padding: 0 !important;
+    padding: 0 20px 16px 20px !important;
 }
 .response-col_description > h5:first-of-type {
     font-size: 12px !important;
@@ -89,7 +96,7 @@ h5:has(+ pre.response-headers),
 }
 .highlight-code pre {
     border-radius: 6px !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
 }
 </style>
 """
