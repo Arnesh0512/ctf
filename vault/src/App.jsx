@@ -5,6 +5,7 @@ import Footer from './Footer';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import History from './pages/History';
+import Exhibits from './pages/Exhibits';
 import Tourism from './pages/Tourism';
 import Vault from './pages/Vault';
 import { getUserSession, clearAuth } from './auth';
@@ -111,6 +112,20 @@ export default function App() {
             isLoggedIn ? (
               <AppLayout user={user} onLogout={handleLogout}>
                 <History />
+              </AppLayout>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        {/* /exhibits */}
+        <Route
+          path="/exhibits"
+          element={
+            isLoggedIn ? (
+              <AppLayout user={user} onLogout={handleLogout}>
+                <Exhibits />
               </AppLayout>
             ) : (
               <Navigate to="/login" replace />

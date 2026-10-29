@@ -1,46 +1,43 @@
 import React from 'react';
-import { 
-  BookOpen, 
-  Layers
-} from 'lucide-react';
+import { BookOpen, Layers, Landmark, Calendar, Crown, Shield } from 'lucide-react';
 
 export default function History() {
-  const stories = [
+  const milestones = [
     {
-      title: 'The 1874 Imperial Commission',
-      subtitle: 'Built for the Royal Visit of King Edward VII',
-      stat: '₹1 CRORE',
-      statLabel: '1874 Silver Currency',
+      year: '1761',
+      title: 'Rise of the Scindia Dynasty',
+      subtitle: 'Mahadji Scindia & Maratha Hegemony',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/0/02/Fort_Gwalior-_India_02.jpg',
+      stat: '1761–1794',
+      statLabel: 'Maratha Empire',
+      desc: 'Following the Third Battle of Panipat, Mahadji Scindia rebuilt Maratha power across North India, securing Gwalior Fort as the royal capital and founding one of India’s most influential princely states.'
+    },
+    {
+      year: '1874',
+      title: 'The Palace Commission',
+      subtitle: 'Conceived by Jayaji Rao Scindia',
       image: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Jai_Vilas_Mahal_Facade.jpg',
-      tag: '1874 Genesis',
-      description: 'Maharaja Jayaji Rao Scindia commissioned Italian-British architect Sir Michael Filose to craft India’s most extravagant Neoclassical palace for the 1875 Prince of Wales tour.'
+      stat: '₹1 CRORE',
+      statLabel: '1874 Construction Cost',
+      desc: 'Maharaja Jayaji Rao Scindia commissioned Italian-British architect Sir Michael Filose to design an opulent European-style palace combining Italian Neoclassical symmetry with Indian palace craftsmanship.'
     },
     {
-      title: 'The 8 Elephants Roof Test',
-      subtitle: '7-Tonne Belgian Crystal Chandeliers',
-      stat: '8 ELEPHANTS',
-      statLabel: '7 Days on Palace Roof',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/DUrbar_hall_at_jai_vilas_palace.JPG',
-      tag: 'Engineering Feat',
-      description: 'Doubting if the ceiling could hold twin 3.5-ton crystal chandeliers, Sir Filose walked 8 royal elephants up an earthen ramp to test the roof strength for seven days.'
+      year: '1875',
+      title: 'Imperial Visit of King Edward VII',
+      subtitle: 'Commemoration of the Prince of Wales Tour',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/0/07/The_Jai_Vilas_Palace_%28Gwalior%29.jpg',
+      stat: '21 GUN SALUTE',
+      statLabel: 'Princely Precedence',
+      desc: 'The palace was inaugurated to host the Prince of Wales (later King Edward VII) during his 1875 royal tour, establishing Gwalior among the highest-ranking princely kingdoms in British India.'
     },
     {
-      title: 'Solid Silver Banquet Train',
-      subtitle: 'Automated Royal Hospitality',
-      stat: '40 SEATS',
-      statLabel: 'Italian Marble Table',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Cart_Jai_vilas_palace_gwalior.jpg',
-      tag: 'Mechanical Marvel',
-      description: 'A sterling silver miniature locomotive glided along silver tracks across the 40-seat marble table, delivering cognac and cigars. Lifting a decanter broke the circuit to stop the train.'
-    },
-    {
-      title: "Asia’s Largest Hand-Woven Carpet",
-      subtitle: 'Gwalior Central Prison Masterwork',
-      stat: '12 YEARS',
-      statLabel: '100 × 50 FT Durbar Hall',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Carpet_2022.jpg',
-      tag: 'Textile Wonder',
-      description: 'Woven by master artisan inmates over twelve continuous years, this colossal woolen Persian rug covers the entire Durbar Hall and remains in pristine original condition.'
+      year: '1948',
+      title: 'Indian Integration & Public Museum',
+      subtitle: 'Accession to Union of India & 1964 Trust',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Inside_view_of_Jaivilas_Palace_Gwalior_-_panoramio.jpg',
+      stat: '1948–1964',
+      statLabel: 'Heritage Conversion',
+      desc: 'Maharaja Jiwaji Rao Scindia integrated Gwalior state into independent India. In 1964, Rajmata Vijaya Raje Scindia opened 35 royal chambers to the public as the H.H. Sir Jiwaji Rao Scindia Museum.'
     }
   ];
 
@@ -49,19 +46,19 @@ export default function History() {
       num: '01',
       name: 'Tuscan Order',
       floor: 'Ground Level',
-      desc: 'Heavy sandstone foundations and rusticated pillars built to anchor 400 chambers.'
+      desc: 'Massive sandstone rustication and heavy colonnaded archways designed to anchor 400 chambers and accommodate royal cavalry.'
     },
     {
       num: '02',
       name: 'Italian-Doric',
       floor: 'Second Level',
-      desc: 'Fluted columns and classical architraves housing the royal reception chambers.'
+      desc: 'Fluted columns, balanced architraves, and classical pediments housing the state reception suites and private chambers.'
     },
     {
       num: '03',
       name: 'Corinthian Order',
       floor: 'Third Level',
-      desc: 'Acanthus leaf capitals and gilded 41-foot ceilings adorned with 560 kg pure gold leaf.'
+      desc: 'The pinnacle of classical elegance, crowned with intricate acanthus-leaf capitals and gilded 41-foot ceilings.'
     }
   ];
 
@@ -72,58 +69,56 @@ export default function History() {
         <div className="max-w-2xl space-y-3 relative z-10">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold uppercase tracking-wider">
             <BookOpen className="w-3.5 h-3.5 text-amber-600" />
-            <span>Visual Chronicles &bull; 1874 to Present</span>
+            <span>Chronicles of Gwalior &bull; 1761 to Present</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight">
-            The Scindia Royal Legacy
+            History of Jai Vilas Palace
           </h1>
           <p className="text-stone-600 text-sm sm:text-base font-sans">
-            A visual retrospective of architectural audacity, royal European engineering, and dynastic opulence in Gwalior.
+            The dynastic trajectory of the Maratha Scindia rulers, the 1874 Italianate commission, and the transition of Gwalior into modern India.
           </p>
         </div>
         <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-amber-100/50 rounded-full blur-2xl pointer-events-none"></div>
       </section>
 
-      {/* 4 Visual Story Cards */}
+      {/* 4 Historical Timeline Milestones */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {stories.map((story, i) => (
+        {milestones.map((item, idx) => (
           <div
-            key={i}
+            key={idx}
             className="group bg-white rounded-3xl overflow-hidden border border-amber-200/90 hover:border-amber-400 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
           >
-            {/* Visual Image container with stat overlay */}
             <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-stone-100">
               <img
-                src={story.image}
-                alt={story.title}
+                src={item.image}
+                alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-transparent"></div>
 
-              {/* Tag Pill */}
-              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-amber-900 border border-amber-200 shadow-sm">
-                {story.tag}
+              {/* Year Tag */}
+              <div className="absolute top-4 left-4 bg-amber-600 text-white font-cinzel font-bold px-3 py-1 rounded-full text-xs shadow-md">
+                {item.year}
               </div>
 
               {/* Stat Badge */}
               <div className="absolute bottom-4 right-4 bg-amber-500/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-right shadow-md text-stone-950">
-                <p className="text-lg font-cinzel font-black leading-tight">{story.stat}</p>
-                <p className="text-[10px] font-sans font-bold uppercase tracking-wider">{story.statLabel}</p>
+                <p className="text-lg font-cinzel font-black leading-tight">{item.stat}</p>
+                <p className="text-[10px] font-sans font-bold uppercase tracking-wider">{item.statLabel}</p>
               </div>
             </div>
 
-            {/* Story text */}
-            <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-3">
+            <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-2">
               <div>
                 <p className="text-xs uppercase tracking-wider text-amber-800 font-bold mb-1">
-                  {story.subtitle}
+                  {item.subtitle}
                 </p>
                 <h2 className="text-xl font-cinzel font-bold text-stone-900 leading-snug">
-                  {story.title}
+                  {item.title}
                 </h2>
                 <p className="text-stone-600 text-xs sm:text-sm font-sans mt-2 leading-relaxed">
-                  {story.description}
+                  {item.desc}
                 </p>
               </div>
             </div>
@@ -131,20 +126,20 @@ export default function History() {
         ))}
       </section>
 
-      {/* 3 Classical Orders */}
+      {/* Classical Architecture Hierarchy */}
       <section className="bg-white border border-stone-200 rounded-3xl p-8 sm:p-10 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center space-x-2 text-xs text-amber-800 font-bold uppercase tracking-wider">
-              <Layers className="w-4 h-4" />
-              <span>Three European Architectural Orders</span>
+              <Layers className="w-4 h-4 text-amber-700" />
+              <span>Three European Classical Orders</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-stone-900 mt-1">
-              Vertical Classical Hierarchy
+              Architectural Orders of 1874
             </h2>
           </div>
           <span className="text-xs font-mono bg-stone-100 text-stone-600 px-3 py-1.5 rounded-full border border-stone-200 w-fit">
-            Designed by Sir Michael Filose (1874)
+            Designed by Sir Michael Filose
           </span>
         </div>
 

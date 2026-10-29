@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Crown, LogOut, Key, Menu, X, Landmark, BookOpen, Compass } from 'lucide-react';
+import { Crown, LogOut, Key, Menu, X, Landmark, BookOpen, Compass, Sparkles } from 'lucide-react';
 import { clearAuth, BACKEND_URL } from './auth';
 
 export default function Navbar({ user, onLogout }) {
@@ -15,10 +15,6 @@ export default function Navbar({ user, onLogout }) {
     } catch (_) {}
     navigate('/login');
   };
-
-  const usernameDisplay = user?.username || 'guest';
-  const roleDisplay = user?.role || 'user';
-  const isRoyal = roleDisplay.toLowerCase() === 'admin' && ['king', 'queen', 'prince', 'princess'].includes(usernameDisplay.toLowerCase());
 
   const navLinkClass = ({ isActive }) =>
     `flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium tracking-wide transition-all ${
@@ -54,6 +50,11 @@ export default function Navbar({ user, onLogout }) {
             <span>History</span>
           </NavLink>
 
+          <NavLink to="/exhibits" className={navLinkClass}>
+            <Sparkles className="w-4 h-4" />
+            <span>Exhibits</span>
+          </NavLink>
+
           <NavLink to="/tourism" className={navLinkClass}>
             <Compass className="w-4 h-4" />
             <span>Tourism Guide</span>
@@ -74,26 +75,15 @@ export default function Navbar({ user, onLogout }) {
           </NavLink>
         </nav>
 
-        {/* User Identity & Logout */}
-        <div className="hidden sm:flex items-center space-x-3">
-          <div className="flex items-center space-x-2 bg-stone-100/90 border border-stone-200/90 rounded-full pl-3 pr-4 py-1.5 text-xs shadow-inner">
-            <div className={`w-2 h-2 rounded-full ${isRoyal ? 'bg-amber-500 shadow-[0_0_6px_#f59e0b]' : 'bg-emerald-500'}`}></div>
-            <span className="text-stone-700 font-medium">User:</span>
-            <span className="font-mono font-bold text-stone-900">{usernameDisplay}</span>
-            <span className="text-stone-300">|</span>
-            <span className="text-stone-700 font-medium">Role:</span>
-            <span className={`font-mono font-semibold ${isRoyal ? 'text-amber-700 font-bold' : 'text-stone-700'}`}>
-              {roleDisplay}
-            </span>
-          </div>
-
+        {/* Logout Button */}
+        <div className="hidden sm:flex items-center">
           <button
             onClick={handleExit}
-            className="flex items-center space-x-1 text-xs text-stone-600 hover:text-red-700 border border-stone-200 hover:border-red-300 bg-white hover:bg-red-50 px-3 py-1.5 rounded-full transition-all cursor-pointer font-medium"
+            className="flex items-center space-x-1.5 text-xs text-stone-700 hover:text-red-700 border border-stone-200 hover:border-red-300 bg-white hover:bg-red-50 px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-semibold shadow-sm"
             title="Log Out and Return to Palace Portal"
           >
             <LogOut className="w-3.5 h-3.5" />
-            <span>Exit</span>
+            <span>Logout</span>
           </button>
         </div>
 
@@ -110,9 +100,12 @@ export default function Navbar({ user, onLogout }) {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden pt-3 pb-2 border-t border-amber-200/60 mt-3 space-y-2">
-          <div className="flex items-center justify-between px-2 py-1 text-xs text-stone-700 bg-stone-50 rounded-lg">
-            <span>Identity: <strong className="text-stone-900">{usernameDisplay}</strong> ({roleDisplay})</span>
-            <button onClick={handleExit} className="text-red-600 font-semibold hover:underline">Log Out</button>
+          <div className="flex items-center justify-between px-3 py-1.5 text-xs text-stone-700 bg-stone-50 rounded-lg">
+            <span className="font-medium">Signed In</span>
+            <button onClick={handleExit} className="text-red-600 font-bold hover:underline flex items-center space-x-1">
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Logout</span>
+            </button>
           </div>
           <div className="grid grid-cols-2 gap-2 pt-1">
             <NavLink to="/home" onClick={() => setMobileMenuOpen(false)} className={navLinkClass}>
@@ -123,11 +116,15 @@ export default function Navbar({ user, onLogout }) {
               <BookOpen className="w-4 h-4" />
               <span>History</span>
             </NavLink>
+            <NavLink to="/exhibits" onClick={() => setMobileMenuOpen(false)} className={navLinkClass}>
+              <Sparkles className="w-4 h-4" />
+              <span>Exhibits</span>
+            </NavLink>
             <NavLink to="/tourism" onClick={() => setMobileMenuOpen(false)} className={navLinkClass}>
               <Compass className="w-4 h-4" />
               <span>Tourism Guide</span>
             </NavLink>
-            <NavLink to="/vault" onClick={() => setMobileMenuOpen(false)} className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white">
+            <NavLink to="/vault" onClick={() => setMobileMenuOpen(false)} className="col-span-2 flex items-center justify-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white">
               <Key className="w-4 h-4" />
               <span>Palace Treasure</span>
             </NavLink>

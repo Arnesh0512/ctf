@@ -41,7 +41,7 @@ export default function Home() {
               Iconic chambers and engineering marvels of the Scindia estate
             </p>
           </div>
-          <Link to="/history" className="text-xs font-cinzel font-bold text-amber-700 hover:text-amber-800 flex items-center space-x-1">
+          <Link to="/exhibits" className="text-xs font-cinzel font-bold text-amber-700 hover:text-amber-800 flex items-center space-x-1">
             <span>VIEW ALL EXHIBITS</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -49,7 +49,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Durbar Hall */}
-          <Link to="/history" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
+          <Link to="/exhibits" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
             <div className="relative h-64 overflow-hidden bg-stone-100">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/a/a0/DUrbar_hall_at_jai_vilas_palace.JPG"
@@ -77,7 +77,7 @@ export default function Home() {
           </Link>
 
           {/* Card 2: Silver Train */}
-          <Link to="/history" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
+          <Link to="/exhibits" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
             <div className="relative h-64 overflow-hidden bg-stone-100">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Cart_Jai_vilas_palace_gwalior.jpg"
@@ -105,7 +105,7 @@ export default function Home() {
           </Link>
 
           {/* Card 3: 12-Year Hand-Woven Carpet */}
-          <Link to="/history" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
+          <Link to="/exhibits" className="group rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
             <div className="relative h-64 overflow-hidden bg-stone-100">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Carpet_2022.jpg"
