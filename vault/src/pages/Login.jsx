@@ -63,10 +63,7 @@ export default function Login({ onLoginSuccess }) {
                 <Crown className="w-5 h-5 text-amber-600" />
               </div>
             </div>
-            <div>
-              <h1 className="text-lg font-cinzel font-bold text-stone-900 tracking-wider">JAI VILAS PALACE</h1>
-              <p className="text-xs text-amber-800 font-sans tracking-wide">GWALIOR &bull; MADHYA PRADESH TOURISM</p>
-            </div>
+            <h1 className="text-lg font-cinzel font-bold text-stone-900 tracking-wider">JAI VILAS PALACE</h1>
           </div>
           <div className="hidden sm:flex items-center space-x-2 text-xs text-stone-600 border border-amber-200 rounded-full px-3 py-1 bg-amber-50/60">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>

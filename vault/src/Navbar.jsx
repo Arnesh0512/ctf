@@ -37,19 +37,9 @@ export default function Navbar({ user, onLogout }) {
               <Crown className="w-5 h-5 text-amber-600" />
             </div>
           </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-base sm:text-lg font-cinzel font-bold text-stone-900 tracking-wider">
-                JAI VILAS PALACE
-              </span>
-              <span className="text-[10px] bg-amber-50 text-amber-800 font-mono px-2 py-0.5 rounded-md border border-amber-300 font-semibold">
-                GWALIOR
-              </span>
-            </div>
-            <p className="text-[11px] text-stone-700 font-sans hidden sm:block">
-              Scindia Royal Heritage &bull; Madhya Pradesh Tourism
-            </p>
-          </div>
+          <span className="text-base sm:text-lg font-cinzel font-bold text-stone-900 tracking-wider">
+            JAI VILAS PALACE
+          </span>
         </NavLink>
 
         {/* Desktop Navigation Links */}

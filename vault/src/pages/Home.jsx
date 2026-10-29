@@ -1,17 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Crown, 
-  Sparkles, 
-  ArrowRight, 
-  Key, 
-  Compass, 
-  BookOpen, 
-  Train, 
-  Shield, 
-  Gem,
-  Landmark
-} from 'lucide-react';
+import { Key, ArrowRight } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -30,11 +19,6 @@ export default function Home() {
 
           {/* Hero Content Overlay */}
           <div className="absolute inset-0 p-6 sm:p-14 flex flex-col justify-end max-w-3xl space-y-4 text-white">
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-500/90 text-stone-950 text-xs font-bold tracking-wider uppercase backdrop-blur-md w-fit shadow-md">
-              <Crown className="w-4 h-4 text-stone-950" />
-              <span>Royal Scindia Heritage &bull; Gwalior</span>
-            </div>
-
             <h1 className="text-3xl sm:text-6xl font-cinzel font-extrabold tracking-tight leading-none text-white drop-shadow-md">
               Jai Vilas Palace
             </h1>
@@ -64,50 +48,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Sleek Luxury Stat Ribbon */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-2xl border border-amber-200/90 shadow-sm flex items-center space-x-4 hover:border-amber-400 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-2xl font-cinzel font-extrabold text-stone-900">560 KG</p>
-            <p className="text-xs text-stone-700 uppercase font-bold tracking-wider">Pure Gold Leaf</p>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-amber-200/90 shadow-sm flex items-center space-x-4 hover:border-amber-400 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-            <Gem className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-2xl font-cinzel font-extrabold text-stone-900">3.5 TON</p>
-            <p className="text-xs text-stone-700 uppercase font-bold tracking-wider">Twin Chandeliers</p>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-amber-200/90 shadow-sm flex items-center space-x-4 hover:border-amber-400 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-            <Train className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-2xl font-cinzel font-extrabold text-stone-900">SILVER</p>
-            <p className="text-xs text-stone-700 uppercase font-bold tracking-wider">Banquet Train</p>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-amber-200/90 shadow-sm flex items-center space-x-4 hover:border-amber-400 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-            <Landmark className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-2xl font-cinzel font-extrabold text-stone-900">1874</p>
-            <p className="text-xs text-stone-700 uppercase font-bold tracking-wider">Royal Inception</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Visual Gallery Showcase Cards (Low Text, High Visual Impact) */}
+      {/* 2. Visual Gallery Showcase Cards (Low Text, High Visual Impact) */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
