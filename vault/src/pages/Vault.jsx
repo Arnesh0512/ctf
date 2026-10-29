@@ -8,10 +8,6 @@ import {
   Sparkles, 
   Copy, 
   Check, 
-  Code2, 
-  Gem, 
-  ShieldAlert,
-  ShieldCheck,
   RefreshCw
 } from 'lucide-react';
 import { getAuthCookie, decodeCookieSafe, BACKEND_URL } from '../auth';
@@ -20,7 +16,6 @@ export default function Vault({ user, onUserUpdate }) {
   const [vaultLoading, setVaultLoading] = useState(false);
   const [vaultResult, setVaultResult] = useState(null);
   const [copied, setCopied] = useState(false);
-  const [showInspector, setShowInspector] = useState(false);
   const [currentCookie, setCurrentCookie] = useState('');
 
   useEffect(() => {
@@ -84,11 +79,6 @@ export default function Vault({ user, onUserUpdate }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const usernameDisplay = user?.username || 'guest';
-  const roleDisplay = user?.role || 'user';
-  const isRoyal = roleDisplay.toLowerCase() === 'admin' && ['king', 'queen', 'prince', 'princess'].includes(usernameDisplay.toLowerCase());
-  const decodedLive = decodeCookieSafe(currentCookie || getAuthCookie());
-
   return (
     <div className="space-y-10">
       {/* Header */}
@@ -100,34 +90,24 @@ export default function Vault({ user, onUserUpdate }) {
       </section>
 
       {/* Main Vault Gate */}
-      <section className="bg-white border-2 border-amber-300 rounded-3xl p-8 sm:p-12 shadow-md relative overflow-hidden">
-        <div className="max-w-lg mx-auto text-center space-y-7 relative z-10">
+      <section className="bg-white border-2 border-amber-300 rounded-3xl p-8 sm:p-14 shadow-md relative overflow-hidden">
+        <div className="max-w-lg mx-auto text-center space-y-8 relative z-10">
           
           {/* Animated Vault Dial */}
           <div className="relative inline-flex items-center justify-center">
-            <div className={`w-32 h-32 rounded-full border-4 ${
+            <div className={`w-36 h-36 rounded-full border-4 ${
               vaultResult?.success
                 ? 'border-emerald-500 bg-emerald-50 shadow-[0_0_35px_rgba(16,185,129,0.3)]'
                 : 'border-amber-400 bg-amber-50/70 shadow-[0_0_30px_rgba(245,158,11,0.2)]'
             } flex items-center justify-center transition-all duration-700`}>
               {vaultResult?.success ? (
-                <Unlock className="w-14 h-14 text-emerald-600 animate-bounce" />
+                <Unlock className="w-16 h-16 text-emerald-600 animate-bounce" />
               ) : (
-                <Lock className="w-14 h-14 text-amber-600" />
+                <Lock className="w-16 h-16 text-amber-600" />
               )}
             </div>
             {/* Spinning decorative orbit */}
             <div className="absolute inset-0 border-2 border-dashed border-amber-300 rounded-full animate-spin" style={{ animationDuration: '40s' }}></div>
-          </div>
-
-          {/* Current Bearer Clearance Badge */}
-          <div className="inline-flex items-center space-x-2 bg-stone-50 border border-stone-200 px-4 py-2 rounded-full text-xs">
-            <span className="text-stone-500 font-medium">Clearance Identity:</span>
-            <span className="font-mono font-bold text-stone-900">{usernameDisplay}</span>
-            <span className="text-stone-300">&bull;</span>
-            <span className={`font-mono font-semibold ${isRoyal ? 'text-amber-700 font-bold' : 'text-stone-600'}`}>
-              role: {roleDisplay}
-            </span>
           </div>
 
           {/* Unseal CTA */}
@@ -135,7 +115,7 @@ export default function Vault({ user, onUserUpdate }) {
             <button
               onClick={handleUnseal}
               disabled={vaultLoading}
-              className="w-full sm:w-auto min-w-[280px] bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white font-cinzel font-bold text-sm tracking-widest py-4 px-8 rounded-xl transition-all duration-300 transform active:scale-95 shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-3 mx-auto disabled:opacity-50 cursor-pointer"
+              className="w-full sm:w-auto min-w-[300px] bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white font-cinzel font-bold text-sm tracking-widest py-4 px-8 rounded-xl transition-all duration-300 transform active:scale-95 shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-3 mx-auto disabled:opacity-50 cursor-pointer"
             >
               {vaultLoading ? (
                 <span className="flex items-center space-x-2">
@@ -236,78 +216,6 @@ export default function Vault({ user, onUserUpdate }) {
           )}
 
         </div>
-      </section>
-
-      {/* Collapsible Cookie Inspector for CTF Players */}
-      <section className="bg-white border border-stone-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
-              <Code2 className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-sm sm:text-base font-cinzel font-bold text-stone-900">
-                Privilege Escalation Inspector
-              </h3>
-              <p className="text-xs text-stone-500">
-                Cookie <code className="text-amber-700 font-mono font-semibold">auth</code> on <code className="text-stone-800 font-mono">jai-vilas.vercel.app</code>
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              setCurrentCookie(getAuthCookie());
-              setShowInspector(!showInspector);
-            }}
-            className="text-xs font-cinzel font-bold text-amber-900 hover:text-amber-950 border border-amber-300 hover:border-amber-400 bg-amber-50 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer"
-          >
-            {showInspector ? 'Hide Inspector ▲' : 'Open Inspector ▼'}
-          </button>
-        </div>
-
-        {showInspector && (
-          <div className="pt-4 border-t border-stone-200 space-y-4 text-xs font-mono">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-1.5">
-                <div className="flex items-center justify-between text-stone-500 font-sans">
-                  <span className="font-semibold text-stone-900">Active 'auth' Cookie (Base64)</span>
-                  <button
-                    onClick={() => setCurrentCookie(getAuthCookie())}
-                    className="text-[10px] text-amber-800 hover:underline cursor-pointer"
-                  >
-                    Refresh
-                  </button>
-                </div>
-                <div className="bg-white p-3 rounded-lg border border-stone-200 text-stone-800 break-all select-all max-h-24 overflow-y-auto">
-                  {currentCookie || getAuthCookie() || '(None detected)'}
-                </div>
-              </div>
-
-              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-1.5">
-                <span className="font-semibold text-stone-900 font-sans">Decoded Session Data</span>
-                <div className="bg-white p-3 rounded-lg border border-stone-200 text-emerald-700 break-all max-h-24 overflow-y-auto font-bold">
-                  {decodedLive ? JSON.stringify(decodedLive, null, 2) : '(Unable to decode)'}
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Solution Tip */}
-            <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200 space-y-2 font-sans">
-              <span className="font-cinzel font-bold text-amber-900 text-xs uppercase tracking-wider block">
-                Privilege Escalation Guide:
-              </span>
-              <p className="text-xs text-stone-700 leading-relaxed">
-                Open DevTools (<kbd className="bg-white border px-1 rounded font-mono">F12</kbd>) &rarr; Application &rarr; Cookies &rarr; <code className="font-mono text-amber-900 font-semibold">https://jai-vilas.vercel.app</code> &rarr; Change <code className="font-mono text-amber-900 font-semibold">auth</code> to:
-              </p>
-              <code className="text-stone-900 bg-white border border-amber-300 px-2 py-1 rounded block font-mono text-xs select-all">
-                eyJ1c2VybmFtZSI6ImtpbmciLCJyb2xlIjoiYWRtaW4ifQ==
-              </code>
-              <p className="text-[11px] text-stone-500">
-                Or paste in Console: <code className="font-mono text-stone-800">document.cookie = "auth=" + btoa('&#123;"username":"king","role":"admin"&#125;') + "; path=/;";</code>
-              </p>
-            </div>
-          </div>
-        )}
       </section>
     </div>
   );
