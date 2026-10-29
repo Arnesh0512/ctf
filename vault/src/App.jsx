@@ -24,6 +24,41 @@ import {
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://ctf-backend-d3un.onrender.com';
 
+// Helper to extract cookie from document.cookie
+function getAuthCookie() {
+  if (typeof document === 'undefined') return '';
+  const match = document.cookie.match(/(?:^|;\s*)auth=([^;]*)/);
+  if (match) return decodeURIComponent(match[1]);
+  return localStorage.getItem('auth_cookie') || '';
+}
+
+// Helper to set cookie in document.cookie
+function setAuthCookie(value) {
+  if (typeof document !== 'undefined') {
+    document.cookie = `auth=${value}; path=/; max-age=86400; SameSite=Lax`;
+  }
+  localStorage.setItem('auth_cookie', value);
+}
+
+// Helper to decode base64 session for live display
+function decodeCookieSafe(raw) {
+  if (!raw) return null;
+  try {
+    const text = atob(raw);
+    try {
+      return JSON.parse(text);
+    } catch {
+      if (text.includes(':')) {
+        const [username, role] = text.split(':');
+        return { username, role };
+      }
+      return { raw: text };
+    }
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
   // Login form state (prefilled as requested)
   const [username, setUsername] = useState('guest');
@@ -33,8 +68,9 @@ export default function App() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // Active session identity (from backend)
+  // Active session identity
   const [user, setUser] = useState({ username: 'guest', role: 'user' });
+  const [currentCookie, setCurrentCookie] = useState('');
 
   // Vault unsealing state
   const [vaultLoading, setVaultLoading] = useState(false);
@@ -44,9 +80,20 @@ export default function App() {
   // DevTools helper drawer toggle
   const [showInspector, setShowInspector] = useState(false);
 
-  // Persist session across tab and browser restarts
+  // Check initial cookie on load so reopening the website keeps the user logged in
   useEffect(() => {
-    // 1. Check local persistent storage immediately so reopen stays logged in
+    const cookie = getAuthCookie();
+    if (cookie) {
+      setCurrentCookie(cookie);
+      const decoded = decodeCookieSafe(cookie);
+      if (decoded && decoded.username) {
+        setUser(decoded);
+        setIsLoggedIn(true);
+        localStorage.setItem('royal_user', JSON.stringify(decoded));
+        return;
+      }
+    }
+
     const saved = localStorage.getItem('royal_user');
     if (saved) {
       try {
@@ -57,29 +104,9 @@ export default function App() {
         }
       } catch (_) {}
     }
-
-    // 2. Query backend /me to synchronize with the current session cookie
-    const syncBackendSession = async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/me`, {
-          method: 'GET',
-          credentials: 'include'
-        });
-        const data = await res.json();
-        if (data?.session?.username) {
-          setUser(data.session);
-          setIsLoggedIn(true);
-          localStorage.setItem('royal_user', JSON.stringify(data.session));
-        } else if (!saved) {
-          setIsLoggedIn(false);
-        }
-      } catch (_) {}
-    };
-
-    syncBackendSession();
   }, []);
 
-  // Login handler: credentials: 'include' receives Set-Cookie exclusively for ctf-backend-d3un.onrender.com
+  // Login handler: Frontend-only approach sets document.cookie on jai-vilas.vercel.app
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -96,8 +123,10 @@ export default function App() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Backend stores the cookie under ctf-backend-d3un.onrender.com via Set-Cookie!
-        const activeUser = data.user || { username: 'guest', role: 'user' };
+        // Store cookie strictly on frontend domain (jai-vilas.vercel.app)
+        setAuthCookie(data.cookie);
+        setCurrentCookie(data.cookie);
+        const activeUser = data.user || decodeCookieSafe(data.cookie) || { username: 'guest', role: 'user' };
         setUser(activeUser);
         setIsLoggedIn(true);
         localStorage.setItem('royal_user', JSON.stringify(activeUser));
@@ -112,30 +141,36 @@ export default function App() {
     }
   };
 
-  // Logout handler
+  // Logout handler: clears frontend cookie and storage
   const handleLogout = async () => {
+    document.cookie = 'auth=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+    localStorage.removeItem('auth_cookie');
     localStorage.removeItem('royal_user');
     sessionStorage.removeItem('royal_user');
+    setCurrentCookie('');
     setUser({ username: 'guest', role: 'user' });
     setIsLoggedIn(false);
     setVaultResult(null);
 
     try {
-      await fetch(`${BACKEND_URL}/logout`, {
-        method: 'POST',
-        credentials: 'include'
-      });
+      await fetch(`${BACKEND_URL}/logout`, { method: 'POST', credentials: 'include' });
     } catch (_) {}
   };
 
-  // Vault unseal handler: credentials: 'include' automatically sends the cookie from ctf-backend-d3un.onrender.com
+  // Vault unseal handler: reads live cookie from document.cookie and forwards to backend
   const handleUnsealVault = async () => {
     setVaultLoading(true);
     setVaultResult(null);
 
+    const cookieToSend = getAuthCookie() || currentCookie;
+
     try {
-      const res = await fetch(`${BACKEND_URL}/vault`, {
+      const res = await fetch(`${BACKEND_URL}/vault?cookie=${encodeURIComponent(cookieToSend)}`, {
         method: 'GET',
+        headers: {
+          'x-auth-cookie': cookieToSend,
+          'Authorization': `Bearer ${cookieToSend}`
+        },
         credentials: 'include'
       });
 
@@ -172,6 +207,7 @@ export default function App() {
       });
     } finally {
       setVaultLoading(false);
+      setCurrentCookie(getAuthCookie());
     }
   };
 
@@ -641,7 +677,7 @@ export default function App() {
                       <strong className="text-amber-200">Vault Collection:</strong> {vaultResult.vault?.collection}
                     </p>
                     <p className="text-slate-500">
-                      You have verified imperial authorization by modifying the backend authorization cookie.
+                      You have verified imperial authorization by modifying the client authorization cookie.
                     </p>
                   </div>
                 </div>
@@ -651,7 +687,7 @@ export default function App() {
         </section>
 
         {/* ---------------------------------------------------- */}
-        {/* COLLAPSIBLE CTF HELPER / COOKIE GUIDE DRAWER         */}
+        {/* COLLAPSIBLE CTF HELPER / COOKIE INSPECTOR DRAWER     */}
         {/* ---------------------------------------------------- */}
         <section className="border border-slate-800/80 bg-slate-900/40 rounded-2xl p-5">
           <div className="flex items-center justify-between">
@@ -659,47 +695,68 @@ export default function App() {
               <Code2 className="w-5 h-5 text-amber-400" />
               <div>
                 <h4 className="text-sm font-semibold text-slate-200">
-                  CTF Cookie Escalation Guide
+                  CTF Session Cookie Inspector
                 </h4>
                 <p className="text-xs text-slate-400">
-                  Authentication cookie <code className="text-amber-400">auth</code> is issued by and stored under <code className="text-amber-300">ctf-backend-d3un.onrender.com</code>.
+                  Cookie <code className="text-amber-400">auth</code> is stored under <code className="text-amber-300">jai-vilas.vercel.app</code>. Inspect or edit it in DevTools or Console.
                 </p>
               </div>
             </div>
             <button
-              onClick={() => setShowInspector(!showInspector)}
+              onClick={() => {
+                setCurrentCookie(getAuthCookie());
+                setShowInspector(!showInspector);
+              }}
               className="text-xs font-mono text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/60 bg-amber-500/10 px-3 py-1.5 rounded-lg transition-all cursor-pointer"
             >
-              {showInspector ? 'Hide Instructions ▲' : 'Open Instructions ▼'}
+              {showInspector ? 'Hide Inspector ▲' : 'Open Inspector ▼'}
             </button>
           </div>
 
           {showInspector && (
             <div className="mt-5 pt-5 border-t border-slate-800 space-y-4 animate-in fade-in duration-200 text-xs font-mono">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Active Raw Cookie */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between text-slate-400">
+                    <span className="font-semibold text-amber-300 font-sans">Active 'auth' Cookie (Base64)</span>
+                    <button
+                      onClick={() => setCurrentCookie(getAuthCookie())}
+                      className="text-[10px] text-slate-400 hover:text-white underline"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-lg text-slate-300 break-all select-all max-h-24 overflow-y-auto">
+                    {currentCookie || getAuthCookie() || '(No auth cookie detected in document.cookie)'}
+                  </div>
+                </div>
+
+                {/* Decoded Session Data */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <span className="font-semibold text-amber-300 font-sans">Decoded Base64 Session Data</span>
+                  <div className="bg-slate-900/90 p-3 rounded-lg text-emerald-400 break-all max-h-24 overflow-y-auto">
+                    {decodeCookieSafe(getAuthCookie() || currentCookie) ? JSON.stringify(decodeCookieSafe(getAuthCookie() || currentCookie), null, 2) : '(Unable to decode session)'}
+                  </div>
+                </div>
+              </div>
+
               <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                <span className="font-semibold text-amber-300 font-sans text-xs">
-                  How to inspect &amp; escalate your cookie in DevTools:
+                <span className="font-semibold text-amber-300 font-sans">
+                  How to modify your cookie on jai-vilas.vercel.app:
                 </span>
-                <ol className="list-decimal list-inside space-y-2 text-slate-300 font-sans text-xs leading-relaxed">
-                  <li>
-                    Press <kbd className="bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-white font-mono">F12</kbd> (or right click &rarr; <em>Inspect</em>) to open browser Developer Tools.
-                  </li>
-                  <li>
-                    Navigate to <strong>Application</strong> (Chrome/Edge) or <strong>Storage</strong> (Firefox).
-                  </li>
-                  <li>
-                    Under <strong>Cookies</strong> in the left sidebar, click on <strong className="text-amber-300 font-mono">https://ctf-backend-d3un.onrender.com</strong>.
-                  </li>
-                  <li>
-                    Locate the row named <strong className="text-amber-400 font-mono">auth</strong>.
-                  </li>
-                  <li>
-                    Double-click its <strong>Value</strong> and replace it with a Base64-encoded royal identity (e.g. <code className="bg-slate-900 border border-slate-800 px-1 py-0.5 rounded text-emerald-400 font-mono">eyJ1c2VybmFtZSI6ImtpbmciLCJyb2xlIjoiYWRtaW4ifQ==</code>).
-                  </li>
-                  <li>
-                    Return to the page and click <strong className="text-amber-300">UNSEAL PALACE TREASURE</strong>!
-                  </li>
-                </ol>
+                <div className="text-[11px] text-slate-300 font-sans space-y-2 leading-relaxed">
+                  <p>
+                    <strong>Option 1 (DevTools GUI):</strong> Press <kbd className="bg-slate-800 px-1 py-0.5 rounded text-white font-mono">F12</kbd> &rarr; <strong>Application / Storage</strong> &rarr; <strong>Cookies</strong> &rarr; Click <strong className="text-amber-300 font-mono">https://jai-vilas.vercel.app</strong> &rarr; Edit <code className="text-amber-400 font-mono">auth</code> &rarr; Click <em>UNSEAL PALACE TREASURE</em>.
+                  </p>
+                  <p>
+                    <strong>Option 2 (Console Command):</strong> Paste in browser Console:
+                    <br />
+                    <code className="text-emerald-400 bg-slate-900 px-2 py-1 rounded inline-block mt-1 font-mono text-xs">
+                      document.cookie = "auth=" + btoa('&#123;"username":"king","role":"admin"&#125;') + "; path=/;";
+                    </code>
+                  </p>
+                </div>
               </div>
             </div>
           )}

@@ -111,15 +111,12 @@ async def process_login(request: Request, response: Response, login_data: Option
     json_bytes = json.dumps(session_data).encode("utf-8")
     encoded_cookie = base64.b64encode(json_bytes).decode("utf-8")
 
-    # Set single backend cookie on ctf-backend-d3un.onrender.com
-    response.set_cookie(
+    # Ensure backend-domain cookie is deleted so session is strictly frontend-only
+    response.delete_cookie(
         key="auth",
-        value=encoded_cookie,
-        max_age=86400,
         path="/",
         samesite="none",
-        secure=True,
-        httponly=False
+        secure=True
     )
 
     return {
