@@ -41,18 +41,9 @@ export default function Tourism() {
     <div className="space-y-12">
       {/* Header */}
       <section className="bg-white border border-amber-200/90 rounded-3xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
-        <div className="max-w-2xl space-y-3 relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold uppercase tracking-wider">
-            <Compass className="w-3.5 h-3.5 text-amber-600" />
-            <span>Madhya Pradesh Tourism &bull; Official Visitor Guide</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight">
-            Jai Vilas Museum Guide
-          </h1>
-          <p className="text-stone-600 text-sm sm:text-base font-sans">
-            Essential visitor tariffs, opening hours, transport links, and key galleries across 35 palatial museum chambers.
-          </p>
-        </div>
+        <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight relative z-10">
+          Jai Vilas Museum Guide
+        </h1>
         <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-amber-100/50 rounded-full blur-2xl pointer-events-none"></div>
       </section>
 

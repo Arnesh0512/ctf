@@ -93,18 +93,9 @@ export default function Vault({ user, onUserUpdate }) {
     <div className="space-y-10">
       {/* Header */}
       <section className="bg-white border border-amber-200/90 rounded-3xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
-        <div className="max-w-2xl space-y-3 relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold uppercase tracking-wider">
-            <Gem className="w-3.5 h-3.5 text-amber-600" />
-            <span>Restricted Sovereign Repository &bull; Level 0 Vault</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight">
-            The Palace Treasure
-          </h1>
-          <p className="text-stone-600 text-sm sm:text-base font-sans">
-            Underneath the Durbar Hall lies the sovereign safe holding ancestral coronation jewels and the classified capture key.
-          </p>
-        </div>
+        <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight relative z-10">
+          The Palace Treasure
+        </h1>
         <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-amber-100/50 rounded-full blur-2xl pointer-events-none"></div>
       </section>
 

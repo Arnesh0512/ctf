@@ -66,18 +66,9 @@ export default function History() {
     <div className="space-y-12">
       {/* Header */}
       <section className="bg-white border border-amber-200/90 rounded-3xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
-        <div className="max-w-2xl space-y-3 relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold uppercase tracking-wider">
-            <BookOpen className="w-3.5 h-3.5 text-amber-600" />
-            <span>Chronicles of Gwalior &bull; 1761 to Present</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight">
-            History of Jai Vilas Palace
-          </h1>
-          <p className="text-stone-600 text-sm sm:text-base font-sans">
-            The dynastic trajectory of the Maratha Scindia rulers, the 1874 Italianate commission, and the transition of Gwalior into modern India.
-          </p>
-        </div>
+        <h1 className="text-3xl sm:text-5xl font-cinzel font-extrabold text-stone-900 tracking-tight relative z-10">
+          History of Jai Vilas Palace
+        </h1>
         <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-amber-100/50 rounded-full blur-2xl pointer-events-none"></div>
       </section>
 
