@@ -36,7 +36,7 @@ def parse_auth_cookie(raw_cookie: Optional[str]):
     if not raw_cookie or not isinstance(raw_cookie, str):
         return None
 
-    raw_clean = raw_cookie.strip()
+    raw_clean = raw_cookie.strip().strip('"').strip("'")
     try:
         # Add padding if needed
         missing_padding = len(raw_clean) % 4
@@ -75,7 +75,7 @@ def health_check():
         "version": "1.0.0"
     }
 
-async def process_login(request: Request, login_data: Optional[LoginRequest] = None):
+async def process_login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
     username = None
     password = None
 
@@ -111,6 +111,17 @@ async def process_login(request: Request, login_data: Optional[LoginRequest] = N
     json_bytes = json.dumps(session_data).encode("utf-8")
     encoded_cookie = base64.b64encode(json_bytes).decode("utf-8")
 
+    # Set single backend cookie on ctf-backend-d3un.onrender.com
+    response.set_cookie(
+        key="auth",
+        value=encoded_cookie,
+        max_age=86400,
+        path="/",
+        samesite="none",
+        secure=True,
+        httponly=False
+    )
+
     return {
         "success": True,
         "message": "Authentication successful.",
@@ -119,12 +130,12 @@ async def process_login(request: Request, login_data: Optional[LoginRequest] = N
     }
 
 @app.post("/login")
-async def login(request: Request, login_data: Optional[LoginRequest] = None):
-    return await process_login(request, login_data)
+async def login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
+    return await process_login(request, response, login_data)
 
 @app.post("/api/login")
-async def api_login(request: Request, login_data: Optional[LoginRequest] = None):
-    return await process_login(request, login_data)
+async def api_login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
+    return await process_login(request, response, login_data)
 
 async def process_vault(request: Request, cookie: Optional[str] = None):
     raw_cookie = (

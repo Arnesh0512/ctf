@@ -24,41 +24,6 @@ import {
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://ctf-backend-d3un.onrender.com';
 
-// Helper to extract cookie from document.cookie
-function getAuthCookie() {
-  if (typeof document === 'undefined') return '';
-  const match = document.cookie.match(/(?:^|;\s*)auth=([^;]*)/);
-  if (match) return decodeURIComponent(match[1]);
-  return localStorage.getItem('auth_cookie') || '';
-}
-
-// Helper to set cookie in document.cookie
-function setAuthCookie(value) {
-  if (typeof document !== 'undefined') {
-    document.cookie = `auth=${value}; path=/; max-age=86400; SameSite=Lax`;
-  }
-  localStorage.setItem('auth_cookie', value);
-}
-
-// Helper to decode base64 session for live display
-function decodeCookieSafe(raw) {
-  if (!raw) return null;
-  try {
-    const text = atob(raw);
-    try {
-      return JSON.parse(text);
-    } catch {
-      if (text.includes(':')) {
-        const [username, role] = text.split(':');
-        return { username, role };
-      }
-      return { raw: text };
-    }
-  } catch {
-    return { invalid: true, raw };
-  }
-}
-
 export default function App() {
   // Login form state (prefilled as requested)
   const [username, setUsername] = useState('guest');
@@ -68,9 +33,8 @@ export default function App() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // Live session & cookie state
-  const [currentCookie, setCurrentCookie] = useState('');
-  const [decodedSession, setDecodedSession] = useState(null);
+  // Active session identity (from backend)
+  const [user, setUser] = useState({ username: 'guest', role: 'user' });
 
   // Vault unsealing state
   const [vaultLoading, setVaultLoading] = useState(false);
@@ -79,29 +43,25 @@ export default function App() {
 
   // DevTools helper drawer toggle
   const [showInspector, setShowInspector] = useState(false);
-  const [customCookieInput, setCustomCookieInput] = useState('');
 
-  // Check initial cookie on load
+  // Proactively clear any old/legacy frontend document.cookie on load
   useEffect(() => {
-    const cookie = getAuthCookie();
-    if (cookie) {
-      setCurrentCookie(cookie);
-      setCustomCookieInput(cookie);
-      const decoded = decodeCookieSafe(cookie);
-      setDecodedSession(decoded);
-      setIsLoggedIn(true);
+    if (typeof document !== 'undefined') {
+      document.cookie = 'auth=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+      document.cookie = `auth=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=${window.location.hostname};`;
+      localStorage.removeItem('auth_cookie');
+    }
+    const saved = sessionStorage.getItem('royal_user');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setUser(parsed);
+        setIsLoggedIn(true);
+      } catch (_) {}
     }
   }, []);
 
-  // Sync state whenever cookie changes
-  const refreshCookieState = () => {
-    const cookie = getAuthCookie();
-    setCurrentCookie(cookie);
-    setCustomCookieInput(cookie);
-    setDecodedSession(decodeCookieSafe(cookie));
-  };
-
-  // Login handler
+  // Login handler: credentials: 'include' receives Set-Cookie exclusively for ctf-backend-d3un.onrender.com
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -118,12 +78,12 @@ export default function App() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Set client-accessible cookie for player inspection & editing
-        setAuthCookie(data.cookie);
-        setCurrentCookie(data.cookie);
-        setCustomCookieInput(data.cookie);
-        setDecodedSession(data.user || decodeCookieSafe(data.cookie));
+        // Backend stores the cookie under ctf-backend-d3un.onrender.com via Set-Cookie!
+        // No document.cookie written in frontend.
+        const activeUser = data.user || { username: 'guest', role: 'user' };
+        setUser(activeUser);
         setIsLoggedIn(true);
+        sessionStorage.setItem('royal_user', JSON.stringify(activeUser));
         setVaultResult(null);
       } else {
         setLoginError(data.message || 'Login failed. Please verify credentials.');
@@ -137,29 +97,20 @@ export default function App() {
 
   // Logout handler
   const handleLogout = () => {
-    document.cookie = 'auth=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    localStorage.removeItem('auth_cookie');
-    setCurrentCookie('');
-    setDecodedSession(null);
+    sessionStorage.removeItem('royal_user');
+    setUser({ username: 'guest', role: 'user' });
     setIsLoggedIn(false);
     setVaultResult(null);
   };
 
-  // Vault unseal handler
+  // Vault unseal handler: credentials: 'include' automatically sends the cookie from ctf-backend-d3un.onrender.com
   const handleUnsealVault = async () => {
     setVaultLoading(true);
     setVaultResult(null);
 
-    // Read live cookie directly from document.cookie or state
-    const cookieToSend = getAuthCookie() || currentCookie;
-
     try {
-      const res = await fetch(`${BACKEND_URL}/vault?cookie=${encodeURIComponent(cookieToSend)}`, {
+      const res = await fetch(`${BACKEND_URL}/vault`, {
         method: 'GET',
-        headers: {
-          'x-auth-cookie': cookieToSend,
-          'Authorization': `Bearer ${cookieToSend}`
-        },
         credentials: 'include'
       });
 
@@ -172,6 +123,11 @@ export default function App() {
           message: data.message,
           vault: data.vault
         });
+        if (data.vault?.accessGrantedTo) {
+          const updated = { username: data.vault.accessGrantedTo, role: data.vault.role || 'admin' };
+          setUser(updated);
+          sessionStorage.setItem('royal_user', JSON.stringify(updated));
+        }
       } else {
         setVaultResult({
           success: false,
@@ -179,6 +135,10 @@ export default function App() {
           message: data.message || 'Access Denied.',
           identity: data.identity
         });
+        if (data.identity?.username) {
+          setUser(data.identity);
+          sessionStorage.setItem('royal_user', JSON.stringify(data.identity));
+        }
       }
     } catch (err) {
       setVaultResult({
@@ -187,15 +147,7 @@ export default function App() {
       });
     } finally {
       setVaultLoading(false);
-      refreshCookieState();
     }
-  };
-
-  // Update cookie manually from inspector
-  const handleApplyCustomCookie = () => {
-    setAuthCookie(customCookieInput.trim());
-    refreshCookieState();
-    setVaultResult(null);
   };
 
   const handleCopyFlag = (flagText) => {
@@ -337,8 +289,8 @@ export default function App() {
   // ----------------------------------------------------
   // LOGGED-IN VIEW: JAI VILAS PALACE & ROYAL VAULT
   // ----------------------------------------------------
-  const roleDisplay = decodedSession?.role || 'user';
-  const usernameDisplay = decodedSession?.username || 'guest';
+  const roleDisplay = user?.role || 'user';
+  const usernameDisplay = user?.username || 'guest';
   const isCurrentlyAdmin = roleDisplay.toLowerCase() === 'admin' && ['king', 'queen', 'prince', 'princess'].includes(usernameDisplay.toLowerCase());
 
   return (
@@ -385,7 +337,7 @@ export default function App() {
             {/* Logout button */}
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-1.5 text-xs text-slate-400 hover:text-red-400 border border-slate-800 hover:border-red-900/50 bg-slate-900/60 hover:bg-red-950/30 px-3 py-1.5 rounded-full transition-all"
+              className="flex items-center space-x-1.5 text-xs text-slate-400 hover:text-red-400 border border-slate-800 hover:border-red-900/50 bg-slate-900/60 hover:bg-red-950/30 px-3 py-1.5 rounded-full transition-all cursor-pointer"
               title="End Palace Visit"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -641,7 +593,7 @@ export default function App() {
                       </code>
                       <button
                         onClick={() => handleCopyFlag(vaultResult.flag)}
-                        className="ml-4 shrink-0 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 hover:text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all"
+                        className="ml-4 shrink-0 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 hover:text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer"
                       >
                         {copied ? (
                           <>
@@ -664,7 +616,7 @@ export default function App() {
                       <strong className="text-amber-200">Vault Collection:</strong> {vaultResult.vault?.collection}
                     </p>
                     <p className="text-slate-500">
-                      You have verified imperial authorization by modifying the client authorization cookie.
+                      You have verified imperial authorization by modifying the backend authorization cookie.
                     </p>
                   </div>
                 </div>
@@ -674,7 +626,7 @@ export default function App() {
         </section>
 
         {/* ---------------------------------------------------- */}
-        {/* COLLAPSIBLE CTF HELPER / COOKIE INSPECTOR DRAWER     */}
+        {/* COLLAPSIBLE CTF HELPER / COOKIE GUIDE DRAWER         */}
         {/* ---------------------------------------------------- */}
         <section className="border border-slate-800/80 bg-slate-900/40 rounded-2xl p-5">
           <div className="flex items-center justify-between">
@@ -682,82 +634,47 @@ export default function App() {
               <Code2 className="w-5 h-5 text-amber-400" />
               <div>
                 <h4 className="text-sm font-semibold text-slate-200">
-                  CTF Session Cookie Inspector
+                  CTF Cookie Escalation Guide
                 </h4>
                 <p className="text-xs text-slate-400">
-                  Inspect or edit your <code className="text-amber-400">auth</code> cookie in browser DevTools (Storage &gt; Cookies) or modify it directly below.
+                  Authentication cookie <code className="text-amber-400">auth</code> is issued by and stored under <code className="text-amber-300">ctf-backend-d3un.onrender.com</code>.
                 </p>
               </div>
             </div>
             <button
-              onClick={() => {
-                refreshCookieState();
-                setShowInspector(!showInspector);
-              }}
-              className="text-xs font-mono text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/60 bg-amber-500/10 px-3 py-1.5 rounded-lg transition-all"
+              onClick={() => setShowInspector(!showInspector)}
+              className="text-xs font-mono text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/60 bg-amber-500/10 px-3 py-1.5 rounded-lg transition-all cursor-pointer"
             >
-              {showInspector ? 'Hide Inspector ▲' : 'Open Inspector ▼'}
+              {showInspector ? 'Hide Instructions ▲' : 'Open Instructions ▼'}
             </button>
           </div>
 
           {showInspector && (
             <div className="mt-5 pt-5 border-t border-slate-800 space-y-4 animate-in fade-in duration-200 text-xs font-mono">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Active Raw Cookie */}
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-slate-400">
-                    <span className="font-semibold text-amber-300">Active 'auth' Cookie (Base64)</span>
-                    <button
-                      onClick={refreshCookieState}
-                      className="text-[10px] text-slate-400 hover:text-white underline"
-                    >
-                      Refresh
-                    </button>
-                  </div>
-                  <div className="bg-slate-900/90 p-3 rounded-lg text-slate-300 break-all select-all max-h-24 overflow-y-auto">
-                    {currentCookie || '(No auth cookie detected in document.cookie)'}
-                  </div>
-                </div>
-
-                {/* Decoded Session Data */}
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <span className="font-semibold text-amber-300">Decoded Base64 Session Data</span>
-                  <div className="bg-slate-900/90 p-3 rounded-lg text-emerald-400 break-all max-h-24 overflow-y-auto">
-                    {decodedSession ? JSON.stringify(decodedSession, null, 2) : '(Unable to decode session)'}
-                  </div>
-                </div>
-              </div>
-
-              {/* In-Browser Cookie Editor */}
               <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-amber-300">Quick Cookie Modulator (or edit in DevTools &gt; Storage &gt; Cookies)</span>
-                  <span className="text-[10px] text-slate-500">Updates document.cookie = "auth=..."</span>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="text"
-                    value={customCookieInput}
-                    onChange={(e) => setCustomCookieInput(e.target.value)}
-                    placeholder="Enter modified Base64 cookie (e.g. eyJ1c2VybmFtZSI6ImtpbmciLCJyb2xlIjoiYWRtaW4ifQ==)"
-                    className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-400"
-                  />
-                  <button
-                    onClick={handleApplyCustomCookie}
-                    className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-lg transition-all shrink-0 font-sans text-xs"
-                  >
-                    Set Cookie & Sync
-                  </button>
-                </div>
-
-                <div className="text-[11px] text-slate-400 space-y-1 pt-1">
-                  <p>
-                    <span className="text-amber-400">DevTools Instructions:</span> Press <kbd className="bg-slate-800 px-1 py-0.5 rounded text-white">F12</kbd> &rarr; <strong>Application / Storage</strong> &rarr; <strong>Cookies</strong> &rarr; Find <code className="text-amber-300">auth</code> &rarr; Edit value &rarr; Click <em>UNSEAL PALACE TREASURE</em>.
-                  </p>
-                  <p>
-                    <span className="text-amber-400">Console Command:</span> <code className="text-slate-300 bg-slate-900 px-1.5 py-0.5 rounded">document.cookie = "auth=" + btoa('&#123;"username":"king","role":"admin"&#125;') + "; path=/;"</code>
-                  </p>
-                </div>
+                <span className="font-semibold text-amber-300 font-sans text-xs">
+                  How to inspect &amp; escalate your cookie in DevTools:
+                </span>
+                <ol className="list-decimal list-inside space-y-2 text-slate-300 font-sans text-xs leading-relaxed">
+                  <li>
+                    Press <kbd className="bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-white font-mono">F12</kbd> (or right click &rarr; <em>Inspect</em>) to open browser Developer Tools.
+                  </li>
+                  <li>
+                    Navigate to <strong>Application</strong> (Chrome/Edge) or <strong>Storage</strong> (Firefox).
+                  </li>
+                  <li>
+                    Under <strong>Cookies</strong> in the left sidebar, click on <strong className="text-amber-300 font-mono">https://ctf-backend-d3un.onrender.com</strong>.
+                  </li>
+                  <li>
+                    Locate the row named <strong className="text-amber-400 font-mono">auth</strong>.
+                  </li>
+                  <li>
+                    Double-click its <strong>Value</strong> and replace it with a Base64-encoded royal identity (e.g. <code className="bg-slate-900 border border-slate-800 px-1 py-0.5 rounded text-emerald-400 font-mono">eyJ1c2VybmFtZSI6ImtpbmciLCJyb2xlIjoiYWRtaW4ifQ==</code>).
+                  </li>
+                  <li>
+                    Return to the page and click <strong className="text-amber-300">UNSEAL PALACE TREASURE</strong>!
+                  </li>
+                </ol>
               </div>
             </div>
           )}
