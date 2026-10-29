@@ -29,16 +29,21 @@ button.cancel {
     display: none !important;
 }
 
-/* 2. Hide Curl & Request URL */
+/* 2. Hide Curl, Request URL & Server response heading */
 .curl-command,
 .request-url,
-.responses-inner > div > h4 {
+.responses-inner h4,
+.responses-inner > div > h4,
+h4:has(+ .live-responses-table) {
     display: none !important;
 }
 
-/* 3. Hide Response Headers and its label */
+/* 3. Hide Response Headers container, headers pre, and label */
 .response-headers,
 pre.response-headers,
+.response-col_description > div:nth-child(n+2),
+.response-col_description > div:not(:first-child),
+.response-col_description > div:has(> pre.microlight),
 .response-col_description > h5:nth-of-type(2),
 h5:has(+ pre.response-headers),
 h5:has(+ .response-headers) {
