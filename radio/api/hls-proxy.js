@@ -36,7 +36,7 @@ module.exports = (req, res) => {
 
   const client = targetUrl.startsWith('https') ? https : http;
 
-  client.get(targetUrl, { headers: { 'User-Agent': 'Mozilla/5.0 DelhiRadio/1.0' } }, (remoteRes) => {
+  client.get(targetUrl, { headers: { 'User-Agent': 'Mozilla/5.0 HighAltitudeRadio/1.0' } }, (remoteRes) => {
     const contentType = remoteRes.headers['content-type'] || '';
 
     // Handle M3U8 Manifest Rewrites

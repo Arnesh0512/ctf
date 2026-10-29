@@ -1,41 +1,38 @@
-# 📻 Dilli FM Live - Delhi Capital & Global Radio Player
+# 📻 High Altitude Radio - Chushul Signal Tuner
 
-A live online FM radio player web application featuring popular broadcasters from **Delhi NCR** plus top **International Channels** (Chinese, Japanese, Pakistani, British, American, and World).
+A high-altitude live online FM radio receiver web application inspired by the Chushul sector of eastern Ladakh (~16,000 ft), featuring Indian national/regional broadcasters alongside international relays.
 
-## ✨ Stations Lineup (13 Channels)
+## ✨ Stations Lineup (13 Channels in Sequential Dial Order)
 
-### 🇮🇳 Delhi NCR Broadcasters
-1. **92.7 MHz** — **92.7 Big FM Delhi** ("Dhun Badal Ke Toh Dekho" • Bollywood Retro & 90s Hits)
-2. **93.5 MHz** — **Superhits 93.5 Red FM Delhi** ("Bajaate Raho!" • Bollywood Superhits)
-3. **98.3 MHz** — **Radio Mirchi 98.3 FM Delhi** ("Mirchi Sunnewaale Always Khush!")
-4. **100.1 MHz** — **AIR FM Gold Delhi** (Akashvani Delhi National • Classics & News)
-5. **102.6 MHz** — **AIR FM Rainbow Delhi** (Akashvani Delhi • Youth Hits & RJ Shows)
-6. **102.8 MHz** — **Vividh Bharati 102.8 FM** (All India Radio Golden Nostalgia)
-7. **104.8 MHz** — **Ishq 104.8 FM Delhi** ("Do Dil Ek Dhadkan" • Romantic Melodies)
-
-### 🌍 International Channels
-8. **93.3 MHz** — 🇨🇳 **YES 933 Chinese Radio** (Top Mandarin & Chinese Hits / 华语经典)
-9. **93.9 MHz** — 🇺🇸 **WNYC 93.9 FM New York (American)** (Live NYC News & Culture)
-10. **95.8 MHz** — 🇬🇧 **Capital FM 95.8 London (Britain)** (The UK's No. 1 Hit Music Station)
-11. **100.0 MHz** — 🇵🇰 **FM 100 Pakistan (Pakistani)** (Urdu Hits • Islamabad / Lahore)
-12. **105.5 MHz** — 🇯🇵 **J-Pop Powerplay Tokyo (Japanese)** (Tokyo J-Pop & Anime Hits)
-13. **106.7 MHz** — 🌏 **Red FM 106.7 World (International)** (East Asian & Chinese Pop - RTM Global)
+1. **92.7 MHz** — 🇮🇳 **92.7 Big FM India** ("Dhun Badal Ke Toh Dekho" • Bollywood Retro & 90s Hits)
+2. **93.3 MHz** — 🇨🇳 **YES 933 Chinese Radio** (Trans-Himalayan Mandarin Relay / 华语经典)
+3. **93.5 MHz** — 🇮🇳 **Superhits 93.5 Red FM** ("Bajaate Raho!" • High-Altitude Bollywood Stream)
+4. **93.9 MHz** — 🇺🇸 **WNYC 93.9 FM New York** (American Live News & Conversations)
+5. **95.8 MHz** — 🇬🇧 **Capital FM 95.8 London** (The UK's No. 1 Hit Music Station)
+6. **98.3 MHz** — 🇮🇳 **Radio Mirchi 98.3 FM** ("Mirchi Sunnewaale Always Khush!")
+7. **100.0 MHz** — 🇵🇰 **FM 100 Pakistan** (Trans-Border Urdu Hits • Islamabad / Lahore)
+8. **100.1 MHz** — 🇮🇳 **Akashvani Leh 100.1 FM** (All India Radio Ladakh • Regional Classics & High-Altitude Broadcasts)
+9. **102.6 MHz** — 🇮🇳 **AIR Ladakh Rainbow 102.6** (All India Radio Ladakh • Youth Hits & RJ Shows)
+10. **102.8 MHz** — 🇮🇳 **Vividh Bharati 102.8 FM** (All India Radio National Golden Nostalgia)
+11. **104.8 MHz** — 🇮🇳 **Ishq 104.8 FM India** ("Do Dil Ek Dhadkan" • Romantic Melodies)
+12. **105.5 MHz** — 🇯🇵 **J-Pop Powerplay Tokyo** (Tokyo J-Pop & Modern Top 40)
+13. **106.7 MHz** — 🌏 **Red FM 106.7 International** (East Asian & Global Pop Hits)
 
 ---
 
 ## ⚡ Features
 - **In-Website Streaming**: Instant playback with zero browser extensions.
-- **Support for Both Audio Formats**:
+- **Audio Formats**:
   - Direct Icecast/Shoutcast MP3 & AAC.
-  - Apple HTTP Live Streaming (HLS `.m3u8`) with transparent local proxy.
-- **Interactive Tuner & Visualizer**:
+  - Apple HTTP Live Streaming (HLS `.m3u8`) with transparent proxy.
+- **Interactive High-Altitude Tuner & Visualizer**:
   - Real-time animated audio wave / spectrum canvas visualizer.
-  - Interactive analog frequency dial needle responding to all 13 stations.
-  - Category filter tabs (Delhi NCR vs International vs All).
-  - Signal strength meter, stereo indicator, and live IST (Delhi) clock.
+  - Interactive analog frequency dial needle with discrete single-value snapping.
+  - Live Indian vs International region indicators.
+  - Signal strength meter, stereo indicator, and live IST (Ladakh) clock.
 - **Keyboard Shortcuts**:
   - `Space`: Play / Pause
-  - `←` / `→`: Previous / Next Station
+  - `←` / `→`: Previous / Next Station (sequential frequency order along dial)
   - `↑` / `↓`: Volume Up / Down
   - `M`: Mute / Unmute
   - `1` – `9`: Direct Station Jump
@@ -49,7 +46,7 @@ A live online FM radio player web application featuring popular broadcasters fro
 npm start
 # Or run directly:
 node local-server.js
-# The Python launcher uses the same integrated server:
+# Or with Python:
 python server.py
 ```
 

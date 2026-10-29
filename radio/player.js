@@ -1,6 +1,6 @@
 /**
- * DELHI FM LIVE - Radio Player Engine
- * Supports 13 Stations: Delhi NCR Broadcasters + World International Channels
+ * HIGH ALTITUDE RADIO - Chushul Signal Tuner Engine
+ * Supports 13 Stations: Indian Regional Broadcasters + International Channels
  * Features:
  * - High precision, pixel-perfect analog FM dial tracking
  * - Interactive draggable red needle with mouse and touch support
@@ -15,12 +15,11 @@
   }
 
 const STATIONS = [
-  // --- DELHI NCR BROADCASTERS ---
   {
-    name: "92.7 Big FM Delhi",
-    broadcaster: "Big FM Delhi",
+    name: "92.7 Big FM India",
+    broadcaster: "Big FM India",
     freq: "92.7",
-    category: "delhi",
+    category: "indian",
     flag: "🇮🇳",
     tagline: "Dhun Badal Ke Toh Dekho • Bollywood Retro & 90s Superhits",
     format: "MP3 Stereo",
@@ -34,111 +33,12 @@ const STATIONS = [
     type: "audio"
   },
   {
-    name: "Superhits 93.5 Red FM",
-    broadcaster: "Red FM Delhi NCR",
-    freq: "93.5",
-    category: "delhi",
-    flag: "🇮🇳",
-    tagline: "Bajaate Raho! • Delhi's Superhit Bollywood Station",
-    format: "MP3 Live",
-    quality: "HQ 128 kbps",
-    color: "#ef233c",
-    streams: [
-      "https://drive.uber.radio/uber/bollywoodnow/icecast.audio",
-      "http://stream.radiobollyfm.in:8201/hd?t=1526570335"
-    ],
-    type: "audio"
-  },
-  {
-    name: "Radio Mirchi 98.3 FM",
-    broadcaster: "Mirchi Delhi",
-    freq: "98.3",
-    category: "delhi",
-    flag: "🇮🇳",
-    tagline: "Mirchi Sunnewaale Always Khush! • Delhi Hindi Hits",
-    format: "MP3 Icecast",
-    quality: "HQ 128 kbps",
-    color: "#f97316",
-    streams: [
-      "https://eu8.fastcast4u.com/proxy/clyedupq/stream",
-      "https://drive.uber.radio/uber/bollywoodnow/icecast.audio"
-    ],
-    type: "audio"
-  },
-  {
-    name: "AIR FM Gold Delhi 100.1",
-    broadcaster: "Akashvani Delhi",
-    freq: "100.1",
-    category: "delhi",
-    flag: "🇮🇳",
-    tagline: "Akashvani Delhi National • Hindi Classics & Cultural News",
-    format: "HLS Official",
-    quality: "Auto 64 kbps",
-    color: "#eab308",
-    streams: [
-      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi03/air003_Auto.m3u8",
-      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi03/air00364kbps.m3u8"
-    ],
-    type: "hls"
-  },
-  {
-    name: "AIR FM Rainbow Delhi 102.6",
-    broadcaster: "Akashvani Delhi",
-    freq: "102.6",
-    category: "delhi",
-    flag: "🇮🇳",
-    tagline: "Dilli Ki Taazi Dhadkan • Live RJ Shows & Youth Hits",
-    format: "HLS Official",
-    quality: "Auto 64 kbps",
-    color: "#06b6d4",
-    streams: [
-      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air002_Auto.m3u8",
-      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air00264kbps.m3u8"
-    ],
-    type: "hls"
-  },
-  {
-    name: "Vividh Bharati 102.8 FM",
-    broadcaster: "All India Radio Delhi",
-    freq: "102.8",
-    category: "delhi",
-    flag: "🇮🇳",
-    tagline: "Desh Ki Swar-Ganga • Sangeet Sartaj & Vintage Gold",
-    format: "HLS Official",
-    quality: "Auto HQ",
-    color: "#10b981",
-    streams: [
-      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi04/air004_Auto.m3u8",
-      "https://air.pc.cdn.bitgravity.com/air/live/pbaudio001/playlist.m3u8"
-    ],
-    type: "hls"
-  },
-  {
-    name: "Ishq 104.8 FM Delhi",
-    broadcaster: "Ishq FM Delhi",
-    freq: "104.8",
-    category: "delhi",
-    flag: "🇮🇳",
-    tagline: "Do Dil Ek Dhadkan • Hindi Romantic Melodies & Bollywood",
-    format: "MP3 Icecast",
-    quality: "HQ 128 kbps",
-    color: "#ec4899",
-    streams: [
-      "https://drive.uber.radio/uber/bollywoodlove/icecast.audio",
-      "https://drive.uber.radio/uber/lrbollywood/icecast.audio",
-      "http://us9.streamingpulse.com:7058/stream"
-    ],
-    type: "audio"
-  },
-
-  // --- INTERNATIONAL BROADCASTERS ---
-  {
     name: "YES 933 Chinese Radio",
     broadcaster: "Singapore / Greater China",
     freq: "93.3",
     category: "intl",
     flag: "🇨🇳",
-    tagline: "顶尖流行音乐台 • Top Mandarin & Chinese Pop Hits",
+    tagline: "顶尖流行音乐台 • Trans-Himalayan Mandarin Relay",
     format: "AAC Stereo",
     quality: "HQ 128 kbps",
     color: "#ef4444",
@@ -146,6 +46,22 @@ const STATIONS = [
       "http://playerservices.streamtheworld.com/api/livestream-redirect/YES933AAC.aac",
       "https://lhttp.qtfm.cn/live/5022308/64k.mp3",
       "https://lhttp.qtfm.cn/live/15318317/64k.mp3"
+    ],
+    type: "audio"
+  },
+  {
+    name: "Superhits 93.5 Red FM",
+    broadcaster: "Red FM India",
+    freq: "93.5",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Bajaate Raho! • High-Altitude Bollywood Stream",
+    format: "MP3 Live",
+    quality: "HQ 128 kbps",
+    color: "#ef233c",
+    streams: [
+      "https://drive.uber.radio/uber/bollywoodnow/icecast.audio",
+      "http://stream.radiobollyfm.in:8201/hd?t=1526570335"
     ],
     type: "audio"
   },
@@ -182,18 +98,99 @@ const STATIONS = [
     type: "audio"
   },
   {
+    name: "Radio Mirchi 98.3 FM",
+    broadcaster: "Mirchi India",
+    freq: "98.3",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Mirchi Sunnewaale Always Khush! • Hindi Hits",
+    format: "MP3 Icecast",
+    quality: "HQ 128 kbps",
+    color: "#f97316",
+    streams: [
+      "https://eu8.fastcast4u.com/proxy/clyedupq/stream",
+      "https://drive.uber.radio/uber/bollywoodnow/icecast.audio"
+    ],
+    type: "audio"
+  },
+  {
     name: "FM 100 Pakistan",
-    broadcaster: "Islamabad / Lahore / Karachi",
+    broadcaster: "Islamabad / Lahore / Rawalpindi",
     freq: "100.0",
     category: "intl",
     flag: "🇵🇰",
-    tagline: "Pakistan's First & Largest Live FM Network • Urdu Hits",
+    tagline: "Pakistan's First & Largest Live FM Network • Trans-Border Urdu Hits",
     format: "MP3 Icecast",
     quality: "HQ 128 kbps",
     color: "#16a34a",
     streams: [
       "http://162.244.80.118:4900/;stream.mp3",
       "https://samaakhi107-itelservices.radioca.st/stream"
+    ],
+    type: "audio"
+  },
+  {
+    name: "Akashvani Leh 100.1 FM",
+    broadcaster: "All India Radio Ladakh",
+    freq: "100.1",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Akashvani Ladakh • Regional Classics & High-Altitude Broadcasts",
+    format: "HLS Official",
+    quality: "Auto 64 kbps",
+    color: "#eab308",
+    streams: [
+      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi03/air003_Auto.m3u8",
+      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi03/air00364kbps.m3u8"
+    ],
+    type: "hls"
+  },
+  {
+    name: "AIR Ladakh Rainbow 102.6",
+    broadcaster: "All India Radio Ladakh",
+    freq: "102.6",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Ladakh Ki Taazi Dhadkan • Live RJ Shows & Youth Hits",
+    format: "HLS Official",
+    quality: "Auto 64 kbps",
+    color: "#06b6d4",
+    streams: [
+      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air002_Auto.m3u8",
+      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air00264kbps.m3u8"
+    ],
+    type: "hls"
+  },
+  {
+    name: "Vividh Bharati 102.8 FM",
+    broadcaster: "All India Radio National",
+    freq: "102.8",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Desh Ki Swar-Ganga • Sangeet Sartaj & Vintage Gold",
+    format: "HLS Official",
+    quality: "Auto HQ",
+    color: "#10b981",
+    streams: [
+      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi04/air004_Auto.m3u8",
+      "https://air.pc.cdn.bitgravity.com/air/live/pbaudio001/playlist.m3u8"
+    ],
+    type: "hls"
+  },
+  {
+    name: "Ishq 104.8 FM India",
+    broadcaster: "Ishq FM India",
+    freq: "104.8",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Do Dil Ek Dhadkan • Romantic Melodies Across The Valleys",
+    format: "MP3 Icecast",
+    quality: "HQ 128 kbps",
+    color: "#ec4899",
+    streams: [
+      "https://drive.uber.radio/uber/bollywoodlove/icecast.audio",
+      "https://drive.uber.radio/uber/lrbollywood/icecast.audio",
+      "http://us9.streamingpulse.com:7058/stream"
     ],
     type: "audio"
   },
@@ -219,7 +216,7 @@ const STATIONS = [
     freq: "106.7",
     category: "intl",
     flag: "🌏",
-    tagline: "East Asian, Chinese & Asian Pop Hits • Global Red FM",
+    tagline: "East Asian & Global Pop Hits • International Red FM",
     format: "AAC Stereo",
     quality: "HQ 64 kbps",
     color: "#8b5cf6",
@@ -232,9 +229,9 @@ const STATIONS = [
 ];
 
 // App State
-let currentStationIndex = 1; // Default to 93.5 Red FM
+let currentStationIndex = 2; // Default to 93.5 Red FM
 let currentStreamIndex = 0;
-let lastTunedStationIndex = 1;
+let lastTunedStationIndex = 2;
 let clipRepeatTimeout = null;
 let currentBackendCarrierFreq = null;
 let activeBackendRepeatDelay = 1000;
@@ -283,6 +280,7 @@ const qualityBadge = document.getElementById("qualityBadge");
 const livePill = document.getElementById("livePill");
 const liveText = document.getElementById("liveText");
 const stereoTag = document.getElementById("stereoTag");
+const regionTag = document.getElementById("regionTag");
 const chipStationText = document.getElementById("chipStationText");
 const dialNeedle = document.getElementById("dialNeedle");
 const needleTooltip = document.getElementById("needleTooltip");
@@ -413,13 +411,13 @@ function setupDialDragging() {
     livePill.classList.remove("active");
     liveText.textContent = "TUNING...";
 
-    // Check if within tolerance of a station to preview carrier
+    // Check if within tight tolerance of a station to preview carrier
+    const DRAG_PREVIEW_TOLERANCE = 0.12;
     let matchedStation = null;
     let matchedIdx = -1;
     for (let i = 0; i < STATIONS.length; i++) {
       const s = STATIONS[i];
-      const tol = s.tolerance || 0.22;
-      if (Math.abs(parseFloat(s.freq) - freq) <= tol) {
+      if (Math.abs(parseFloat(s.freq) - freq) <= DRAG_PREVIEW_TOLERANCE) {
         matchedStation = s;
         matchedIdx = i;
         break;
@@ -427,6 +425,10 @@ function setupDialDragging() {
     }
 
     if (matchedStation) {
+      if (regionTag) {
+        regionTag.textContent = matchedStation.category === "intl" ? "INTERNATIONAL" : "INDIAN";
+        regionTag.className = "tag-region " + (matchedStation.category === "intl" ? "region-intl" : "region-indian");
+      }
       needleTooltip.style.background = matchedStation.color || "#ef233c";
       stationName.textContent = `${matchedStation.flag} ${matchedStation.name}`;
       stationTagline.textContent = "Release pointer to lock frequency & play audio";
@@ -438,6 +440,10 @@ function setupDialDragging() {
       updateStationPinsHighlight(matchedIdx);
       highlightStationCard(matchedIdx);
     } else {
+      if (regionTag) {
+        regionTag.textContent = "TUNING";
+        regionTag.className = "tag-region region-carrier";
+      }
       needleTooltip.style.background = "rgba(239, 35, 60, 0.95)";
       stationName.textContent = "📻 FM STATIC NOISE";
       stationTagline.textContent = "Sliding pointer through FM spectrum... release to tune";
@@ -489,19 +495,28 @@ function setupDialDragging() {
     const pct = (offsetX / rect.width) * 100;
     const freq = percentToFreq(pct);
 
+    // Discrete single-value snapping tolerance (e.g. 98.4 snaps back to 98.3, 98.5 stays empty static)
+    const SNAP_TOLERANCE = 0.12;
     let nearestIdx = -1;
-    let minDiff = 0.35;
+    let minDiff = SNAP_TOLERANCE;
     STATIONS.forEach((s, idx) => {
-      const tol = s.tolerance || minDiff;
       const diff = Math.abs(parseFloat(s.freq) - freq);
-      if (diff <= tol && diff < minDiff) {
+      if (diff <= SNAP_TOLERANCE && diff < minDiff) {
         minDiff = diff;
         nearestIdx = idx;
       }
     });
 
-    // STEP 1: If it is a standard radio frequency then simply play that radio
+    // STEP 1: If it is a standard radio frequency then snap slider and play that radio
     if (nearestIdx !== -1) {
+      const s = STATIONS[nearestIdx];
+      const exactFreq = parseFloat(s.freq);
+      const snapPct = freqToPercent(exactFreq);
+      dialNeedle.style.transition = "left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      dialNeedle.style.left = `${snapPct}%`;
+      needleTooltip.textContent = `${s.freq} MHz`;
+      freqNumber.textContent = s.freq;
+
       currentBackendCarrierFreq = null;
       setStaticNoiseVolume(0);
       loadAndPlayStation(nearestIdx, 0);
@@ -538,6 +553,10 @@ function checkBackendCarrier(freq) {
   chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Querying...)`;
   livePill.classList.remove("active");
   liveText.textContent = "SCANNING";
+  if (regionTag) {
+    regionTag.textContent = "SCANNING";
+    regionTag.className = "tag-region region-carrier";
+  }
 
   // Use the same-origin API locally and on Vercel; no separate port 3001.
   const backendUrl = "/api/tune";
@@ -559,6 +578,13 @@ function checkBackendCarrier(freq) {
       isTunedToStation = true;
       setStaticNoiseVolume(0); // Mute static noise completely
 
+      // Snap needle to matched carrier frequency
+      const carrierPct = freqToPercent(roundedFreq);
+      dialNeedle.style.transition = "left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)";
+      dialNeedle.style.left = `${carrierPct}%`;
+      needleTooltip.textContent = `${roundedFreq.toFixed(1)} MHz`;
+      freqNumber.textContent = roundedFreq.toFixed(1);
+
       needleTooltip.style.background = "#06b6d4";
       stationName.textContent = `📡 CARRIER LOCKED (${roundedFreq.toFixed(1)} MHz)`;
       const delaySec = Math.round(activeBackendRepeatDelay / 1000);
@@ -569,6 +595,10 @@ function checkBackendCarrier(freq) {
       livePill.classList.add("active");
       liveText.textContent = "LIVE CARRIER";
       stereoTag.style.opacity = "1";
+      if (regionTag) {
+        regionTag.textContent = "CLASSIFIED";
+        regionTag.className = "tag-region region-carrier";
+      }
       updateSignalBars(4);
       updateStationPinsHighlight(-1);
       highlightStationCard(-1);
@@ -598,6 +628,10 @@ function checkBackendCarrier(freq) {
       livePill.classList.remove("active");
       liveText.textContent = "STATIC NOISE";
       stereoTag.style.opacity = "0.35";
+      if (regionTag) {
+        regionTag.textContent = "STATIC";
+        regionTag.className = "tag-region region-carrier";
+      }
       updateSignalBars(1);
       updateStationPinsHighlight(-1);
       highlightStationCard(-1);
@@ -621,6 +655,10 @@ function checkBackendCarrier(freq) {
       livePill.classList.remove("active");
       liveText.textContent = "STATIC NOISE";
       stereoTag.style.opacity = "0.35";
+      if (regionTag) {
+        regionTag.textContent = "STATIC";
+        regionTag.className = "tag-region region-carrier";
+      }
       updateSignalBars(1);
       updateStationPinsHighlight(-1);
       highlightStationCard(-1);
@@ -746,6 +784,15 @@ function updateStationUI(index) {
   const delaySec = Math.round((s.repeatDelay || 1000) / 1000);
   altStreamText.textContent = s.isClip ? `Audio Clip • ${delaySec}s Repeat Loop` : `Server 1 of ${s.streams.length}`;
   stereoTag.style.opacity = "1";
+  if (regionTag) {
+    if (s.category === "intl") {
+      regionTag.textContent = "INTERNATIONAL";
+      regionTag.className = "tag-region region-intl";
+    } else {
+      regionTag.textContent = "INDIAN";
+      regionTag.className = "tag-region region-indian";
+    }
+  }
 
   // Pixel-perfect needle positioning: exact mathematical percentage
   const f = parseFloat(s.freq);

@@ -74,7 +74,7 @@ const server = http.createServer((req, res) => {
       return res.end('Missing url param');
     }
     const client = target.startsWith('https') ? https : http;
-    const proxyReq = client.get(target, { headers: { 'User-Agent': 'Mozilla/5.0 DelhiRadio/1.0' } }, (proxyRes) => {
+    const proxyReq = client.get(target, { headers: { 'User-Agent': 'Mozilla/5.0 HighAltitudeRadio/1.0' } }, (proxyRes) => {
       const contentType = proxyRes.headers['content-type'] || '';
       if (target.includes('.m3u8') || contentType.includes('mpegurl')) {
         let raw = '';
@@ -130,5 +130,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`📻 DELHI FM RADIO SERVER LISTENING ON http://localhost:${PORT}`);
+  console.log(`📻 HIGH ALTITUDE RADIO SERVER LISTENING ON http://localhost:${PORT}`);
 });
