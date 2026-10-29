@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 import os
 
@@ -21,11 +20,6 @@ def get_flag(n: int) -> str:
         or os.getenv(f"FLAG{n}")
         or f"MAYA{{flag_{n}}}"
     )
-
-@app.get("/", include_in_schema=False)
-def root():
-    """Redirect root path to interactive Swagger documentation."""
-    return RedirectResponse(url="/docs")
 
 @app.get("/flag1", tags=["Flags"], summary="Retrieve Flag 1")
 def flag1():
