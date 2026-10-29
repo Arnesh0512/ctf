@@ -259,6 +259,7 @@ let staticNoiseSource = null;
 let staticGainNode = null;
 let staticFilterNode = null;
 let isStaticPlaying = false;
+const STATIC_NOISE_DEFAULT_VOL = 0.42;
 
 // DOM Elements
 const audio = document.getElementById("audioElement");
@@ -422,7 +423,7 @@ function setupDialDragging() {
     if (audio) {
       audio.volume = 0;
     }
-    setStaticNoiseVolume(0.28);
+    setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
     isTunedToStation = false;
     livePill.classList.remove("active");
     liveText.textContent = "TUNING...";
@@ -485,7 +486,7 @@ function setupDialDragging() {
       audio.volume = 0;
       audio.pause();
     }
-    setStaticNoiseVolume(0.28);
+    setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
     dialTrack.classList.add("dragging");
     dialNeedle.classList.add("dragging");
     handlePointer(e.clientX);
@@ -554,7 +555,7 @@ function checkBackendCarrier(freq) {
   }
   dialNeedle.style.transition = "left 0.2s ease-out";
   isTunedToStation = false;
-  setStaticNoiseVolume(0.26); // Keep noise humming in transition
+  setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL); // Keep noise humming in transition
   if (audio) {
     audio.pause();
     audio.currentTime = 0;
@@ -617,7 +618,7 @@ function checkBackendCarrier(freq) {
       // Step 2 (No match): Continue playing noise
       currentBackendCarrierFreq = null;
       isTunedToStation = false;
-      setStaticNoiseVolume(0.26);
+      setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
       if (audio) {
         audio.pause();
         audio.currentTime = 0;
@@ -704,7 +705,7 @@ function initStaticNoise() {
       if (Math.random() < 0.003) {
         pink += (Math.random() * 2 - 1) * 0.9;
       }
-      output[i] = pink * 0.16;
+      output[i] = pink * 0.22;
     }
 
     staticNoiseSource = staticAudioCtx.createBufferSource();
@@ -1024,7 +1025,7 @@ function togglePlayPause() {
 
     // 2. If currently on empty spectrum static noise:
     if (!isTunedToStation || currentStationIndex === -1) {
-      setStaticNoiseVolume(0.26);
+      setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
       isPlaying = true;
       setLoadingState(false);
       livePill.classList.remove("active");
@@ -1123,7 +1124,7 @@ function bindEvents() {
     updateVolIcon(val);
 
     if (isStaticPlaying) {
-      setStaticNoiseVolume(0.26);
+      setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
     }
   });
 
@@ -1139,7 +1140,7 @@ function bindEvents() {
       updateVolIcon(volSlider.value);
       volPercent.textContent = `${volSlider.value}%`;
       if (!isTunedToStation) {
-        setStaticNoiseVolume(0.26);
+        setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
       }
     }
   });
@@ -1256,7 +1257,7 @@ function bindEvents() {
       audio.volume = v / 100;
       volPercent.textContent = `${v}%`;
       updateVolIcon(v);
-      if (isStaticPlaying) setStaticNoiseVolume(0.26);
+      if (isStaticPlaying) setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
     }
     if (e.code === "ArrowDown") {
       e.preventDefault();
@@ -1265,7 +1266,7 @@ function bindEvents() {
       audio.volume = v / 100;
       volPercent.textContent = `${v}%`;
       updateVolIcon(v);
-      if (isStaticPlaying) setStaticNoiseVolume(0.26);
+      if (isStaticPlaying) setStaticNoiseVolume(STATIC_NOISE_DEFAULT_VOL);
     }
     if (e.code === "KeyM") {
       muteBtn.click();
