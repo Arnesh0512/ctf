@@ -44,16 +44,14 @@ A live online FM radio player web application featuring popular broadcasters fro
 
 ## 🚀 How to Run
 
-### Python Server (Default: Port 8080)
+### Local Server (frontend and API on the same port)
 ```powershell
+npm start
+# Or run directly:
+node local-server.js
+# The Python launcher uses the same integrated server:
 python server.py
-# Or specify custom port:
-python server.py 3000
-```
-
-### Node.js Server
-```powershell
-node server.js
 ```
 
 Open your browser to [http://localhost:8080](http://localhost:8080).
+The radio API is available at `/api/tune` on that same origin; no separate port 3001 is needed.

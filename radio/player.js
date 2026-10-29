@@ -539,9 +539,8 @@ function checkBackendCarrier(freq) {
   livePill.classList.remove("active");
   liveText.textContent = "SCANNING";
 
-  const backendUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
-    ? "http://localhost:3001/api/tune"
-    : "/api/tune";
+  // Use the same-origin API locally and on Vercel; no separate port 3001.
+  const backendUrl = "/api/tune";
 
   fetch(backendUrl, {
     method: "POST",

@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const carriers = require('./api/_carriers.js');
 
 const PORT = process.env.PORT || 8080;
 const PUBLIC_DIR = __dirname;
@@ -28,6 +29,42 @@ const server = http.createServer((req, res) => {
   }
 
   const parsedUrl = new URL(req.url, `http://localhost:${PORT}`);
+
+  // Local equivalent of the Vercel /api/tune function.
+  if (parsedUrl.pathname === '/api/tune' || parsedUrl.pathname === '/tune') {
+    const respond = (frequency) => {
+      const f = Number.parseFloat(frequency);
+      const matched = Number.isFinite(f)
+        ? carriers.find(carrier => Math.abs(carrier.freq - f) <= carrier.tolerance)
+        : null;
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(matched
+        ? { match: true, audio: matched.audio, repeatDelay: matched.repeatDelay }
+        : { match: false }));
+    };
+
+    if (req.method === 'GET') {
+      return respond(parsedUrl.searchParams.get('freq') || parsedUrl.searchParams.get('frequency'));
+    }
+    if (req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk;
+        if (body.length > 1e6) req.destroy();
+      });
+      req.on('end', () => {
+        try {
+          const data = JSON.parse(body || '{}');
+          respond(data.freq ?? data.frequency);
+        } catch {
+          respond(null);
+        }
+      });
+      return;
+    }
+    res.writeHead(405, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'Method not allowed' }));
+  }
 
   // Stream & HLS proxy endpoint
   if (parsedUrl.pathname === '/stream-proxy' || parsedUrl.pathname === '/hls-proxy') {
