@@ -243,7 +243,8 @@ let hlsInstance = null;
 let sessionSeconds = 0;
 let sessionInterval = null;
 
-// Carrier Tune Fast Request Manager
+// Carrier Tune Cache & Fast Request Manager
+const tuneCache = new Map();
 let currentTuneAbortController = null;
 let warmupPingInterval = null;
 
@@ -641,7 +642,13 @@ function checkBackendCarrier(freq) {
     }
   }
 
-  // Interrogate carrier receiver with abort controller
+  // 1. Instant Cache Check (0ms response if previously queried)
+  if (tuneCache.has(roundedFreq)) {
+    applyTuneResult(tuneCache.get(roundedFreq));
+    return;
+  }
+
+  // 2. Not cached: show scanning indicator and fetch with abort controller
   stationName.textContent = "📻 SCANNING SPECTRUM...";
   stationTagline.textContent = `Interrogating receiver for carrier signal at ${roundedFreq.toFixed(1)} MHz...`;
   streamStatus.textContent = "CHECKING SPECTRUM CARRIER...";
@@ -659,12 +666,12 @@ function checkBackendCarrier(freq) {
 
   fetch(backendUrl, {
     method: "GET",
-    cache: "no-store",
     signal: currentTuneAbortController.signal
   })
   .then(res => res.json())
   .then(data => {
     currentTuneAbortController = null;
+    tuneCache.set(roundedFreq, data);
     applyTuneResult(data);
   })
   .catch(err => {
