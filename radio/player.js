@@ -16,6 +16,39 @@
 
 const STATIONS = [
   {
+    name: "WNYC 88.9 FM New York",
+    broadcaster: "New York Public Radio (USA)",
+    freq: "88.9",
+    category: "intl",
+    flag: "🇺🇸",
+    tagline: "New York City's Premier Radio • Live News & Conversations",
+    format: "MP3 Live",
+    quality: "HQ 128 kbps",
+    color: "#3b82f6",
+    streams: [
+      "https://fm939.wnyc.org/wnycfm",
+      "https://pureplay.cdnstream1.com/6044_128.mp3"
+    ],
+    type: "audio"
+  },
+  {
+    name: "YES 90.7 Chinese Radio",
+    broadcaster: "Singapore / Greater China",
+    freq: "90.7",
+    category: "intl",
+    flag: "🇨🇳",
+    tagline: "顶尖流行音乐台 • Trans-Himalayan Mandarin Relay",
+    format: "AAC Stereo",
+    quality: "HQ 128 kbps",
+    color: "#ef4444",
+    streams: [
+      "http://playerservices.streamtheworld.com/api/livestream-redirect/YES933AAC.aac",
+      "https://lhttp.qtfm.cn/live/5022308/64k.mp3",
+      "https://lhttp.qtfm.cn/live/15318317/64k.mp3"
+    ],
+    type: "audio"
+  },
+  {
     name: "92.7 Big FM India",
     broadcaster: "Big FM India",
     freq: "92.7",
@@ -29,23 +62,6 @@ const STATIONS = [
       "https://server.mixify.in/listen/listen/radio.mp3",
       "https://2.mystreaming.net/uber/bollywood2000s/icecast.audio",
       "http://stream.radiobollyfm.in:8201/hd?t=1526570335"
-    ],
-    type: "audio"
-  },
-  {
-    name: "YES 933 Chinese Radio",
-    broadcaster: "Singapore / Greater China",
-    freq: "93.3",
-    category: "intl",
-    flag: "🇨🇳",
-    tagline: "顶尖流行音乐台 • Trans-Himalayan Mandarin Relay",
-    format: "AAC Stereo",
-    quality: "HQ 128 kbps",
-    color: "#ef4444",
-    streams: [
-      "http://playerservices.streamtheworld.com/api/livestream-redirect/YES933AAC.aac",
-      "https://lhttp.qtfm.cn/live/5022308/64k.mp3",
-      "https://lhttp.qtfm.cn/live/15318317/64k.mp3"
     ],
     type: "audio"
   },
@@ -66,22 +82,6 @@ const STATIONS = [
     type: "audio"
   },
   {
-    name: "WNYC 93.9 FM New York",
-    broadcaster: "New York Public Radio (USA)",
-    freq: "93.9",
-    category: "intl",
-    flag: "🇺🇸",
-    tagline: "New York City's Premier Radio • Live News & Conversations",
-    format: "MP3 Live",
-    quality: "HQ 128 kbps",
-    color: "#3b82f6",
-    streams: [
-      "https://fm939.wnyc.org/wnycfm",
-      "https://pureplay.cdnstream1.com/6044_128.mp3"
-    ],
-    type: "audio"
-  },
-  {
     name: "Capital FM 95.8 London",
     broadcaster: "Global Media UK (Britain)",
     freq: "95.8",
@@ -98,6 +98,22 @@ const STATIONS = [
     type: "audio"
   },
   {
+    name: "Vividh Bharati 97.0 FM",
+    broadcaster: "All India Radio National",
+    freq: "97.0",
+    category: "indian",
+    flag: "🇮🇳",
+    tagline: "Desh Ki Swar-Ganga • Sangeet Sartaj & Vintage Gold",
+    format: "HLS Official",
+    quality: "Auto HQ",
+    color: "#10b981",
+    streams: [
+      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi04/air004_Auto.m3u8",
+      "https://air.pc.cdn.bitgravity.com/air/live/pbaudio001/playlist.m3u8"
+    ],
+    type: "hls"
+  },
+  {
     name: "Radio Mirchi 98.3 FM",
     broadcaster: "Mirchi India",
     freq: "98.3",
@@ -110,22 +126,6 @@ const STATIONS = [
     streams: [
       "https://eu8.fastcast4u.com/proxy/clyedupq/stream",
       "https://drive.uber.radio/uber/bollywoodnow/icecast.audio"
-    ],
-    type: "audio"
-  },
-  {
-    name: "FM 100 Pakistan",
-    broadcaster: "Islamabad / Lahore / Rawalpindi",
-    freq: "100.0",
-    category: "intl",
-    flag: "🇵🇰",
-    tagline: "Pakistan's First & Largest Live FM Network • Trans-Border Urdu Hits",
-    format: "MP3 Icecast",
-    quality: "HQ 128 kbps",
-    color: "#16a34a",
-    streams: [
-      "http://162.244.80.118:4900/;stream.mp3",
-      "https://samaakhi107-itelservices.radioca.st/stream"
     ],
     type: "audio"
   },
@@ -146,6 +146,22 @@ const STATIONS = [
     type: "hls"
   },
   {
+    name: "FM 100.8 Pakistan",
+    broadcaster: "Islamabad / Lahore / Rawalpindi",
+    freq: "100.8",
+    category: "intl",
+    flag: "🇵🇰",
+    tagline: "Pakistan's First & Largest Live FM Network • Trans-Border Urdu Hits",
+    format: "MP3 Icecast",
+    quality: "HQ 128 kbps",
+    color: "#16a34a",
+    streams: [
+      "http://162.244.80.118:4900/;stream.mp3",
+      "https://samaakhi107-itelservices.radioca.st/stream"
+    ],
+    type: "audio"
+  },
+  {
     name: "AIR Ladakh Rainbow 102.6",
     broadcaster: "All India Radio Ladakh",
     freq: "102.6",
@@ -158,22 +174,6 @@ const STATIONS = [
     streams: [
       "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air002_Auto.m3u8",
       "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi02/air00264kbps.m3u8"
-    ],
-    type: "hls"
-  },
-  {
-    name: "Vividh Bharati 102.8 FM",
-    broadcaster: "All India Radio National",
-    freq: "102.8",
-    category: "indian",
-    flag: "🇮🇳",
-    tagline: "Desh Ki Swar-Ganga • Sangeet Sartaj & Vintage Gold",
-    format: "HLS Official",
-    quality: "Auto HQ",
-    color: "#10b981",
-    streams: [
-      "/hls-proxy?url=https://d3r9rhourdc02u.cloudfront.net/assets/radio/airdelhi04/air004_Auto.m3u8",
-      "https://air.pc.cdn.bitgravity.com/air/live/pbaudio001/playlist.m3u8"
     ],
     type: "hls"
   },
@@ -229,9 +229,9 @@ const STATIONS = [
 ];
 
 // App State
-let currentStationIndex = 2; // Default to 93.5 Red FM
+let currentStationIndex = 3; // Default to 93.5 Red FM
 let currentStreamIndex = 0;
-let lastTunedStationIndex = 2;
+let lastTunedStationIndex = 3;
 let clipRepeatTimeout = null;
 let currentBackendCarrierFreq = null;
 let activeBackendRepeatDelay = 1000;
