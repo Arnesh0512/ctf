@@ -88,5 +88,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`[SQL-Injection] Server running at http://localhost:${PORT}`);
+  console.log(`[Fort-Access] Server running at http://localhost:${PORT}`);
 });

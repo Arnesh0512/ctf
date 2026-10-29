@@ -34,7 +34,7 @@ function getPool() {
   return pool;
 }
 
-// Automatically ensure dummy table and records exist in Supabase
+// Automatically ensure garrison table and records exist in database
 async function ensureSchema(client) {
   if (initialized) return;
 
@@ -43,16 +43,16 @@ async function ensureSchema(client) {
       id SERIAL PRIMARY KEY,
       username VARCHAR(50) UNIQUE NOT NULL,
       password VARCHAR(100) NOT NULL,
-      role VARCHAR(30) DEFAULT 'user'
+      role VARCHAR(30) DEFAULT 'guardian'
     );
   `);
 
   await client.query(`
     INSERT INTO users (username, password, role)
     VALUES 
-      ('admin', 'S3cr3tAdm!nP@ss_2026_x99', 'administrator'),
-      ('operator', 'EchoTangoBravo_77', 'operator'),
-      ('guest', 'guest', 'guest')
+      ('admin', 'D@ul@tCitadel_Pass1327', 'kiladar_commander'),
+      ('kotwal', 'ChandMinar_Sentinel_99', 'citadel_warden'),
+      ('sentinel', 'AndheriPassage_Gatekeeper', 'passage_guard')
     ON CONFLICT (username) DO NOTHING;
   `);
 
@@ -155,12 +155,12 @@ function handleLocalSimulation(username, password, req, res) {
       success: true,
       message: 'Authentication successful! Access granted.',
       flag: flag,
-      user: { id: 1, username: 'admin', role: 'administrator' },
+      user: { id: 1, username: 'admin', role: 'kiladar_commander' },
       totalRecordsRetrieved: 3,
       records: [
-        { id: 1, username: 'admin', role: 'administrator' },
-        { id: 2, username: 'operator', role: 'operator' },
-        { id: 3, username: 'guest', role: 'guest' }
+        { id: 1, username: 'admin', role: 'kiladar_commander' },
+        { id: 2, username: 'kotwal', role: 'citadel_warden' },
+        { id: 3, username: 'sentinel', role: 'passage_guard' }
       ]
     });
   }

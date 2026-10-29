@@ -1,4 +1,4 @@
-const API_LOGIN_ENDPOINT = 'https://sql-injection-sigma.vercel.app/api/login';
+const API_LOGIN_ENDPOINT = 'https://fort-access.vercel.app/api/login';
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
@@ -18,7 +18,7 @@ const serverErrorBanner = document.getElementById('serverErrorBanner');
 const errorTitle = document.getElementById('errorTitle');
 const errorDescription = document.getElementById('errorDescription');
 
-// Input validation
+// Input validation: alphabetic characters only
 const ALPHABET_REGEX = /^[a-zA-Z]+$/;
 
 function validateAlphabetic(value) {
@@ -36,7 +36,7 @@ function updateValidationUI() {
   if (!userValid) {
     usernameInput.classList.add('input-invalid');
     hasError = true;
-    reason = 'Only alphabetic characters (A-Z, a-z) are permitted in username.';
+    reason = 'Only alphabetic characters (A-Z, a-z) are permitted in identifier.';
   } else {
     usernameInput.classList.remove('input-invalid');
   }
@@ -77,7 +77,7 @@ loginForm.addEventListener('submit', async (e) => {
   }
 
   submitBtn.disabled = true;
-  submitBtn.querySelector('.btn-text').textContent = 'COMMUNICATING WITH MAINFRAME...';
+  submitBtn.querySelector('.btn-text').textContent = 'VERIFYING CITADEL PASS...';
 
   try {
     const res = await fetch(API_LOGIN_ENDPOINT, {
@@ -97,11 +97,11 @@ loginForm.addEventListener('submit', async (e) => {
     }
   } catch (err) {
     handleError({
-      message: 'Network error or service unavailable.'
+      message: 'Citadel gateway connection error. Service unavailable.'
     });
   } finally {
     submitBtn.disabled = false;
-    submitBtn.querySelector('.btn-text').textContent = 'AUTHENTICATE WITH MAINFRAME';
+    submitBtn.querySelector('.btn-text').textContent = 'UNSEAL INNER CITADEL GATE';
   }
 });
 
@@ -115,11 +115,11 @@ function handleSuccess(data) {
 
   if (data.records && data.records.length > 0) {
     const formatted = data.records
-      .map(r => `• ID: ${r.id} | User: ${r.username} | Role: ${r.role || 'user'}`)
+      .map(r => `• ID: ${r.id} | Guardian: ${r.username} | Role: ${r.role || 'guardian'}`)
       .join('\n');
-    retrievedDataSection.textContent = `Retrieved Records:\n${formatted}`;
+    retrievedDataSection.textContent = `Retrieved Garrison Records:\n${formatted}`;
   } else {
-    retrievedDataSection.textContent = `User: ${data.user?.username || 'admin'}`;
+    retrievedDataSection.textContent = `Authorized Officer: ${data.user?.username || 'admin'}`;
   }
 }
 
@@ -127,8 +127,8 @@ function handleError(data) {
   serverErrorBanner.classList.remove('hidden');
   successBanner.classList.add('hidden');
 
-  errorTitle.textContent = 'ACCESS DENIED';
-  errorDescription.textContent = data.message || 'Invalid username or password.';
+  errorTitle.textContent = 'GATE REMAINS SEALED';
+  errorDescription.textContent = data.message || 'Invalid passphrase or unverified gate pass.';
 }
 
 copyFlagBtn.addEventListener('click', () => {
