@@ -4,11 +4,19 @@ module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
+
+  // Instant response for background pre-warmup ping
+  if (req.method === 'GET' && (req.query?.warmup || req.query?.ping)) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ warm: true });
+  }
+
+  // Edge and browser cache header: speeds up repeat queries to ~5-15ms
+  res.setHeader('Cache-Control', 'public, max-age=600, s-maxage=86400, stale-while-revalidate=86400');
 
   let reqFreq = null;
   if (req.method === 'GET') {

@@ -243,6 +243,11 @@ let hlsInstance = null;
 let sessionSeconds = 0;
 let sessionInterval = null;
 
+// Carrier Tune Cache & Fast Request Manager
+const tuneCache = new Map();
+let currentTuneAbortController = null;
+let warmupPingInterval = null;
+
 // Web Audio & Synthesizers
 let audioContext = null;
 let analyser = null;
@@ -308,7 +313,18 @@ document.addEventListener("DOMContentLoaded", () => {
   setupAudioVisualizer();
   updateStationUI(currentStationIndex);
   bindEvents();
+  initBackendWarmup();
 });
+
+// Proactive Serverless Pre-warming
+function initBackendWarmup() {
+  function pingWarmup() {
+    fetch('/api/tune?warmup=1', { method: 'GET', keepalive: true }).catch(() => {});
+  }
+  pingWarmup();
+  if (warmupPingInterval) clearInterval(warmupPingInterval);
+  warmupPingInterval = setInterval(pingWarmup, 210000); // 3.5 min keepalive
+}
 
 // Setup Clock
 function setupClock() {
@@ -546,29 +562,14 @@ function checkBackendCarrier(freq) {
   lastTunedStationIndex = -1;
 
   const roundedFreq = parseFloat(freq.toFixed(1));
-  stationName.textContent = "📻 SCANNING SPECTRUM...";
-  stationTagline.textContent = `Interrogating receiver for carrier signal at ${roundedFreq.toFixed(1)} MHz...`;
-  streamStatus.textContent = "CHECKING SPECTRUM CARRIER...";
-  streamStatus.className = "stream-status buffering";
-  chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Querying...)`;
-  livePill.classList.remove("active");
-  liveText.textContent = "SCANNING";
-  if (regionTag) {
-    regionTag.textContent = "SCANNING";
-    regionTag.className = "tag-region region-carrier";
+
+  // Abort any previous pending backend request so network never queues up
+  if (currentTuneAbortController) {
+    currentTuneAbortController.abort();
+    currentTuneAbortController = null;
   }
 
-  // Use the same-origin API locally and on Vercel; no separate port 3001.
-  const backendUrl = "/api/tune";
-
-  fetch(backendUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ freq: roundedFreq })
-  })
-  .then(res => res.json())
-  .then(data => {
-    // If the user resumed sliding while fetching, ignore stale response
+  function applyTuneResult(data) {
     if (isDraggingNeedle) return;
 
     if (data && data.match === true && data.audio) {
@@ -636,32 +637,46 @@ function checkBackendCarrier(freq) {
       updateStationPinsHighlight(-1);
       highlightStationCard(-1);
     }
+  }
+
+  // 1. Instant Cache Check (0ms response if previously queried)
+  if (tuneCache.has(roundedFreq)) {
+    applyTuneResult(tuneCache.get(roundedFreq));
+    return;
+  }
+
+  // 2. Not cached: show scanning indicator and fetch with abort controller
+  stationName.textContent = "📻 SCANNING SPECTRUM...";
+  stationTagline.textContent = `Interrogating receiver for carrier signal at ${roundedFreq.toFixed(1)} MHz...`;
+  streamStatus.textContent = "CHECKING SPECTRUM CARRIER...";
+  streamStatus.className = "stream-status buffering";
+  chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Querying...)`;
+  livePill.classList.remove("active");
+  liveText.textContent = "SCANNING";
+  if (regionTag) {
+    regionTag.textContent = "SCANNING";
+    regionTag.className = "tag-region region-carrier";
+  }
+
+  currentTuneAbortController = new AbortController();
+  const backendUrl = `/api/tune?freq=${encodeURIComponent(roundedFreq)}`;
+
+  fetch(backendUrl, {
+    method: "GET",
+    signal: currentTuneAbortController.signal
+  })
+  .then(res => res.json())
+  .then(data => {
+    currentTuneAbortController = null;
+    tuneCache.set(roundedFreq, data);
+    applyTuneResult(data);
   })
   .catch(err => {
+    if (err.name === 'AbortError') return; // Cancelled by subsequent user interaction
     console.warn("Backend tune query failed:", err);
+    currentTuneAbortController = null;
     if (!isDraggingNeedle) {
-      currentBackendCarrierFreq = null;
-      isTunedToStation = false;
-      setStaticNoiseVolume(0.26);
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-      stationName.textContent = "📻 FM STATIC NOISE";
-      stationTagline.textContent = "No broadcast carrier signal on this frequency • Drag needle to tune";
-      streamStatus.textContent = "EMPTY FREQUENCY • NO CARRIER";
-      streamStatus.className = "stream-status buffering";
-      chipStationText.textContent = `${roundedFreq.toFixed(1)} MHz (Empty Space)`;
-      livePill.classList.remove("active");
-      liveText.textContent = "STATIC NOISE";
-      stereoTag.style.opacity = "0.35";
-      if (regionTag) {
-        regionTag.textContent = "STATIC";
-        regionTag.className = "tag-region region-carrier";
-      }
-      updateSignalBars(1);
-      updateStationPinsHighlight(-1);
-      highlightStationCard(-1);
+      applyTuneResult({ match: false });
     }
   });
 }

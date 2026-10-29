@@ -43,6 +43,11 @@ const server = http.createServer((req, res) => {
         : { match: false }));
     };
 
+    if (req.method === 'GET' && (parsedUrl.searchParams.get('warmup') || parsedUrl.searchParams.get('ping'))) {
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      return res.end(JSON.stringify({ warm: true }));
+    }
+
     if (req.method === 'GET') {
       return respond(parsedUrl.searchParams.get('freq') || parsedUrl.searchParams.get('frequency'));
     }

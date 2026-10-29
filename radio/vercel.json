@@ -1,6 +1,7 @@
 {
   "version": 2,
   "outputDirectory": ".",
+  "regions": ["bom1"],
   "rewrites": [
     { "source": "/tune", "destination": "/api/tune" },
     { "source": "/api/tune", "destination": "/api/tune" },
