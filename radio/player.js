@@ -560,6 +560,7 @@ function checkBackendCarrier(freq) {
     audio.currentTime = 0;
   }
   lastTunedStationIndex = -1;
+  currentStationIndex = -1;
 
   const roundedFreq = parseFloat(freq.toFixed(1));
 
@@ -994,22 +995,61 @@ function togglePlayPause() {
       hlsInstance.stopLoad();
     }
     setStaticNoiseVolume(0);
-    setStatusMessage("PAUSED • Click Play to resume live output", "normal");
+    setStatusMessage("PAUSED • Click Play to resume output", "normal");
     setLoadingState(false);
     livePill.classList.remove("active");
     liveText.textContent = "PAUSED";
     stopSessionTimer();
-    highlightStationCard(currentStationIndex);
+    if (currentStationIndex >= 0) {
+      highlightStationCard(currentStationIndex);
+    }
   } else {
-    if (!isTunedToStation) {
-      // Resume static noise
+    // RESUMING PLAYBACK - NEVER reset slider position!
+
+    // 1. If currently locked to an encrypted backend carrier (e.g. 88.0, 96.2, 108.0):
+    if (currentBackendCarrierFreq !== null) {
+      setStaticNoiseVolume(0);
+      if (audio.ended) {
+        audio.currentTime = 0;
+      }
+      audio.play().then(() => {
+        isPlaying = true;
+        setLoadingState(false);
+        livePill.classList.add("active");
+        liveText.textContent = "LIVE CARRIER";
+        startSessionTimer();
+      }).catch(handlePlayError);
+      return;
+    }
+
+    // 2. If currently on empty spectrum static noise:
+    if (!isTunedToStation || currentStationIndex === -1) {
       setStaticNoiseVolume(0.26);
       isPlaying = true;
       setLoadingState(false);
       livePill.classList.remove("active");
       liveText.textContent = "STATIC NOISE";
       startSessionTimer();
-    } else {
+      return;
+    }
+
+    // 3. If currently on a standard radio station:
+    if (currentStationIndex >= 0 && currentStationIndex < STATIONS.length) {
+      const station = STATIONS[currentStationIndex];
+      // If audio already loaded and just paused, resume directly without moving slider
+      if (audio.src && !audio.ended && station.type !== "hls") {
+        audio.play().then(() => {
+          isPlaying = true;
+          setLoadingState(false);
+          livePill.classList.add("active");
+          liveText.textContent = "LIVE ON AIR";
+          startSessionTimer();
+        }).catch(() => {
+          loadAndPlayStation(currentStationIndex, currentStreamIndex);
+        });
+        return;
+      }
+
       if (audio.ended) {
         audio.currentTime = 0;
       }
@@ -1020,6 +1060,26 @@ function togglePlayPause() {
 
 // Switch Station By Offset (+1 or -1)
 function changeStation(offset) {
+  if (currentStationIndex === -1) {
+    const currentF = parseFloat(freqNumber.textContent) || 93.5;
+    if (offset > 0) {
+      let nextIdx = STATIONS.findIndex(s => parseFloat(s.freq) > currentF);
+      if (nextIdx === -1) nextIdx = 0;
+      loadAndPlayStation(nextIdx, 0);
+    } else {
+      let prevIdx = -1;
+      for (let i = STATIONS.length - 1; i >= 0; i--) {
+        if (parseFloat(STATIONS[i].freq) < currentF) {
+          prevIdx = i;
+          break;
+        }
+      }
+      if (prevIdx === -1) prevIdx = STATIONS.length - 1;
+      loadAndPlayStation(prevIdx, 0);
+    }
+    return;
+  }
+
   let nextIdx = (currentStationIndex + offset + STATIONS.length) % STATIONS.length;
   loadAndPlayStation(nextIdx, 0);
 }
