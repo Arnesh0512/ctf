@@ -44,21 +44,39 @@ export default function App() {
   // DevTools helper drawer toggle
   const [showInspector, setShowInspector] = useState(false);
 
-  // Proactively clear any old/legacy frontend document.cookie on load
+  // Persist session across tab and browser restarts
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.cookie = 'auth=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
-      document.cookie = `auth=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=${window.location.hostname};`;
-      localStorage.removeItem('auth_cookie');
-    }
-    const saved = sessionStorage.getItem('royal_user');
+    // 1. Check local persistent storage immediately so reopen stays logged in
+    const saved = localStorage.getItem('royal_user');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setUser(parsed);
-        setIsLoggedIn(true);
+        if (parsed?.username) {
+          setUser(parsed);
+          setIsLoggedIn(true);
+        }
       } catch (_) {}
     }
+
+    // 2. Query backend /me to synchronize with the current session cookie
+    const syncBackendSession = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/me`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const data = await res.json();
+        if (data?.session?.username) {
+          setUser(data.session);
+          setIsLoggedIn(true);
+          localStorage.setItem('royal_user', JSON.stringify(data.session));
+        } else if (!saved) {
+          setIsLoggedIn(false);
+        }
+      } catch (_) {}
+    };
+
+    syncBackendSession();
   }, []);
 
   // Login handler: credentials: 'include' receives Set-Cookie exclusively for ctf-backend-d3un.onrender.com
@@ -79,11 +97,10 @@ export default function App() {
 
       if (res.ok && data.success) {
         // Backend stores the cookie under ctf-backend-d3un.onrender.com via Set-Cookie!
-        // No document.cookie written in frontend.
         const activeUser = data.user || { username: 'guest', role: 'user' };
         setUser(activeUser);
         setIsLoggedIn(true);
-        sessionStorage.setItem('royal_user', JSON.stringify(activeUser));
+        localStorage.setItem('royal_user', JSON.stringify(activeUser));
         setVaultResult(null);
       } else {
         setLoginError(data.message || 'Login failed. Please verify credentials.');
@@ -96,11 +113,19 @@ export default function App() {
   };
 
   // Logout handler
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    localStorage.removeItem('royal_user');
     sessionStorage.removeItem('royal_user');
     setUser({ username: 'guest', role: 'user' });
     setIsLoggedIn(false);
     setVaultResult(null);
+
+    try {
+      await fetch(`${BACKEND_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (_) {}
   };
 
   // Vault unseal handler: credentials: 'include' automatically sends the cookie from ctf-backend-d3un.onrender.com
@@ -126,7 +151,7 @@ export default function App() {
         if (data.vault?.accessGrantedTo) {
           const updated = { username: data.vault.accessGrantedTo, role: data.vault.role || 'admin' };
           setUser(updated);
-          sessionStorage.setItem('royal_user', JSON.stringify(updated));
+          localStorage.setItem('royal_user', JSON.stringify(updated));
         }
       } else {
         setVaultResult({
@@ -137,7 +162,7 @@ export default function App() {
         });
         if (data.identity?.username) {
           setUser(data.identity);
-          sessionStorage.setItem('royal_user', JSON.stringify(data.identity));
+          localStorage.setItem('royal_user', JSON.stringify(data.identity));
         }
       }
     } catch (err) {

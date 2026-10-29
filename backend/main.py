@@ -233,6 +233,18 @@ def me(request: Request, cookie: Optional[str] = None):
     parsed = parse_auth_cookie(raw_cookie)
     return {"cookie": raw_cookie, "session": parsed}
 
+@app.post("/logout")
+@app.get("/logout")
+def logout(response: Response):
+    response.delete_cookie(
+        key="auth",
+        path="/",
+        samesite="none",
+        secure=True,
+        httponly=False
+    )
+    return {"success": True, "message": "Session terminated."}
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 10000))
