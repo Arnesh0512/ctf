@@ -1,39 +1,68 @@
 import React from 'react';
 import { 
-  Compass, 
   Clock, 
   Ticket, 
   Plane, 
   Train as TrainIcon, 
   Navigation, 
-  Camera
+  Camera,
+  Headphones,
+  Footprints,
+  Accessibility,
+  Hourglass,
+  MapPin,
+  Sun,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function Tourism() {
-  const highlights = [
+  const visitorTips = [
     {
-      title: 'Scindia Art & Armoury Gallery',
-      desc: 'Blades of Emperor Aurangzeb, royal Maratha talwars, and diamond-studded ceremonial shields.',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Art_collection_Scindia_Palace.jpg',
-      badge: 'Chamber 12'
+      title: 'Multilingual Audio Guides',
+      badge: 'Self-Guided',
+      desc: 'Smart audio headsets available at the reception ticket counter in English, Hindi, and French for detailed architectural narrations.',
+      icon: Headphones
     },
     {
-      title: 'Imperial Silver Buggy',
-      desc: 'Solid sterling silver royal carriage used in coronation processions and state receptions.',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Cart_Jai_vilas_palace_gwalior.jpg',
-      badge: 'Coach Gallery'
+      title: 'Carpet Preservation Policy',
+      badge: 'Heritage Care',
+      desc: 'Complimentary protective shoe covers are provided before entering the Grand Durbar Hall to preserve the 12-year historic Persian rug.',
+      icon: Footprints
     },
     {
-      title: 'Grand Durbar Hall',
-      desc: '560 kg gold-gilded ceiling, twin 3.5-ton Belgian crystal chandeliers, and Asia’s largest carpet.',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/DUrbar_hall_at_jai_vilas_palace.JPG',
-      badge: 'Masterpiece'
+      title: 'Accessibility & Cloakroom',
+      badge: 'Amenities',
+      desc: 'Wheelchair assistance and ramp access are available at palace entrances. Secure cloakroom storage provided for bags and luggage.',
+      icon: Accessibility
     },
     {
-      title: 'Gwalior Fort & Heritage',
-      desc: 'The iconic 8th-century citadel perched high above Gwalior, just 5 km from the palace.',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/0/02/Fort_Gwalior-_India_02.jpg',
-      badge: 'Heritage Circuit'
+      title: 'Tour Duration & Timing',
+      badge: 'Planning',
+      desc: 'Recommended tour duration is 2 to 2.5 hours. Visiting between 10:00 AM and 1:00 PM offers the best natural sunlight across the halls.',
+      icon: Hourglass
+    }
+  ];
+
+  const nearbyMonuments = [
+    {
+      name: 'Gwalior Fort',
+      distance: '5 km away',
+      desc: 'An 8th-century hilltop fortress described by Mughal Emperor Babur as the pearl among Indian forts, housing Man Mandir Palace.'
+    },
+    {
+      name: 'Tomb of Tansen',
+      distance: '4 km away',
+      desc: 'Mughal architectural memorial dedicated to the legendary musician Tansen, one of the Navratnas (Nine Jewels) of Emperor Akbar.'
+    },
+    {
+      name: 'Saas-Bahu Temples',
+      distance: '5.5 km away',
+      desc: '11th-century twin sandstone temples dedicated to Lord Vishnu, celebrated for intricately carved pillars and geometric ceilings.'
+    },
+    {
+      name: 'Sun Temple (Suraj Kund)',
+      distance: '6 km away',
+      desc: 'A red sandstone temple modeled after the famous Konark Sun Temple in Odisha, surrounded by serene landscaped gardens.'
     }
   ];
 
@@ -98,46 +127,44 @@ export default function Tourism() {
         </div>
       </section>
 
-      {/* Visual Gallery Showcase */}
+      {/* Visitor Tips & Regulations */}
       <section className="space-y-6">
         <div>
           <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-stone-900">
-            Key Royal Exhibits
+            Visitor Guidelines &amp; Amenities
           </h2>
           <p className="text-xs sm:text-sm text-stone-600">
-            Selected highlights among the 35 public galleries of H.H. Sir Jiwaji Rao Scindia Museum:
+            Essential guidelines for an enjoyable tour of the Scindia Museum:
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {highlights.map((item, idx) => (
-            <div
-              key={idx}
-              className="group bg-white rounded-2xl overflow-hidden border border-amber-200/90 hover:border-amber-400 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-44 w-full overflow-hidden bg-stone-100">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <span className="absolute top-3 right-3 bg-stone-950/80 backdrop-blur-md text-amber-400 text-[10px] font-mono px-2 py-0.5 rounded-full border border-amber-400/40 font-semibold">
-                  {item.badge}
-                </span>
-              </div>
-              <div className="p-4 space-y-1.5 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-cinzel font-bold text-stone-900 text-sm leading-snug">
-                    {item.title}
+          {visitorTips.map((tip, idx) => {
+            const Icon = tip.icon;
+            return (
+              <div
+                key={idx}
+                className="bg-white rounded-2xl p-6 border border-amber-200/90 hover:border-amber-400 shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+                      <Icon className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      {tip.badge}
+                    </span>
+                  </div>
+                  <h3 className="font-cinzel font-bold text-stone-900 text-base leading-snug">
+                    {tip.title}
                   </h3>
-                  <p className="text-xs text-stone-600 font-sans mt-1 leading-relaxed">
-                    {item.desc}
+                  <p className="text-xs text-stone-600 font-sans leading-relaxed">
+                    {tip.desc}
                   </p>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -177,6 +204,39 @@ export default function Tourism() {
               Scenic highway drive: 120 km from Agra (2.5 hrs) and 320 km from New Delhi via Yamuna Expressway.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Gwalior Heritage Circuit */}
+      <section className="bg-white border border-stone-200 rounded-3xl p-8 sm:p-10 shadow-sm space-y-6">
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-stone-900">
+            Gwalior Heritage Circuit
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-600">
+            Historical landmarks to visit alongside Jai Vilas Palace:
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {nearbyMonuments.map((place, idx) => (
+            <div
+              key={idx}
+              className="p-5 rounded-2xl bg-[#faf8f5] border border-amber-200/70 space-y-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
+                  {place.distance}
+                </span>
+              </div>
+              <h3 className="font-cinzel font-bold text-stone-900 text-sm">
+                {place.name}
+              </h3>
+              <p className="text-xs text-stone-600 font-sans leading-relaxed">
+                {place.desc}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
     </div>
