@@ -35,7 +35,7 @@ function getAuthCookie() {
 // Helper to set cookie in document.cookie
 function setAuthCookie(value) {
   if (typeof document !== 'undefined') {
-    document.cookie = `auth=${encodeURIComponent(value)}; path=/; max-age=86400; SameSite=Lax`;
+    document.cookie = `auth=${value}; path=/; max-age=86400; SameSite=Lax`;
   }
   localStorage.setItem('auth_cookie', value);
 }

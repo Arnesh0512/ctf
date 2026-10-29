@@ -75,7 +75,7 @@ def health_check():
         "version": "1.0.0"
     }
 
-async def process_login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
+async def process_login(request: Request, login_data: Optional[LoginRequest] = None):
     username = None
     password = None
 
@@ -111,16 +111,6 @@ async def process_login(request: Request, response: Response, login_data: Option
     json_bytes = json.dumps(session_data).encode("utf-8")
     encoded_cookie = base64.b64encode(json_bytes).decode("utf-8")
 
-    response.set_cookie(
-        key="auth",
-        value=encoded_cookie,
-        max_age=86400,
-        path="/",
-        samesite="none",
-        secure=True,
-        httponly=False
-    )
-
     return {
         "success": True,
         "message": "Authentication successful.",
@@ -129,12 +119,12 @@ async def process_login(request: Request, response: Response, login_data: Option
     }
 
 @app.post("/login")
-async def login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
-    return await process_login(request, response, login_data)
+async def login(request: Request, login_data: Optional[LoginRequest] = None):
+    return await process_login(request, login_data)
 
 @app.post("/api/login")
-async def api_login(request: Request, response: Response, login_data: Optional[LoginRequest] = None):
-    return await process_login(request, response, login_data)
+async def api_login(request: Request, login_data: Optional[LoginRequest] = None):
+    return await process_login(request, login_data)
 
 async def process_vault(request: Request, cookie: Optional[str] = None):
     raw_cookie = (
