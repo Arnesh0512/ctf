@@ -15,13 +15,14 @@ import {
   Copy, 
   Check, 
   Eye, 
+  EyeOff,
   Code2, 
   HelpCircle,
   Gem,
   Compass
 } from 'lucide-react';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://vault-backend-qo71.onrender.com';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://ctf-backend-d3un.onrender.com';
 
 // Helper to extract cookie from document.cookie
 function getAuthCookie() {
@@ -62,6 +63,7 @@ export default function App() {
   // Login form state (prefilled as requested)
   const [username, setUsername] = useState('guest');
   const [password, setPassword] = useState('visitorPass');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
@@ -245,11 +247,8 @@ export default function App() {
                 <Lock className="w-8 h-8 text-amber-400 animate-pulse" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-amber-100 tracking-wide">
-                Royal Visitor Portal
+                Royal Palace Portal
               </h2>
-              <p className="text-sm text-slate-400 mt-2 font-sans max-w-sm mx-auto">
-                Authenticate your imperial visitor credentials to explore the Scindia dynasty museum and heritage galleries.
-              </p>
             </div>
 
             {/* Login Card */}
@@ -266,7 +265,7 @@ export default function App() {
               <form onSubmit={handleLogin} className="space-y-5">
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-amber-300/90 font-medium mb-2">
-                    Visitor Username
+                    Username
                   </label>
                   <div className="relative">
                     <input
@@ -282,32 +281,33 @@ export default function App() {
 
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-amber-300/90 font-medium mb-2">
-                    Passcode / Access Key
+                    Password
                   </label>
-                  <div className="relative">
+                  <div className="relative flex items-center">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter pass"
+                      placeholder="Enter password"
                       required
-                      className="w-full bg-slate-950/90 border border-slate-700/80 focus:border-amber-400 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-400/20 text-sm font-sans transition-all"
+                      className="w-full bg-slate-950/90 border border-slate-700/80 focus:border-amber-400 rounded-xl pl-4 pr-12 py-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-400/20 text-sm font-sans transition-all"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 p-1.5 text-slate-400 hover:text-amber-400 transition-colors focus:outline-none cursor-pointer"
+                      title={showPassword ? "Hide password" : "Show password"}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
                   </div>
-                </div>
-
-                <div className="p-3 rounded-lg bg-amber-950/20 border border-amber-900/40 text-xs text-amber-300/80 flex items-center justify-between">
-                  <span className="flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-amber-400" />
-                    <span>Default Guest Pass Pre-filled</span>
-                  </span>
-                  <span className="font-mono text-[11px] text-amber-400/90 font-semibold">guest : visitorPass</span>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loginLoading}
-                  className="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-400 hover:via-amber-500 hover:to-amber-600 text-slate-950 font-cinzel font-bold text-sm tracking-widest py-3.5 px-6 rounded-xl transition-all duration-300 transform active:scale-[0.99] shadow-lg shadow-amber-600/25 flex items-center justify-center space-x-2 disabled:opacity-50"
+                  className="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-400 hover:via-amber-500 hover:to-amber-600 text-slate-950 font-cinzel font-bold text-sm tracking-widest py-3.5 px-6 rounded-xl transition-all duration-300 transform active:scale-[0.99] shadow-lg shadow-amber-600/25 flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
                 >
                   {loginLoading ? (
                     <span className="flex items-center space-x-2">
@@ -322,12 +322,6 @@ export default function App() {
                   )}
                 </button>
               </form>
-
-              <div className="mt-6 pt-6 border-t border-slate-800/80 text-center">
-                <p className="text-xs text-slate-500">
-                  Secured by Imperial Scindia Protocol &bull; Tokenized Cookie Exchange
-                </p>
-              </div>
             </div>
           </div>
         </main>
