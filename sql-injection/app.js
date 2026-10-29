@@ -1,4 +1,4 @@
-const API_LOGIN_ENDPOINT = '/api/login';
+const API_LOGIN_ENDPOINT = 'https://sql-injection-sigma.vercel.app/api/login';
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
