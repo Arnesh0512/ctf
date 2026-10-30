@@ -36,7 +36,6 @@ async def temple_login(request: Request, login_data: Optional[LoginRequest] = No
 
     now = int(time.time())
     payload = {
-        "sub": username,
         "role": "pilgrim",
         "temple": "Konark Sun Temple",
         "dynasty": "Eastern Ganga",
