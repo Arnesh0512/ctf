@@ -17,7 +17,7 @@ export default function Login({ onLoginSuccess }) {
     setLoginError('');
 
     try {
-      const res = await fetch(`${BACKEND_URL}/login`, {
+      const res = await fetch(`${BACKEND_URL}/villa/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

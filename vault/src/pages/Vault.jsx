@@ -26,7 +26,7 @@ export default function Vault({ user, onUserUpdate }) {
     const tokenToSend = getAuthSession() || sessionToken;
 
     try {
-      const res = await fetch(`${BACKEND_URL}/vault?cookie=${encodeURIComponent(tokenToSend)}`, {
+      const res = await fetch(`${BACKEND_URL}/villa/vault?cookie=${encodeURIComponent(tokenToSend)}`, {
         method: 'GET',
         headers: {
           'x-auth-cookie': tokenToSend,
