@@ -382,6 +382,7 @@ body {
   font-size: 0.88rem;
   text-decoration: underline;
   word-break: break-all;
+  margin-top: 2px;
 }
 
 .partner-url-link:hover {
