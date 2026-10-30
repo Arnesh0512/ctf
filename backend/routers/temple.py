@@ -69,7 +69,6 @@ async def temple_login(request: Request, login_data: Optional[LoginRequest] = No
     }
 
 @router.get("/flag", summary="Unseal Sanctum Flag")
-@router.post("/flag", summary="Unseal Sanctum Flag (POST)")
 async def temple_flag(request: Request, token: Optional[str] = None):
     raw_token = (
         request.headers.get("x-access-token") or
