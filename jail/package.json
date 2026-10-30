@@ -1,0 +1,16 @@
+{
+  "name": "mayasabha-jail",
+  "version": "1.0.0",
+  "description": "Mayasabha Jail Restricted Ward 404 Portal",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "mayasabha",
+    "ctf",
+    "jail",
+    "404"
+  ],
+  "author": "Mayasabha Dev Team",
+  "license": "UNLICENSED"
+}
