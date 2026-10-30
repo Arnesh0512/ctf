@@ -4,17 +4,11 @@ import {
   Sun, 
   LogOut, 
   Clock, 
-  AlertCircle, 
   Sparkles, 
   CheckCircle2, 
-  Key, 
-  Code, 
-  Edit3, 
-  Compass, 
-  ShieldAlert,
-  Save
+  Compass
 } from 'lucide-react';
-import { BACKEND_URL, getToken, setToken, getUser, clearAuth, parseJwtSafe } from '../auth';
+import { BACKEND_URL, getToken, getUser, clearAuth } from '../auth';
 
 export default function Flag() {
   const navigate = useNavigate();
@@ -22,9 +16,6 @@ export default function Flag() {
   const [user, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [manualToken, setManualToken] = useState('');
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     const storedToken = getToken();
@@ -33,7 +24,6 @@ export default function Flag() {
       return;
     }
     setCurrentToken(storedToken);
-    setManualToken(storedToken);
     setCurrentUser(getUser() || { username: 'pilgrim', role: 'pilgrim' });
   }, [navigate]);
 
@@ -76,20 +66,6 @@ export default function Flag() {
       setLoading(false);
     }
   };
-
-  const handleSaveManualToken = (e) => {
-    e.preventDefault();
-    if (!manualToken.trim()) return;
-    setToken(manualToken.trim());
-    setCurrentToken(manualToken.trim());
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 2500);
-    setEditMode(false);
-  };
-
-  const parsedJwt = parseJwtSafe(token);
-  const currentTimestamp = Math.floor(Date.now() / 1000);
-  const isClientExpired = parsedJwt?.exp && parsedJwt.exp <= currentTimestamp;
 
   return (
     <div className="min-h-screen bg-[#f1f6f3] text-stone-900 flex flex-col justify-between selection:bg-emerald-200 selection:text-emerald-950 relative overflow-hidden">
@@ -238,118 +214,6 @@ export default function Flag() {
                   </div>
                 </div>
               )}
-            </div>
-          )}
-        </section>
-
-        {/* Transit Pass (JWT) Inspector & Editor Card */}
-        <section className="bg-white/95 backdrop-blur-md border border-emerald-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center space-x-2">
-              <Key className="w-5 h-5 text-emerald-700" />
-              <h3 className="font-cinzel font-bold text-emerald-950 text-base">
-                Chariot Transit Pass (JWT Inspector)
-              </h3>
-            </div>
-
-            <button
-              onClick={() => setEditMode(!editMode)}
-              className="text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-emerald-100/80 hover:bg-emerald-200 px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1 cursor-pointer"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              <span>{editMode ? 'Cancel Edit' : 'Edit / Replace JWT'}</span>
-            </button>
-          </div>
-
-          {saveSuccess && (
-            <div className="p-3 bg-emerald-100 border border-emerald-300 rounded-xl text-xs font-bold text-emerald-900 flex items-center space-x-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-              <span>Transit pass updated in persistent memory! You can now re-click "Show Flag".</span>
-            </div>
-          )}
-
-          {editMode ? (
-            /* Manual Token Edit Form */
-            <form onSubmit={handleSaveManualToken} className="space-y-3 pt-2">
-              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wide">
-                Paste New Signed JWT (with secret 2407 & future exp):
-              </label>
-              <textarea
-                value={manualToken}
-                onChange={(e) => setManualToken(e.target.value)}
-                rows={4}
-                required
-                className="w-full p-3 font-mono text-xs bg-stone-50 border border-emerald-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition-all text-stone-800 break-all"
-                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-              />
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="submit"
-                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-lg flex items-center space-x-1.5 shadow-sm cursor-pointer"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>Save New Token</span>
-                </button>
-              </div>
-            </form>
-          ) : (
-            /* Token Display & Decoded Claims */
-            <div className="space-y-4">
-              <div className="p-3 bg-stone-50 border border-emerald-200/80 rounded-xl">
-                <div className="flex items-center justify-between text-xs text-stone-500 mb-1">
-                  <span className="font-bold uppercase tracking-wider text-emerald-900">Current Token</span>
-                  <span className="font-mono text-[11px]">{token.length} chars</span>
-                </div>
-                <p className="font-mono text-xs text-stone-700 break-all select-all line-clamp-3">
-                  {token}
-                </p>
-              </div>
-
-              {parsedJwt && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl text-xs space-y-1">
-                    <span className="font-bold text-emerald-900 block uppercase tracking-wider text-[10px]">
-                      Identity (Subject)
-                    </span>
-                    <p className="font-mono text-stone-800">
-                      <strong>sub:</strong> {parsedJwt.sub || 'N/A'}
-                    </p>
-                    <p className="font-mono text-stone-800">
-                      <strong>role:</strong> {parsedJwt.role || 'N/A'}
-                    </p>
-                  </div>
-
-                  <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl text-xs space-y-1">
-                    <span className="font-bold text-emerald-900 block uppercase tracking-wider text-[10px]">
-                      Temporal Stamps (UNIX Time)
-                    </span>
-                    <p className="font-mono text-stone-800">
-                      <strong>iat:</strong> {parsedJwt.iat}
-                    </p>
-                    <p className="font-mono text-stone-800 flex items-center space-x-1">
-                      <span><strong>exp:</strong> {parsedJwt.exp}</span>
-                      {isClientExpired ? (
-                        <span className="ml-1 text-[10px] bg-rose-100 text-rose-800 font-bold px-1.5 py-0.5 rounded">
-                          EXPIRED
-                        </span>
-                      ) : (
-                        <span className="ml-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">
-                          ACTIVE
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-1">
-                <p className="font-bold">
-                  Temple Priest Whisper:
-                </p>
-                <p className="text-amber-800 leading-relaxed font-sans">
-                  The gatekeepers sign all transit passes using <strong>HMAC-SHA256 (HS256)</strong> with secret <code className="bg-amber-100 px-1 py-0.5 rounded font-mono font-bold">2407</code>. Since your pass expired immediately upon creation, you must forge a new pass signed with secret <code className="bg-amber-100 px-1 py-0.5 rounded font-mono font-bold">2407</code> having an expiration timestamp in the future.
-                </p>
-              </div>
             </div>
           )}
         </section>
