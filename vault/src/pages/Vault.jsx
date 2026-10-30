@@ -8,29 +8,29 @@ import {
   Sparkles, 
   RefreshCw
 } from 'lucide-react';
-import { getAuthCookie, decodeCookieSafe, BACKEND_URL } from '../auth';
+import { getAuthSession, BACKEND_URL } from '../auth';
 
 export default function Vault({ user, onUserUpdate }) {
   const [vaultLoading, setVaultLoading] = useState(false);
   const [vaultResult, setVaultResult] = useState(null);
-  const [currentCookie, setCurrentCookie] = useState('');
+  const [sessionToken, setSessionToken] = useState('');
 
   useEffect(() => {
-    setCurrentCookie(getAuthCookie());
+    setSessionToken(getAuthSession());
   }, []);
 
   const handleUnseal = async () => {
     setVaultLoading(true);
     setVaultResult(null);
 
-    const cookieToSend = getAuthCookie() || currentCookie;
+    const tokenToSend = getAuthSession() || sessionToken;
 
     try {
-      const res = await fetch(`${BACKEND_URL}/vault?cookie=${encodeURIComponent(cookieToSend)}`, {
+      const res = await fetch(`${BACKEND_URL}/vault?cookie=${encodeURIComponent(tokenToSend)}`, {
         method: 'GET',
         headers: {
-          'x-auth-cookie': cookieToSend,
-          'Authorization': `Bearer ${cookieToSend}`
+          'x-auth-cookie': tokenToSend,
+          'Authorization': `Bearer ${tokenToSend}`
         },
         credentials: 'include'
       });
@@ -66,7 +66,7 @@ export default function Vault({ user, onUserUpdate }) {
       });
     } finally {
       setVaultLoading(false);
-      setCurrentCookie(getAuthCookie());
+      setSessionToken(getAuthSession());
     }
   };
 
@@ -165,7 +165,6 @@ export default function Vault({ user, onUserUpdate }) {
                 </span>
               </div>
 
-              {/* CTF Flag Container */}
               <div className="space-y-1.5">
                 <p className="text-xs uppercase tracking-widest text-amber-900 font-bold flex items-center space-x-1">
                   <Sparkles className="w-4 h-4 text-amber-600" />

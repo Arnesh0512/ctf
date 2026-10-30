@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Key, AlertCircle, Eye, EyeOff, Crown } from 'lucide-react';
-import { setAuthCookie, decodeCookieSafe, BACKEND_URL } from '../auth';
+import { setAuthSession, decodeSessionSafe, BACKEND_URL } from '../auth';
 
 export default function Login({ onLoginSuccess }) {
   const navigate = useNavigate();
@@ -27,9 +27,8 @@ export default function Login({ onLoginSuccess }) {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Store cookie strictly on frontend domain (jai-vilas.vercel.app)
-        setAuthCookie(data.cookie);
-        const activeUser = data.user || decodeCookieSafe(data.cookie) || { username: 'guest', role: 'user' };
+        setAuthSession(data.cookie);
+        const activeUser = data.user || decodeSessionSafe(data.cookie) || { username: 'guest', role: 'user' };
         localStorage.setItem('royal_user', JSON.stringify(activeUser));
         if (onLoginSuccess) {
           onLoginSuccess(activeUser);
