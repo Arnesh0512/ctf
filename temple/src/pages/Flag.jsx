@@ -5,8 +5,7 @@ import {
   LogOut, 
   Clock, 
   Sparkles, 
-  CheckCircle2, 
-  Compass
+  CheckCircle2 
 } from 'lucide-react';
 import { BACKEND_URL, getToken, clearAuth, parseJwtSafe } from '../auth';
 
@@ -99,11 +98,6 @@ export default function Flag() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <div className="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-medium text-emerald-900">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Pilgrim: <strong className="font-mono">{username || 'pilgrim'}</strong></span>
-            </div>
-
             <button
               onClick={handleLogout}
               className="flex items-center space-x-1.5 text-xs text-stone-700 hover:text-rose-700 border border-stone-200 hover:border-rose-300 bg-white hover:bg-rose-50 px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-semibold shadow-sm"
@@ -122,15 +116,11 @@ export default function Flag() {
         {/* Lore Banner */}
         <section className="bg-white/95 backdrop-blur-md border border-emerald-200/90 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
           <div className="max-w-2xl space-y-2">
-            <span className="inline-flex items-center space-x-1.5 bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
-              <Compass className="w-3.5 h-3.5" />
-              <span>Odisha Eastern Coast &bull; Kalinga Architecture</span>
-            </span>
             <h2 className="text-2xl sm:text-4xl font-cinzel font-black text-emerald-950 tracking-tight">
               The Monumental Stone Chariot
             </h2>
             <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-sans">
-              Dedicated to <strong>Surya, the Sun God</strong>, the temple is sculpted in the form of a gigantic celestial chariot with <strong>24 elaborately carved stone wheels</strong> and 7 galloping horses, tracking the eternal progression of solar time.
+              Dedicated to <strong>Surya, the Sun God</strong>, the temple is sculpted in the form of a gigantic celestial chariot with 24 elaborately carved stone wheels and 7 galloping horses, tracking the eternal progression of solar time.
             </p>
           </div>
           <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-emerald-100/60 rounded-full blur-2xl pointer-events-none"></div>
@@ -145,9 +135,6 @@ export default function Flag() {
             <h3 className="text-xl sm:text-2xl font-cinzel font-bold text-emerald-950">
               Inner Sanctum Seal
             </h3>
-            <p className="text-xs text-stone-600">
-              Present your signed Chariot Transit Pass to unveil the sacred Surya relic.
-            </p>
           </div>
 
           <div>
@@ -194,25 +181,15 @@ export default function Flag() {
                 </div>
               ) : (
                 /* Error / Expired 401 */
-                <div className="p-5 sm:p-6 rounded-2xl bg-rose-50 border border-rose-200 text-left shadow-sm space-y-3">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-9 h-9 rounded-xl bg-rose-100 border border-rose-300 flex items-center justify-center text-rose-700 shrink-0 mt-0.5">
+                <div className="p-5 sm:p-6 rounded-2xl bg-rose-50 border border-rose-200 text-left shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-9 h-9 rounded-xl bg-rose-100 border border-rose-300 flex items-center justify-center text-rose-700 shrink-0">
                       <Clock className="w-5 h-5" />
                     </div>
-                    <div className="flex-1 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-cinzel font-bold text-rose-950 text-xs sm:text-sm tracking-wide">
-                          {result.data.error || 'TEMPORAL SEAL EXPIRED'} &bull; HTTP {result.status}
-                        </span>
-                      </div>
-                      <p className="text-xs sm:text-sm font-sans text-rose-900 leading-relaxed font-semibold">
-                        {result.data.message}
-                      </p>
-                      {result.data.hint && (
-                        <p className="text-xs font-mono text-emerald-900 bg-emerald-100/70 p-2 rounded-lg border border-emerald-300">
-                          <strong>Clue:</strong> {result.data.hint}
-                        </p>
-                      )}
+                    <div>
+                      <span className="font-cinzel font-bold text-rose-950 text-xs sm:text-sm tracking-wide">
+                        {result.data.error || 'TEMPORAL SEAL EXPIRED'} &bull; HTTP {result.status}
+                      </span>
                     </div>
                   </div>
                 </div>
