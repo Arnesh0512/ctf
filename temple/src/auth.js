@@ -6,7 +6,7 @@ export const TOKEN_KEY = 'jwt';
 
 export function getToken() {
   try {
-    return localStorage.getItem(TOKEN_KEY) || localStorage.getItem('temple_jwt') || '';
+    return localStorage.getItem(TOKEN_KEY) || '';
   } catch (_) {
     return '';
   }
@@ -15,17 +15,12 @@ export function getToken() {
 export function setToken(token) {
   try {
     localStorage.setItem(TOKEN_KEY, token);
-    // Remove legacy keys if present
-    localStorage.removeItem('temple_jwt');
-    localStorage.removeItem('temple_user');
   } catch (_) {}
 }
 
 export function clearAuth() {
   try {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem('temple_jwt');
-    localStorage.removeItem('temple_user');
   } catch (_) {}
 }
 
