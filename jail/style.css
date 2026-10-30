@@ -95,6 +95,25 @@ body {
   color: #0b57d0;
 }
 
+.nav-partner-entry {
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-partner-link {
+  color: #0b57d0;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.nav-partner-link:hover {
+  color: #0842a0;
+}
+
 /* --------------------------------------------------------------------------
    Main Error Stage (Big 404 File Not Found in Blue on White Background)
    -------------------------------------------------------------------------- */
@@ -359,6 +378,16 @@ body {
   user-select: text;
 }
 
+.partner-url-link {
+  color: #0b57d0;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.partner-url-link:hover {
+  color: #0842a0;
+}
+
 /* --------------------------------------------------------------------------
    Footer Bottom Bar (Centered Navigation & Copyright)
    -------------------------------------------------------------------------- */
@@ -400,6 +429,26 @@ body {
   margin: 0 18px;
   font-weight: 300;
   user-select: none;
+}
+
+.bottom-partner-entry {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bottom-partner-link {
+  color: #0b57d0;
+  text-decoration: underline;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.bottom-partner-link:hover {
+  color: #0842a0;
 }
 
 .bottom-copyright-text {
