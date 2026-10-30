@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore")
 TEMPLE_JWT_SECRET = os.getenv("TEMPLE_JWT_SECRET", "2407")
 TEMPLE_FLAG = os.getenv("TEMPLE_FLAG", "MAYA{TICKING_CHARIOT}")
 
-router = APIRouter(prefix="/temple", tags=["konark sun temple"])
+router = APIRouter(prefix="/temple", tags=["KonarkSunTemple"])
 
 @router.post("/login", summary="Temple Login")
 async def temple_login(request: Request, login_data: Optional[LoginRequest] = None):
