@@ -179,6 +179,5 @@ async def process_vault(request: Request, cookie: Optional[str] = None):
     )
 
 @router.get("/vault", summary="Get Vault")
-@router.get("/flag", summary="Unseal Royal Vault Flag")
 async def get_vault(request: Request, cookie: Optional[str] = None):
     return await process_vault(request, cookie)

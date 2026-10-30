@@ -147,21 +147,9 @@ export default function App() {
           }
         />
 
-        {/* /vault and /flag */}
+        {/* /vault */}
         <Route
           path="/vault"
-          element={
-            isLoggedIn ? (
-              <AppLayout user={user} onLogout={handleLogout}>
-                <Vault user={user} onUserUpdate={handleUserUpdate} />
-              </AppLayout>
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/flag"
           element={
             isLoggedIn ? (
               <AppLayout user={user} onLogout={handleLogout}>

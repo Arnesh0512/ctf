@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -42,17 +42,6 @@ def health_check():
 # Register decentralized routers
 app.include_router(jaivilla_router)
 app.include_router(temple_router)
-
-# Backwards-compatible legacy endpoints for /login and /vault (excluded from Swagger schema)
-@app.api_route("/login", methods=["POST"], include_in_schema=False)
-async def legacy_login(request: Request, response: Response):
-    from routers.jaivilla import process_login
-    return await process_login(request, response)
-
-@app.api_route("/vault", methods=["GET"], include_in_schema=False)
-async def legacy_vault(request: Request):
-    from routers.jaivilla import process_vault
-    return await process_vault(request)
 
 if __name__ == "__main__":
     import uvicorn
