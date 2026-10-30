@@ -1,16 +1,15 @@
 {
-  "name": "mayasabha-jail",
+  "name": "cellular-jail",
   "version": "1.0.0",
-  "description": "Mayasabha Jail Restricted Ward 404 Portal",
+  "description": "Cellular Jail National Memorial Portal",
   "scripts": {
     "start": "npx serve ."
   },
   "keywords": [
-    "mayasabha",
+    "cellular-jail",
     "ctf",
-    "jail",
-    "404"
+    "memorial"
   ],
-  "author": "Mayasabha Dev Team",
+  "author": "Cellular Jail Memorial",
   "license": "UNLICENSED"
 }

@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "cellular-jail",
   "cleanUrls": true,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
