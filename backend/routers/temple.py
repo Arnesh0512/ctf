@@ -16,27 +16,38 @@ router = APIRouter(prefix="/temple", tags=["konark sun temple"])
 
 @router.post("/login", summary="Temple Login")
 async def temple_login(request: Request, login_data: Optional[LoginRequest] = None):
-    username = "pilgrim"
+    username = None
     password = None
 
     if login_data:
-        if login_data.username:
-            username = login_data.username.strip()
+        username = login_data.username
         password = login_data.password
 
-    if not password:
+    if not username:
         try:
             body = await request.json()
             if isinstance(body, dict):
-                if body.get("username"):
-                    username = str(body["username"]).strip()
+                username = body.get("username")
                 password = body.get("password")
         except Exception:
             pass
 
+    clean_username = str(username).strip() if username else ""
+    clean_password = str(password) if password else ""
+
+    if clean_username != "pilgrim" or clean_password != "chariotPass":
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={
+                "success": False,
+                "message": "use given pilgrim credentials"
+            }
+        )
+
     now = int(time.time())
     payload = {
-        "role": "pilgrim",
+        "username": "pilgrim",
+        "role": "user",
         "temple": "Konark Sun Temple",
         "dynasty": "Eastern Ganga",
         "iat": now,
@@ -50,8 +61,8 @@ async def temple_login(request: Request, login_data: Optional[LoginRequest] = No
         "message": "Pilgrim transit pass issued by the priests of King Narasimhadeva I.",
         "token": token,
         "user": {
-            "username": username,
-            "role": "pilgrim",
+            "username": "pilgrim",
+            "role": "user",
             "temple": "Konark Sun Temple"
         },
         "hint": "The Sun God Surya measures time across 24 stone chariot wheels. Sacred Secret: 2407"

@@ -64,17 +64,20 @@ async def process_login(request: Request, response: Response, login_data: Option
         except Exception:
             pass
 
-    if not username or not password:
+    clean_username = str(username).strip() if username else ""
+    clean_password = str(password) if password else ""
+
+    if clean_username != "guest" or clean_password != "visitorPass":
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             content={
                 "success": False,
-                "message": "Username and password are required."
+                "message": "use given guest credential"
             }
         )
 
     session_data = {
-        "username": str(username).strip(),
+        "username": clean_username,
         "role": "user"
     }
 
