@@ -7,7 +7,7 @@ export default function History() {
       year: '1761',
       title: 'Rise of the Scindia Dynasty',
       subtitle: 'Mahadji Scindia & Maratha Hegemony',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/0/02/Fort_Gwalior-_India_02.jpg',
+      image: '/images/fort_gwalior-_india_02.jpg',
       stat: '1761–1794',
       statLabel: 'Maratha Empire',
       desc: 'Following the Third Battle of Panipat, Mahadji Scindia rebuilt Maratha power across North India, securing Gwalior Fort as the royal capital and founding one of India’s most influential princely states.'
@@ -16,7 +16,7 @@ export default function History() {
       year: '1874',
       title: 'The Palace Commission',
       subtitle: 'Conceived by Jayaji Rao Scindia',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Jai_Vilas_Mahal_Facade.jpg',
+      image: '/images/jai_vilas_mahal_facade.jpg',
       stat: '₹1 CRORE',
       statLabel: '1874 Construction Cost',
       desc: 'Maharaja Jayaji Rao Scindia commissioned Italian-British architect Sir Michael Filose to design an opulent European-style palace combining Italian Neoclassical symmetry with Indian palace craftsmanship.'
@@ -25,7 +25,7 @@ export default function History() {
       year: '1875',
       title: 'Imperial Visit of King Edward VII',
       subtitle: 'Commemoration of the Prince of Wales Tour',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/0/07/The_Jai_Vilas_Palace_%28Gwalior%29.jpg',
+      image: '/images/the_jai_vilas_palace__gwalior_.jpg',
       stat: '21 GUN SALUTE',
       statLabel: 'Princely Precedence',
       desc: 'The palace was inaugurated to host the Prince of Wales (later King Edward VII) during his 1875 royal tour, establishing Gwalior among the highest-ranking princely kingdoms in British India.'
@@ -34,7 +34,7 @@ export default function History() {
       year: '1948',
       title: 'Indian Integration & Public Museum',
       subtitle: 'Accession to Union of India & 1964 Trust',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Inside_view_of_Jaivilas_Palace_Gwalior_-_panoramio.jpg',
+      image: '/images/inside_view_of_jaivilas_palace_gwalior_-_panoramio.jpg',
       stat: '1948–1964',
       statLabel: 'Heritage Conversion',
       desc: 'Maharaja Jiwaji Rao Scindia integrated Gwalior state into independent India. In 1964, Rajmata Vijaya Raje Scindia opened 35 royal chambers to the public as the H.H. Sir Jiwaji Rao Scindia Museum.'

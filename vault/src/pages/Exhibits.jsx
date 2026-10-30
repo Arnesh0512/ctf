@@ -8,7 +8,7 @@ export default function Exhibits() {
       category: 'Throne Chamber',
       stat: '3.5 TONNES',
       statLabel: 'Twin Crystal Chandeliers',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/DUrbar_hall_at_jai_vilas_palace.JPG',
+      image: '/images/durbar_hall_at_jai_vilas_palace.jpg',
       desc: 'Suspended beneath a 41-foot ceiling gilded with 560 kg of pure gold leaf, these Belgian chandeliers each hold 250 electric bulbs. Eight elephants were marched onto the roof in 1874 to test its structural load.'
     },
     {
@@ -16,7 +16,7 @@ export default function Exhibits() {
       category: 'Mechanical Novelty',
       stat: '40 SEATS',
       statLabel: 'Italian Marble Table',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Cart_Jai_vilas_palace_gwalior.jpg',
+      image: '/images/cart_jai_vilas_palace_gwalior.jpg',
       desc: 'A custom sterling silver miniature train that glided across silver rails embedded into the banquet table. It served cognac, liqueurs, and cigars to royal guests, stopping automatically when a decanter was lifted.'
     },
     {
@@ -24,7 +24,7 @@ export default function Exhibits() {
       category: 'Textile Masterwork',
       stat: '12 YEARS',
       statLabel: '100 × 50 Feet',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Carpet_2022.jpg',
+      image: '/images/carpet_2022.jpg',
       desc: 'Spanning the entirety of the Durbar Hall floor, this monumental woolen Persian carpet was hand-knotted by master weaver inmates inside Gwalior Central Prison over twelve continuous years.'
     },
     {
@@ -32,7 +32,7 @@ export default function Exhibits() {
       category: 'Weaponry & Regalia',
       stat: 'HISTORIC BLADES',
       statLabel: 'Chamber 12',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Art_collection_Scindia_Palace.jpg',
+      image: '/images/art_collection_scindia_palace.jpg',
       desc: 'Featuring the historic personal sword of Mughal Emperor Aurangzeb, Maratha curved talwars, jewel-encrusted ceremonial shields, and Damascus steel blades used by Scindia warriors.'
     },
     {
@@ -40,7 +40,7 @@ export default function Exhibits() {
       category: 'Imperial Transport',
       stat: 'SOLID STERLING',
       statLabel: 'Royal Processions',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Jai_Vilas_Mahal_Facade.jpg',
+      image: '/images/jai_vilas_mahal_facade.jpg',
       desc: 'The ceremonial horse-drawn carriage cast in solid sterling silver, used by the Maharajas of Gwalior for state coronations, royal durbars, and welcoming imperial dignitaries.'
     },
     {
@@ -48,7 +48,7 @@ export default function Exhibits() {
       category: 'European Decorative Arts',
       stat: 'VENETIAN & BAVARIAN',
       statLabel: 'Crystal Wing',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Inside_view_of_Jaivilas_Palace_Gwalior_-_panoramio.jpg',
+      image: '/images/inside_view_of_jaivilas_palace_gwalior_-_panoramio.jpg',
       desc: 'A rare collection of European cut glass fountains, towering Venetian mirrors, and French porcelain dinner sets custom-engraved with the Scindia royal crest.'
     }
   ];

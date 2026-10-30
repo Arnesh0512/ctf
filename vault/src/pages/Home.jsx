@@ -8,7 +8,7 @@ export default function Home() {
       tag: 'Private Sovereign Wing',
       stat: '400 ROOMS',
       statLabel: '124,000 Sq Ft Estate',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/0/07/The_Jai_Vilas_Palace_%28Gwalior%29.jpg',
+      image: '/images/the_jai_vilas_palace__gwalior_.jpg',
       desc: 'Unlike static monuments, Jai Vilas remains a living palace where descendants of the Scindia dynasty continue to reside in private residential wings alongside the public heritage estate.'
     },
     {
@@ -16,7 +16,7 @@ export default function Home() {
       tag: 'Rare Literary Archives',
       stat: '7,000+ BOOKS',
       statLabel: 'Historic Manuscripts',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Inside_view_of_Jaivilas_Palace_Gwalior_-_panoramio.jpg',
+      image: '/images/inside_view_of_jaivilas_palace_gwalior_-_panoramio.jpg',
       desc: 'Preserves an extensive private collection of rare historical literature, illuminated Persian texts, Sanskrit philosophical treatises, and sovereign state documents of the Gwalior court.'
     },
     {
@@ -24,7 +24,7 @@ export default function Home() {
       tag: 'Palace Grounds',
       stat: 'CLASSICAL LOGGIAS',
       statLabel: 'Tiered Fountains',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Jai_Vilas_Mahal_Facade.jpg',
+      image: '/images/jai_vilas_mahal_facade.jpg',
       desc: 'Sprawling central light-well courtyards designed on European country estate plans, framed by classical sandstone balustrades, manicured lawns, and carved marble fountains.'
     },
     {
@@ -32,7 +32,7 @@ export default function Home() {
       tag: 'Residential Architecture',
       stat: 'INDOOR POOLS',
       statLabel: 'Marble Enclaves',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Art_collection_Scindia_Palace.jpg',
+      image: '/images/art_collection_scindia_palace.jpg',
       desc: 'Featuring unique 19th-century royal residential amenities, including indoor spring baths, decorative ladies’ bathing chambers, and private family reception suites.'
     }
   ];
@@ -43,7 +43,7 @@ export default function Home() {
       <section className="relative rounded-3xl overflow-hidden shadow-xl border border-amber-200/90 group">
         <div className="relative h-[420px] sm:h-[500px] w-full overflow-hidden bg-stone-900">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/0/07/The_Jai_Vilas_Palace_%28Gwalior%29.jpg"
+            src="/images/the_jai_vilas_palace__gwalior_.jpg"
             alt="Jai Vilas Palace exterior facade"
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
           />

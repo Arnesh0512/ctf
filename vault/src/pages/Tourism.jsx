@@ -21,21 +21,21 @@ export default function Tourism() {
       name: 'Gwalior Fort',
       distance: '5 km away',
       tag: 'Hilltop Fortress',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/0/02/Fort_Gwalior-_India_02.jpg',
+      image: '/images/fort_gwalior-_india_02.jpg',
       desc: 'Iconic 8th-century citadel featuring Man Mandir Palace and daily evening sound & light shows.'
     },
     {
       name: 'Tomb of Tansen',
       distance: '4 km away',
       tag: 'Mughal Monument',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Tomb_of_Tansen%2C_Gwalior.JPG',
+      image: '/images/tomb_of_tansen__gwalior.jpg',
       desc: 'Historic memorial dedicated to Tansen, Akbar’s court musician and father of Hindustani classical music.'
     },
     {
       name: 'Palace Grounds & Estate',
       distance: 'On-Site',
       tag: 'Visitor Gateway',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Jai_Vilas_Mahal_Facade.jpg',
+      image: '/images/jai_vilas_mahal_facade.jpg',
       desc: 'Ticket counters, visitor reception, audio guide collection, and vehicle parking facility.'
     }
   ];
