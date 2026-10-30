@@ -1,6 +1,7 @@
 /* ==========================================================================
    Cellular Jail National Memorial - 404 Portal
    Clean White Background with Blue 404 File Not Found
+   Rich Memorial Footer Styled like Reference Architecture
    ========================================================================== */
 
 *, *::before, *::after {
@@ -39,7 +40,7 @@ body {
 }
 
 .navbar {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 16px 24px;
   display: flex;
@@ -98,7 +99,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  padding: 40px 24px;
+  padding: 60px 24px;
   text-align: center;
 }
 
@@ -129,93 +130,296 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Footer (Standard Memorial Bottom Bar)
+   Rich Footer Wrapper
    -------------------------------------------------------------------------- */
-.footer {
-  background-color: #ffffff;
+.footer-wrapper {
+  background-color: #fbfbfc;
   border-top: 1px solid #e5e7eb;
-  padding: 18px 24px;
+  padding: 56px 24px 28px 24px;
+  color: #334155;
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
+}
+
+/* Top Grid: Brand (Left) + Links Columns (Right) */
+.footer-top-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 60px;
+  padding-bottom: 40px;
+}
+
+/* Left Brand Column */
+.footer-brand-col {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+  flex-direction: column;
+  gap: 18px;
 }
 
-.footer-left {
+.footer-brand-header {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+.brand-badge-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.footer-brand-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.footer-brand-description {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+/* Store Download Badges */
+.footer-store-badges {
+  display: flex;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 20px;
-  font-size: 0.85rem;
-  color: #334155;
+  margin-top: 4px;
 }
 
-.copyright {
-  font-weight: 400;
-  color: #1e293b;
-}
-
-.footer-link {
-  color: #334155;
+.store-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 8px;
   text-decoration: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.store-badge-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.store-icon {
+  flex-shrink: 0;
+}
+
+.store-btn-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.store-subtext {
+  font-size: 0.62rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #d1d5db;
+  letter-spacing: 0.04em;
+}
+
+.store-maintext {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Let's get social */
+.footer-social-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.social-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.social-icons-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.social-btn.facebook {
+  background-color: #1877f2;
+}
+
+.social-btn.instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+}
+
+.social-btn.youtube {
+  background-color: #ff0000;
+}
+
+.social-btn.linkedin {
+  background-color: #0a66c2;
+}
+
+.social-btn.twitter {
+  background-color: #1da1f2;
+}
+
+.social-btn.telegram {
+  background-color: #229ed9;
+}
+
+/* Links Grid Columns */
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.col-heading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+.col-heading.sub-heading {
+  margin-top: 26px;
+}
+
+.col-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.col-list li a {
+  text-decoration: none;
+  color: #4b5563;
+  font-size: 0.88rem;
   font-weight: 400;
   transition: color 0.15s ease;
 }
 
-.footer-link:hover {
+.col-list li a:hover {
   color: #0b57d0;
   text-decoration: underline;
 }
 
-.footer-sep {
-  color: #94a3b8;
-  user-select: none;
+/* --------------------------------------------------------------------------
+   Informational SEO / About Paragraphs (Image 2 style)
+   -------------------------------------------------------------------------- */
+.footer-info-section {
+  border-top: 1px solid #e5e7eb;
+  padding: 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.footer-contact {
-  color: #334155;
+.info-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
 }
 
-.footer-contact a {
-  color: #0b57d0;
+.info-card-text {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #4b5563;
+}
+
+/* --------------------------------------------------------------------------
+   Footer Bottom Bar
+   -------------------------------------------------------------------------- */
+.footer-bottom-bar {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.82rem;
+  color: #4b5563;
+}
+
+.bottom-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bottom-links a {
+  color: #4b5563;
   text-decoration: none;
-  font-weight: 500;
+  transition: color 0.15s ease;
 }
 
-.footer-contact a:hover {
+.bottom-links a:hover {
+  color: #0b57d0;
   text-decoration: underline;
 }
 
-.footer-socials {
-  display: flex;
-  align-items: center;
-  gap: 18px;
+.bottom-sep {
+  color: #9ca3af;
 }
 
-.social-icon {
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  transition: color 0.15s ease, transform 0.15s ease;
-}
-
-.social-icon:hover {
-  color: #0b57d0;
-  transform: translateY(-1px);
+.bottom-copyright {
+  color: #4b5563;
 }
 
 /* --------------------------------------------------------------------------
    Responsive Design
    -------------------------------------------------------------------------- */
-@media (max-width: 860px) {
+@media (max-width: 1024px) {
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     gap: 16px;
@@ -236,19 +440,14 @@ body {
     text-align: center;
   }
 
-  .footer-container {
+  .footer-links-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-bottom-bar {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 16px;
-  }
-
-  .footer-left {
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .footer-socials {
-    justify-content: center;
   }
 }
