@@ -8,12 +8,12 @@ import {
   CheckCircle2, 
   Compass
 } from 'lucide-react';
-import { BACKEND_URL, getToken, getUser, clearAuth } from '../auth';
+import { BACKEND_URL, getToken, clearAuth, parseJwtSafe } from '../auth';
 
 export default function Flag() {
   const navigate = useNavigate();
   const [token, setCurrentToken] = useState('');
-  const [user, setCurrentUser] = useState(null);
+  const [username, setUsername] = useState('pilgrim');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -24,7 +24,10 @@ export default function Flag() {
       return;
     }
     setCurrentToken(storedToken);
-    setCurrentUser(getUser() || { username: 'pilgrim', role: 'pilgrim' });
+    const parsed = parseJwtSafe(storedToken);
+    if (parsed?.sub) {
+      setUsername(parsed.sub);
+    }
   }, [navigate]);
 
   const handleLogout = () => {
@@ -98,7 +101,7 @@ export default function Flag() {
           <div className="flex items-center space-x-3">
             <div className="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full text-xs font-medium text-emerald-900">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Pilgrim: <strong className="font-mono">{user?.username || 'pilgrim'}</strong></span>
+              <span>Pilgrim: <strong className="font-mono">{username || 'pilgrim'}</strong></span>
             </div>
 
             <button

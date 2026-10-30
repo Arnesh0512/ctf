@@ -2,12 +2,11 @@ export const BACKEND_URL =
   import.meta.env.VITE_BACKEND_URL || 
   (window.location.hostname === 'localhost' ? 'http://localhost:10000' : 'https://ctf-backend-d3un.onrender.com');
 
-export const TOKEN_KEY = 'temple_jwt';
-export const USER_KEY = 'temple_user';
+export const TOKEN_KEY = 'jwt';
 
 export function getToken() {
   try {
-    return localStorage.getItem(TOKEN_KEY) || '';
+    return localStorage.getItem(TOKEN_KEY) || localStorage.getItem('temple_jwt') || '';
   } catch (_) {
     return '';
   }
@@ -16,28 +15,17 @@ export function getToken() {
 export function setToken(token) {
   try {
     localStorage.setItem(TOKEN_KEY, token);
-  } catch (_) {}
-}
-
-export function getUser() {
-  try {
-    const raw = localStorage.getItem(USER_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch (_) {
-    return null;
-  }
-}
-
-export function setUser(user) {
-  try {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    // Remove legacy keys if present
+    localStorage.removeItem('temple_jwt');
+    localStorage.removeItem('temple_user');
   } catch (_) {}
 }
 
 export function clearAuth() {
   try {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem('temple_jwt');
+    localStorage.removeItem('temple_user');
   } catch (_) {}
 }
 

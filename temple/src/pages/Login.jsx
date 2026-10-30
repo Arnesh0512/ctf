@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Lock, User, Eye, EyeOff, Sparkles, Compass } from 'lucide-react';
-import { BACKEND_URL, getToken, setToken, setUser } from '../auth';
+import { BACKEND_URL, getToken, setToken } from '../auth';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,7 +34,6 @@ export default function Login() {
 
       if (res.ok && data.success && data.token) {
         setToken(data.token);
-        setUser(data.user || { username, role: 'pilgrim' });
         navigate('/flag');
       } else {
         setError(data.message || 'Temple gate authentication failed.');
