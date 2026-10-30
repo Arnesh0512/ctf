@@ -4,6 +4,10 @@
    Rich Memorial Footer Styled like Reference Architecture
    ========================================================================== */
 
+:root {
+  --nav-height: 74px;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -42,6 +46,7 @@ body {
 .navbar {
   max-width: 1240px;
   margin: 0 auto;
+  min-height: var(--nav-height);
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
@@ -94,13 +99,15 @@ body {
    Main Error Stage (Big 404 File Not Found in Blue on White Background)
    -------------------------------------------------------------------------- */
 .error-stage {
-  flex: 1;
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100dvh - var(--nav-height));
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  padding: 60px 24px;
+  padding: 40px 24px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .error-centerbox {
@@ -421,9 +428,15 @@ body {
 
 @media (max-width: 768px) {
   .navbar {
+    min-height: auto;
     flex-direction: column;
     gap: 16px;
     padding: 16px;
+  }
+
+  .error-stage {
+    min-height: calc(100vh - 120px);
+    min-height: calc(100dvh - 120px);
   }
 
   .nav-links {
