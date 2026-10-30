@@ -129,10 +129,7 @@ async def temple_flag(request: Request, token: Optional[str] = None):
             status_code=status.HTTP_401_UNAUTHORIZED,
             content={
                 "success": False,
-                "error": "TokenExpiredError",
-                "message": f"Chariot transit pass has EXPIRED at timestamp {exp}. Current sun time is {now}. The sands of time have run out.",
-                "expired_at": exp,
-                "current_time": now
+                "error": "TokenExpiredError"
             }
         )
 
