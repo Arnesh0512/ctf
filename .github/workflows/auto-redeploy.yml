@@ -1,0 +1,21 @@
+name: Auto Redeploy on Vercel Limit Reset
+
+on:
+  schedule:
+    # Runs at 06:15 UTC on Oct 31, 2026 (11:45 AM IST), right after the 11:30 AM IST reset
+    - cron: '15 6 31 10 *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab at any time
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Konark Sun Temple Vercel Deployment
+        run: |
+          echo "Triggering Konark Sun Temple deploy hook..."
+          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_XVxPcTWOXwpUGstiBuPNU61n0CAN/4whNchFjqs"
+
+      - name: Trigger Jai Villa Vault Vercel Deployment
+        run: |
+          echo "Triggering Jai Villa Vault deploy hook..."
+          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_2pzLB8d11dbrLLeT8cyKgXjefuBD/IRLM2A04T4"
