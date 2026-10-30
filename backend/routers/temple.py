@@ -64,8 +64,7 @@ async def temple_login(request: Request, login_data: Optional[LoginRequest] = No
             "username": "pilgrim",
             "role": "user",
             "temple": "Konark Sun Temple"
-        },
-        "hint": "The Sun God Surya measures time across 24 stone chariot wheels. Sacred Secret: 2407"
+        }
     }
 
 @router.get("/flag", summary="Unseal Sanctum Flag")
@@ -145,14 +144,5 @@ async def temple_flag(request: Request, token: Optional[str] = None):
     return {
         "success": True,
         "message": "The 24 carved stone wheels of the Sun Chariot align! King Narasimhadeva I's inner sanctum reveals the sacred flag.",
-        "flag": TEMPLE_FLAG,
-        "temple": {
-            "name": "Konark Sun Temple",
-            "deity": "Surya (The Sun God)",
-            "builder": "King Narasimhadeva I",
-            "dynasty": "Eastern Ganga Dynasty",
-            "century": "13th Century CE",
-            "location": "Odisha, Eastern Coast of India",
-            "design": "Monumental Stone Chariot with 24 carved wheels & 7 horses"
-        }
+        "flag": TEMPLE_FLAG
     }
