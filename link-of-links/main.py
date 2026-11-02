@@ -4,12 +4,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import PlainTextResponse
 
 
-app = FastAPI(
-    title="Link of Links",
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None,
-)
+app = FastAPI(title="Link of Links")
 
 FLAG_AT = int(os.getenv("FLAG_AT", "73"))
 CTF_FLAG = os.getenv("CTF_FLAG", "MAYA{LINKED_TRAIL}")

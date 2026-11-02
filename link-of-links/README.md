@@ -6,7 +6,7 @@ Small FastAPI CTF service with one route: `/link/{number}`.
 - Record 100 links back to record 0.
 - Requests outside that range return HTTP 404.
 - The configured record adds the flag in the `X-Archive-Fragment` response header.
-- Swagger, ReDoc, and OpenAPI routes are disabled so only the challenge route is exposed.
+- FastAPI documentation is available at `/docs` (Swagger UI), `/redoc`, and `/openapi.json`.
 
 ## Run locally
 
