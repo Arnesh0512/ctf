@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import PlainTextResponse
 
 
-app = FastAPI(title="Link of Links")
+app = FastAPI(title="Temple Chain")
 
 FLAG_AT = int(os.getenv("FLAG_AT", "73"))
 CTF_FLAG = os.getenv("CTF_FLAG", "MAYA{LINKED_TRAIL}")

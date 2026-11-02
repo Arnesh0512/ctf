@@ -1,4 +1,4 @@
-# Link of Links
+# Temple Chain
 
 Small FastAPI CTF service with one route: `/link/{number}`.
 
