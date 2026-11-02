@@ -1,13 +1,30 @@
 import os
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 
-app = FastAPI(title="Temple Chain")
+app = FastAPI(
+    title="Temple Chain API",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 FLAG_AT = int(os.getenv("FLAG_AT", "125"))
 CTF_FLAG = os.getenv("CTF_FLAG", "MAYA{LINKED_TRAIL}")
+
+
+@app.get("/", include_in_schema=False, response_class=HTMLResponse)
+async def home() -> HTMLResponse:
+    return HTMLResponse(
+        "<!doctype html><html><head><meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+        "<title>Temple Chain API</title></head>"
+        "<body><h1>Temple Chain API</h1>"
+        "<p>Follow the linked records using <code>/link/{number}</code>.</p>"
+        "</body></html>"
+    )
 
 
 @app.get("/link/{number}", name="link", response_class=PlainTextResponse)
