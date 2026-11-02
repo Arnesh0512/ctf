@@ -6,7 +6,7 @@ Small FastAPI CTF service with one route: `/link/{number}`.
 - Record 0 links back to record 200, and record 200 links to record 0.
 - Requests outside that range return HTTP 404.
 - The configured record adds the flag in the `X-Archive-Fragment` response header.
-- The root page is titled “Temple Chain API.” Interactive Swagger/ReDoc docs and the OpenAPI schema are disabled.
+- The root page and interactive API docs are branded “Temple Chain API”; the docs are at `/docs`.
 
 ## Run locally
 

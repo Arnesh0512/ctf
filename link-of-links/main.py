@@ -1,6 +1,7 @@
 import os
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import HTMLResponse, PlainTextResponse
 
 
@@ -8,7 +9,6 @@ app = FastAPI(
     title="Temple Chain API",
     docs_url=None,
     redoc_url=None,
-    openapi_url=None,
 )
 
 FLAG_AT = int(os.getenv("FLAG_AT", "125"))
@@ -24,6 +24,14 @@ async def home() -> HTMLResponse:
         "<body><h1>Temple Chain API</h1>"
         "<p>Follow the linked records using <code>/link/{number}</code>.</p>"
         "</body></html>"
+    )
+
+
+@app.get("/docs", include_in_schema=False, response_class=HTMLResponse)
+async def api_docs() -> HTMLResponse:
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title="Temple Chain API",
     )
 
 
